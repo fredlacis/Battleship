@@ -27,6 +27,7 @@ public class JP_InitialScreen extends JPanel{
 
 	public JP_InitialScreen() {
 		setLayout(new GridBagLayout());
+		setBounds(0,0,1024,768);
 		setBackground(new Color(250, 250, 250));
 		
 		Dimension btnDimension = new Dimension(150, 50);

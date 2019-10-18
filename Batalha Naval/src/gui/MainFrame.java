@@ -23,8 +23,24 @@ public class MainFrame extends JFrame {
 		setBounds(x,y,LARG_DEFAULT,ALT_DEFAULT);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setResizable(false);
+		setLayout(null);
 		
-		getContentPane().add(new JP_InitialScreen());
+		//getContentPane().add(new JP_InitialScreen());
+		
+		getContentPane().add(new JP_MouseBoard());
+		
+		
+		/*JP_Board tabuleiro1 = new JP_Board();
+		tabuleiro1.setBounds(8,8,500,500);
+		
+		JP_Board tabuleiro2 = new JP_Board();
+		tabuleiro2.setBounds(516,8,500,500);
+		
+		getContentPane().add(tabuleiro1);
+		getContentPane().add(tabuleiro2);
+		*/
+		
+		
 		
 		setTitle("Batalha Naval");
 	}
