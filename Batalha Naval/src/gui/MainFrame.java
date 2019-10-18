@@ -22,6 +22,7 @@ public class MainFrame extends JFrame {
 		int y = sa/2-ALT_DEFAULT/2;
 		setBounds(x,y,LARG_DEFAULT,ALT_DEFAULT);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setResizable(false);
 		
 		getContentPane().add(new JP_InitialScreen());
 		
