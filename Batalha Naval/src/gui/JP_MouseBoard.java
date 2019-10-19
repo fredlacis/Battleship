@@ -1,6 +1,5 @@
 package gui;
 
-import java.awt.GridBagLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -12,7 +11,7 @@ public class JP_MouseBoard extends JPanel implements MouseListener{
 	
 	public JP_MouseBoard() {
 		setLayout(null);
-		setBounds(0, 50, 500, 500);
+		setBounds(0, 0, 500, 500);
 		addMouseListener(this);
 		
 		add(board);
@@ -21,9 +20,21 @@ public class JP_MouseBoard extends JPanel implements MouseListener{
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		System.out.printf("%d - %d\n", (int)((e.getX()-25)/30.6), (int)((e.getY()-25)/30.6));
-		//precisa melhorar
-		//double x = e.getX() - board.get, y = e.getY() - cellSize;
+
+		int x = 0, y = 0;
+		
+		if( e.getX() >= board.getBoardBorder() && e.getY() >= board.getBoardBorder() ) {
+			x = (int)( ( e.getX() - board.getBoardBorder() ) / board.getCellSize() );
+			y = (int)( ( e.getY() - board.getBoardBorder() ) / board.getCellSize() );
+		}
+		else {
+			return;
+		}
+		
+		if(x < 15 && y < 15) {
+			//resto do código entra aqui
+			System.out.printf("Click! -> X: %d | Y: %d\n", x, y);
+		}
 	}
 
 	@Override

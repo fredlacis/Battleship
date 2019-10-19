@@ -25,7 +25,7 @@ public class JP_InitialScreen extends JPanel{
 	private JButton loadBtn = new JButton("Load Game");
 	private JButton exitBtn = new JButton("Exit");
 
-	public JP_InitialScreen() {
+	public JP_InitialScreen(MainFrame m) {
 		setLayout(new GridBagLayout());
 		setBounds(0,0,1024,768);
 		setBackground(new Color(250, 250, 250));
@@ -45,7 +45,7 @@ public class JP_InitialScreen extends JPanel{
 		startBtn.setToolTipText("Começar um novo jogo.");
 		startBtn.addActionListener(new ActionListener() { 
 			public void actionPerformed(ActionEvent e) { 
-				new JF_NameForm().setVisible(true);
+				new JF_NameForm(m).setVisible(true);
 			} 
 		} );
 		

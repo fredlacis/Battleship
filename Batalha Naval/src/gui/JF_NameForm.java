@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -33,7 +35,7 @@ public class JF_NameForm extends JFrame{
 	private JPanel containerPnl = new JPanel();
 	
 	
-	public JF_NameForm() {
+	public JF_NameForm(MainFrame m) {
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		Dimension screenSize = tk.getScreenSize();
 		int sl = screenSize.width;
@@ -89,6 +91,15 @@ public class JF_NameForm extends JFrame{
 		startBtn.setFont(new Font("SansSerif", Font.BOLD, 14));
 		startBtn.setBackground(new Color(0, 218, 60));
 		startBtn.setForeground(new Color(0, 100, 10));
+		startBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+               m.setNewPanel(new JP_MouseBoard());
+                
+                setVisible(false);
+            }
+        });
 		buttonPnl.add(startBtn);
 		buttonPnl.setOpaque(false);
 		containerPnl.add(buttonPnl);
