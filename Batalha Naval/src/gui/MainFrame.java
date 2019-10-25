@@ -30,24 +30,7 @@ public class MainFrame extends JFrame {
 		setLayout(null);
 		getContentPane().setBackground(new Color(250, 250, 250));
 		
-		//JP_MouseBoard mouseBoard = new JP_MouseBoard();
-		
-		//getContentPane().add(new JP_InitialScreen(this));
-		
-		//getContentPane().add(mouseBoard);
-		
-		
-		/*JP_Board tabuleiro1 = new JP_Board();
-		tabuleiro1.setBounds(8,8,500,500);
-		
-		JP_Board tabuleiro2 = new JP_Board();
-		tabuleiro2.setBounds(516,8,500,500);
-		
-		getContentPane().add(tabuleiro1);
-		getContentPane().add(tabuleiro2);
-		*/
-		
-		
+		getContentPane().add(new JP_InitialScreen(this));
 		
 		setTitle("Batalha Naval");
 	}
@@ -66,7 +49,6 @@ public class MainFrame extends JFrame {
 		
 		MainFrame mainFrame = new MainFrame();
 		mainFrame.setVisible(true);
-		mainFrame.setContentPane(new JP_InitialScreen(mainFrame));
 
 	}
 

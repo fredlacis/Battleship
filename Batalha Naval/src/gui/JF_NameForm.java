@@ -7,12 +7,15 @@ import java.awt.GridBagLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
@@ -21,13 +24,13 @@ public class JF_NameForm extends JFrame{
 	final int LARG_DEFAULT = 230;
 	final int ALT_DEFAULT = 150;
 	
-	private JLabel player1Lbl = new JLabel("Jogador 1:");
-	private JTextArea player1Txt = new JTextArea("Nome do jogador 1");
+	private JLabel player1Lbl = new JLabel("Player 1:");
+	private JTextArea player1Txt = new JTextArea("Player 1 name");
 	
-	private JLabel player2Lbl = new JLabel("Jogador 2:");
-	private JTextArea player2Txt = new JTextArea("Nome do jogador 2");
+	private JLabel player2Lbl = new JLabel("Player 2:");
+	private JTextArea player2Txt = new JTextArea("Player 2 name");
 	
-	private JButton startBtn = new JButton("Começar!");
+	private JButton startBtn = new JButton("Start!");
 	
 	private JPanel labelsPnl = new JPanel();
 	private JPanel textsPnl = new JPanel();
@@ -66,14 +69,48 @@ public class JF_NameForm extends JFrame{
 		
 		textsPnl.setLayout(new BoxLayout(textsPnl, BoxLayout.Y_AXIS));
 		textsPnl.setBounds(85,5,130,80);
+		player1Txt.setForeground(Color.GRAY);
 		player1Txt.setAlignmentX(LEFT_ALIGNMENT);
 		player1Txt.setPreferredSize(txtDimension);
 		player1Txt.setMinimumSize(txtDimension);
 		player1Txt.setMaximumSize(txtDimension);
+		player1Txt.addFocusListener(new FocusListener() {
+		    @Override
+		    public void focusGained(FocusEvent e) {
+		        if (player1Txt.getText().equals("Player 1 name")) {
+		        	player1Txt.setText("");
+		        	player1Txt.setForeground(Color.BLACK);
+		        }
+		    }
+		    @Override
+		    public void focusLost(FocusEvent e) {
+		        if (player1Txt.getText().isEmpty()) {
+		        	player1Txt.setForeground(Color.GRAY);
+		        	player1Txt.setText("Player 1 name");
+		        }
+		    }
+		});
+		player2Txt.setForeground(Color.GRAY);
 		player2Txt.setAlignmentX(LEFT_ALIGNMENT);
 		player2Txt.setPreferredSize(txtDimension);
 		player2Txt.setMinimumSize(txtDimension);
 		player2Txt.setMaximumSize(txtDimension);
+		player2Txt.addFocusListener(new FocusListener() {
+		    @Override
+		    public void focusGained(FocusEvent e) {
+		        if (player2Txt.getText().equals("Player 2 name")) {
+		        	player2Txt.setText("");
+		        	player2Txt.setForeground(Color.BLACK);
+		        }
+		    }
+		    @Override
+		    public void focusLost(FocusEvent e) {
+		        if (player2Txt.getText().isEmpty()) {
+		        	player2Txt.setForeground(Color.GRAY);
+		        	player2Txt.setText("Player 2 name");
+		        }
+		    }
+		});
 		textsPnl.add(Box.createRigidArea(new Dimension(0, 7)));
 		textsPnl.add(player1Txt);
 		textsPnl.add(Box.createRigidArea(new Dimension(0, 8)));
@@ -95,9 +132,20 @@ public class JF_NameForm extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
 
-               m.setNewPanel(new JP_MouseBoard());
-                
-                setVisible(false);
+               //m.setNewPanel(new JP_MouseBoard());
+            	
+            	if(player1Txt.getText().equals("Player 1 name") || player2Txt.getText().equals("Player 2 name")) {
+            		JOptionPane.showMessageDialog(null, "Insira os dois nomes!");
+            		
+            	}
+            	else {
+                	(new JF_ShipSelection(player1Txt.getText())).setVisible(true);
+                	
+                	m.setVisible(false);
+                    
+                    setVisible(false);
+            	}
+            	
             }
         });
 		buttonPnl.add(startBtn);
