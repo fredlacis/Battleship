@@ -1,5 +1,5 @@
 package gui;
-
+import java.awt.MouseInfo;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 
 public class JP_MouseBoard extends JPanel implements MouseListener{
 	
+	private boolean mouseInBoard;
 	private JP_Board board = new JP_Board();
 	
 	public JP_MouseBoard() {
@@ -51,13 +52,28 @@ public class JP_MouseBoard extends JPanel implements MouseListener{
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-
+		
+		mouseInBoard = true;
+		
+		double mouseX = 1.0;
+		double mouseY = 1.0;
+		
+		while(mouseInBoard) {
+			mouseX = MouseInfo.getPointerInfo().getLocation().getX() - this.getLocationOnScreen().getX();
+			mouseY = MouseInfo.getPointerInfo().getLocation().getY() - this.getLocationOnScreen().getY();
+			
+			int x = (int)( ( mouseX - board.getBoardBorder() ) / board.getCellSize() );
+			int y = (int)( ( mouseY - board.getBoardBorder() ) / board.getCellSize() );
+			
+			System.out.printf("X: %d | Y: %d\n", x, y);
+		}
+		
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
+		
+		mouseInBoard = false;
 		
 	}
 }

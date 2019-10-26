@@ -3,8 +3,9 @@ package gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-
 import javax.swing.JFrame;
+
+import gui.ships.*;
 
 public class JF_ShipSelection extends JFrame{
 	
@@ -24,6 +25,7 @@ public class JF_ShipSelection extends JFrame{
 		setLayout(null);
 		getContentPane().setBackground(new Color(250, 250, 250));
 		
+		getContentPane().add(new Destroyer());
 		getContentPane().add(new JP_MouseBoard());
 		System.out.println(playerName);
 		
