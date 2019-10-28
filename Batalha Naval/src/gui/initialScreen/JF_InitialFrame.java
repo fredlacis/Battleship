@@ -1,18 +1,23 @@
-package gui;
+package gui.initialScreen;
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
 
-import gui.ships.*;
+import rules.*;
 
-public class JF_ShipSelection extends JFrame{
-	
+public class JF_InitialFrame extends JFrame {
+
 	final int LARG_DEFAULT = 1024;
 	final int ALT_DEFAULT = 768;
 	
-	public JF_ShipSelection(String playerName) {
+	private static JF_InitialFrame instance;
+	
+	public JF_InitialFrame(/*CtrlRules c*/) {
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		Dimension screenSize = tk.getScreenSize();
 		int sl = screenSize.width;
@@ -25,10 +30,15 @@ public class JF_ShipSelection extends JFrame{
 		setLayout(null);
 		getContentPane().setBackground(new Color(250, 250, 250));
 		
-		getContentPane().add(new Destroyer());
-		getContentPane().add(new JP_MouseBoard());
-		System.out.println(playerName);
+		getContentPane().add(new JP_InitialScreen(this));
 		
+		setTitle("Batalha Naval");
 	}
 	
+	public void setNewPanel(JPanel p) {
+		 getContentPane().removeAll();
+         validate();
+         setContentPane(p);
+	}
+
 }

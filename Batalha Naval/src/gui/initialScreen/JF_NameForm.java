@@ -1,4 +1,4 @@
-package gui;
+package gui.initialScreen;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -19,6 +19,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
+import gui.shipSelection.JF_ShipSelection;
+
 public class JF_NameForm extends JFrame{
 	
 	final int LARG_DEFAULT = 230;
@@ -38,7 +40,7 @@ public class JF_NameForm extends JFrame{
 	private JPanel containerPnl = new JPanel();
 	
 	
-	public JF_NameForm(MainFrame m) {
+	public JF_NameForm(JF_InitialFrame m) {
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		Dimension screenSize = tk.getScreenSize();
 		int sl = screenSize.width;

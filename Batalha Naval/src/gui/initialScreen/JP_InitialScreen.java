@@ -1,4 +1,4 @@
-package gui;
+package gui.initialScreen;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -25,7 +25,7 @@ public class JP_InitialScreen extends JPanel{
 	private JButton loadBtn = new JButton("Load Game");
 	private JButton exitBtn = new JButton("Exit");
 
-	public JP_InitialScreen(MainFrame m) {
+	public JP_InitialScreen(JF_InitialFrame m) {
 		setLayout(new GridBagLayout());
 		setBounds(0,0,1024,768);
 		setBackground(new Color(250, 250, 250));
