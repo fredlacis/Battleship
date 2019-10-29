@@ -1,21 +1,17 @@
 package gui.ships;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
 
 public class Destroyer extends Ship {
-	
-	private final int SIZE = 2; 
-	
-	public Destroyer() {
-		setBounds(0, 0, SIZE*31, 31);
+
+	private final int DESTROYER_SIZE = 2; 
+
+	public Destroyer(int x, int y) {
+
+		setBounds(x, y, SQUARE_SIZE*DESTROYER_SIZE, SQUARE_SIZE);
 		setOpaque(false);
-		
-		super.paintSquares(SIZE);
-		
-		//setPreferredSize(new Dimension(200, 200));
+
+		super.paintSquares(DESTROYER_SIZE);
 	}
-	
+
 }
