@@ -1,4 +1,4 @@
-package gui;
+package gui.board;
 import java.awt.MouseInfo;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -36,6 +36,7 @@ public class JP_MouseBoard extends JPanel implements MouseListener{
 			//resto do código entra aqui
 			System.out.printf("Click! -> X: %d | Y: %d\n", x, y);
 		}
+		
 	}
 
 	@Override
@@ -53,20 +54,20 @@ public class JP_MouseBoard extends JPanel implements MouseListener{
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		
-		mouseInBoard = true;
-		
-		double mouseX = 1.0;
-		double mouseY = 1.0;
-		
-		while(mouseInBoard) {
-			mouseX = MouseInfo.getPointerInfo().getLocation().getX() - this.getLocationOnScreen().getX();
-			mouseY = MouseInfo.getPointerInfo().getLocation().getY() - this.getLocationOnScreen().getY();
-			
-			int x = (int)( ( mouseX - board.getBoardBorder() ) / board.getCellSize() );
-			int y = (int)( ( mouseY - board.getBoardBorder() ) / board.getCellSize() );
-			
-			System.out.printf("X: %d | Y: %d\n", x, y);
-		}
+//		mouseInBoard = true;
+//		
+//		double mouseX = 1.0;
+//		double mouseY = 1.0;
+//		
+//		while(mouseInBoard) {
+//			mouseX = MouseInfo.getPointerInfo().getLocation().getX() - this.getLocationOnScreen().getX();
+//			mouseY = MouseInfo.getPointerInfo().getLocation().getY() - this.getLocationOnScreen().getY();
+//			
+//			int x = (int)( ( mouseX - board.getBoardBorder() ) / board.getCellSize() );
+//			int y = (int)( ( mouseY - board.getBoardBorder() ) / board.getCellSize() );
+//			
+//			System.out.printf("X: %d | Y: %d\n", x, y);
+//		}
 		
 	}
 

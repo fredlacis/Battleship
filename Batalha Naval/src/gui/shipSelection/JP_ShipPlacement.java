@@ -6,7 +6,7 @@ import java.awt.GridBagLayout;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
-import gui.JP_MouseBoard;
+import gui.board.JP_MouseBoard;
 
 public class JP_ShipPlacement extends JPanel{
 

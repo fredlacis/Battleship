@@ -10,9 +10,10 @@ import java.awt.geom.Rectangle2D;
 
 import javax.swing.JComponent;
 
+import main.K;
+
 public abstract class Ship extends JComponent implements MouseListener {
 
-	protected final int SQUARE_SIZE = 31;
 	private Rectangle2D.Double squares[];
 	
 	private Color shipColor;
@@ -23,9 +24,9 @@ public abstract class Ship extends JComponent implements MouseListener {
 
 		for(int i = 0; i < squareNumbers; i++) {
 			squares[i] = new Rectangle2D.Double();
-			squares[i].height = SQUARE_SIZE;
-			squares[i].width = SQUARE_SIZE;
-			squares[i].x = i * SQUARE_SIZE;
+			squares[i].height = K.SQUARE_SIZE;
+			squares[i].width = K.SQUARE_SIZE;
+			squares[i].x = i * K.SQUARE_SIZE;
 			squares[i].y = 0;
 		}
 
