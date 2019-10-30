@@ -1,5 +1,8 @@
 package gui.shipSelection;
 
+import java.awt.Font;
+
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import gui.ships.*;
@@ -9,11 +12,12 @@ public class JP_ShipOptions extends JPanel{
 	private final int SQUARE_SIZE = 31;
 	private final int OFFSET_X = 70;
 	private final int OFFSET_Y = 100;
+	private final int LABEL_OFFSET_X = 250;
 
 	private final int BATTLESHIP_SIZE = 5; 
 	private final int CRUISER_SIZE = 4; 
-	private final int DESTROYER_SIZE = 3; 
-	private final int SUBMARINE_SIZE = 2;
+	private final int DESTROYER_SIZE = 2; 
+	private final int SUBMARINE_SIZE = 1;
 
 	private final int BATTLESHIP_COUNT = 1;
 	private final int CRUISER_COUNT = 2;
@@ -41,32 +45,56 @@ public class JP_ShipOptions extends JPanel{
 	}
 
 	public void addBattleships() {
-		for(int i = 0; i < BATTLESHIP_COUNT; i++){
-			int battleshipSize = BATTLESHIP_SIZE*SQUARE_SIZE;
-			Battleship battleship = new Battleship(OFFSET_X + (battleshipSize * i), OFFSET_Y*BATTLESHIP_COUNT);
-			add(battleship);
-		}
+
+		int battleshipSize = BATTLESHIP_SIZE*SQUARE_SIZE;
+		Battleship battleship = new Battleship(OFFSET_X, OFFSET_Y*BATTLESHIP_COUNT);
+		
+		JLabel battleshipCount = new JLabel( "x" + Integer.toString(BATTLESHIP_COUNT) );
+		battleshipCount.setFont(new Font("SansSerif", Font.PLAIN, 13));
+		battleshipCount.setBounds(LABEL_OFFSET_X, OFFSET_Y*BATTLESHIP_COUNT+8, 30, 15);
+		
+		add(battleship);
+		add(battleshipCount);
+		
 	}
 	public void addCruisers() {
-		for(int i = 0; i < CRUISER_COUNT; i++){
-			int cruiserSize = CRUISER_SIZE*SQUARE_SIZE + SQUARE_SIZE;
-			Cruiser cruiser = new Cruiser(OFFSET_X + (cruiserSize * i), OFFSET_Y*CRUISER_COUNT);
-			add(cruiser);
-		}
+		
+		int cruiserSize = CRUISER_SIZE*SQUARE_SIZE;
+		Cruiser cruiser = new Cruiser(OFFSET_X, OFFSET_Y*CRUISER_COUNT);
+		
+		JLabel cruiserCount = new JLabel( "x" + Integer.toString(CRUISER_COUNT) );
+		cruiserCount.setFont(new Font("SansSerif", Font.PLAIN, 13));
+		cruiserCount.setBounds(LABEL_OFFSET_X, OFFSET_Y*CRUISER_COUNT+8, 30, 15);
+		
+		add(cruiser);
+		add(cruiserCount);
+		
 	}
 	public void addDestroyers() {
-		for(int i = 0; i < DESTROYER_COUNT; i++){
-			int destroyerSize = DESTROYER_SIZE*SQUARE_SIZE;
-			Destroyer destroyer = new Destroyer(OFFSET_X + (destroyerSize * i), OFFSET_Y*DESTROYER_COUNT);
-			add(destroyer);
-		}
+		
+		int destroyerSize = DESTROYER_SIZE*SQUARE_SIZE;
+		Destroyer destroyer = new Destroyer(OFFSET_X, OFFSET_Y*DESTROYER_COUNT);
+		
+		JLabel destroyerCount = new JLabel( "x" + Integer.toString(DESTROYER_COUNT) );
+		destroyerCount.setFont(new Font("SansSerif", Font.PLAIN, 13));
+		destroyerCount.setBounds(LABEL_OFFSET_X, OFFSET_Y*DESTROYER_COUNT+8, 30, 15);
+		
+		add(destroyer);
+		add(destroyerCount);
+		
 	}
 	public void addSubmarines() {
-		for(int i = 0; i < SUBMARINE_COUNT; i++){
-			int submarineSize = SUBMARINE_SIZE*SQUARE_SIZE;
-			Submarine submarine = new Submarine(OFFSET_X + (submarineSize * i), OFFSET_Y*SUBMARINE_COUNT);
-			add(submarine);
-		}
+		
+		int submarineSize = SUBMARINE_SIZE*SQUARE_SIZE;
+		Submarine submarine = new Submarine(OFFSET_X, OFFSET_Y*SUBMARINE_COUNT);
+		
+		JLabel submarineCount = new JLabel( "x" + Integer.toString(SUBMARINE_COUNT) );
+		submarineCount.setFont(new Font("SansSerif", Font.PLAIN, 13));
+		submarineCount.setBounds(LABEL_OFFSET_X, OFFSET_Y*SUBMARINE_COUNT+8, 30, 15);
+		
+		add(submarine);
+		add(submarineCount);
+		
 	}
 
 }

@@ -14,6 +14,8 @@ public abstract class Ship extends JComponent implements MouseListener {
 
 	protected final int SQUARE_SIZE = 31;
 	private Rectangle2D.Double squares[];
+	
+	private Color shipColor;
 
 	public void paintSquares(int squareNumbers) {
 
@@ -27,6 +29,8 @@ public abstract class Ship extends JComponent implements MouseListener {
 			squares[i].y = 0;
 		}
 
+		setColor(getOriginalColor());
+		
 		addMouseListener(this);
 
 		repaint();
@@ -42,23 +46,36 @@ public abstract class Ship extends JComponent implements MouseListener {
         for(int i = 0; i < squares.length; i++) {
         	g2d.setColor(getColor());
 			g2d.fill(squares[i]);
-			g2d.setColor(Color.BLACK);
+			g2d.setColor(getColor().darker());
 			g2d.draw(squares[i]);
 		}
 	}
-
+	
+	public void setColor(Color color) {
+		shipColor = color;
+	}
+	
 	public Color getColor() {
+		return shipColor;
+	}
+	
+	public Color getOriginalColor() {
 		switch(squares.length) {
-			case 1: return Color.GREEN;
-			case 2: return Color.YELLOW;
-			case 4: return Color.ORANGE;
-			case 5: return Color.RED;
+			case 1: return new Color( 106, 221, 221 ); //Cyan
+			case 2: return new Color( 57, 170, 99 ); //Green
+			case 4: return new Color( 34, 95, 167 ); //DarkBlue
+			case 5: return new Color( 253, 64, 117 ); //Pink
 		}
 		return Color.BLACK;
 	}
 
 	public void mouseEntered(MouseEvent e) {
 		System.out.println("Mouse IN");
+		
+		setColor(shipColor.darker());
+		
+		repaint();
+		
 	}
 
 	@Override
@@ -68,7 +85,11 @@ public abstract class Ship extends JComponent implements MouseListener {
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
+		System.out.println("Mouse OUT");
+		
+		setColor(getOriginalColor());
+		
+		repaint();
 
 	}
 
