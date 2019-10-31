@@ -32,6 +32,21 @@ public class JP_Board extends JPanel{
 		
 	}
 	
+<<<<<<< HEAD
+=======
+	public void paintComponent(Graphics g){
+		super.paintComponent(g);
+		Graphics2D g2d = (Graphics2D) g;
+		
+		g2d.setPaint(mainColor);
+		
+		g2d.setStroke(new BasicStroke(STROKE_WIDTH, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER ,10.0f));
+		
+		//g2d.draw(border);
+		
+	}
+	
+>>>>>>> branch 'master' of https://github.com/fredlacis/Batalha-Naval.git
 	public void addLabels() {
 		
 		int labelSpace = K.JPANEL_BORDER;
