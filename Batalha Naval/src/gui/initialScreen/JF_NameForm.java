@@ -21,6 +21,7 @@ import javax.swing.JTextArea;
 
 import gui.shipSelection.JF_ShipSelection;
 
+@SuppressWarnings("serial")
 public class JF_NameForm extends JFrame{
 	
 	final int LARG_DEFAULT = 230;
@@ -141,7 +142,7 @@ public class JF_NameForm extends JFrame{
             		
             	}
             	else {
-                	(new JF_ShipSelection(player1Txt.getText())).setVisible(true);
+                	(new JF_ShipSelection(/*player1Txt.getText()*/)).setVisible(true);
                 	
                 	m.setVisible(false);
                     

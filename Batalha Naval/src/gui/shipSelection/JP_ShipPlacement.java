@@ -1,23 +1,26 @@
 package gui.shipSelection;
 
-import java.awt.Color;
-import java.awt.GridBagLayout;
-
-import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
-import gui.board.JP_MouseBoard;
+import gui.board.JP_Board;
+import main.K;
 
+@SuppressWarnings("serial")
 public class JP_ShipPlacement extends JPanel{
+	
+	JP_Board board = new JP_Board();
 
 	public JP_ShipPlacement() {
 
-		setBounds(1024/3, 0, 1024-(1024/3), 618);
+		setBounds(K.LARG_DEFAULT/3, 0, K.LARG_DEFAULT-(K.LARG_DEFAULT/3), K.ALT_DEFAULT - 150);
 		setLayout(null);
-		//setBackground(Color.GREEN);
 		setOpaque(false);
 		
-		add(new JP_MouseBoard());
+		
+		
+		board.setBounds((this.getBounds().width - board.BOARD_SIZE)/2, (this.getBounds().height - board.BOARD_SIZE)/2, board.BOARD_SIZE, board.BOARD_SIZE);
+		
+		add(board);
 		
 	}
 

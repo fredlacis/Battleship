@@ -3,7 +3,6 @@ package gui.ships;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.MouseInfo;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Rectangle2D;
@@ -12,9 +11,10 @@ import javax.swing.JComponent;
 
 import main.K;
 
+@SuppressWarnings("serial")
 public abstract class Ship extends JComponent implements MouseListener {
 
-	private Rectangle2D.Double squares[];
+	protected Rectangle2D.Double squares[];
 	
 	private Color shipColor;
 
@@ -64,6 +64,7 @@ public abstract class Ship extends JComponent implements MouseListener {
 		switch(squares.length) {
 			case 1: return new Color( 106, 221, 221 ); //Cyan
 			case 2: return new Color( 57, 170, 99 ); //Green
+			case 3: return new Color( 235, 235, 52 ); //Yellow
 			case 4: return new Color( 34, 95, 167 ); //DarkBlue
 			case 5: return new Color( 253, 64, 117 ); //Pink
 		}
