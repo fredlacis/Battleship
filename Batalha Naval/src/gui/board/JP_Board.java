@@ -51,9 +51,9 @@ public class JP_Board extends JPanel{
 		
 		g2d.setPaint(mainColor);
 		
-		g2d.setStroke(new BasicStroke(STROKE_WIDTH ,BasicStroke.CAP_BUTT ,BasicStroke.JOIN_MITER ,10.0f));
+		g2d.setStroke(new BasicStroke(STROKE_WIDTH, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER ,10.0f));
 		
-		g2d.draw(border);
+		//g2d.draw(border);
 		
 	}
 	
