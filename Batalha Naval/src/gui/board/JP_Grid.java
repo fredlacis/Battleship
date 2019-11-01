@@ -11,9 +11,10 @@ import rules.designPatterns.Facade;
 
 public class JP_Grid extends JPanel{
 	
-	private Cell grid[][] = new Cell[K.SQUARE_COUNT][K.SQUARE_COUNT];	
-	private Cell gridWithNoCurrentCells[][];
-			
+	private Cell grid[][] = new Cell[K.SQUARE_COUNT][K.SQUARE_COUNT];
+	
+	private int[][] currentCellsToPaint;
+	
 	static JP_Grid g = null;
 	
 	public static JP_Grid getGrid() {
@@ -49,7 +50,6 @@ public class JP_Grid extends JPanel{
 	public void paintCells(int x, int y, boolean isValid, int cellsToPaint[][]) {
 		
 		Cell cell;
-		gridWithNoCurrentCells = K.cloneCellGrid(grid);
 		
 		for(int i = 0; i < K.SQUARE_COUNT; i++)
 		{
@@ -68,24 +68,42 @@ public class JP_Grid extends JPanel{
 				}
 			}
 		}
+		
+		currentCellsToPaint = cellsToPaint;
 	}
 	
-	public void unpaintCurrentCells() {
+	public void unpaintCells(int x, int y) {
 		
-		if(gridWithNoCurrentCells == null) return;
+		Cell cell;
+		if(currentCellsToPaint == null) return;
 		
-		grid = gridWithNoCurrentCells;
-		
-		repaintCells();
-	}
-	
-	public void repaintCells() {
-				
 		for(int i = 0; i < K.SQUARE_COUNT; i++)
 		{
 			for(int j = 0; j < K.SQUARE_COUNT; j++)
 			{
-				grid[j][i].repaint();
+				if(currentCellsToPaint[j][i] != 0) {
+					cell = grid[j][i];
+					cell.setColor(cell.getOriginalColor());
+					cell.repaint();
+				}
+			}
+		}
+	}
+	
+	public void repaint() {
+		
+		Cell cell;
+		if(currentCellsToPaint == null) return;
+		
+		for(int i = 0; i < K.SQUARE_COUNT; i++)
+		{
+			for(int j = 0; j < K.SQUARE_COUNT; j++)
+			{
+				if(currentCellsToPaint[j][i] != 0) {
+					cell = grid[j][i];
+					cell.setColor(cell.getOriginalColor());
+					cell.repaint();
+				}
 			}
 		}
 	}

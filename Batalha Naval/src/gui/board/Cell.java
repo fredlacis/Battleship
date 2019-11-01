@@ -91,7 +91,7 @@ public class Cell extends JPanel implements MouseListener{
 		selectedShip.rotate();
 		Facade.getFacade().checkPos(x/K.SQUARE_SIZE, y/K.SQUARE_SIZE);
 		
-		JP_Grid.getGrid().repaintCells();
+		JP_Grid.getGrid().repaint();
 	}
 
 	@Override
@@ -136,7 +136,7 @@ public class Cell extends JPanel implements MouseListener{
 		
 		//System.out.printf("Mouse Exited Cell (%d, %d)\n", x/K.SQUARE_SIZE, y/K.SQUARE_SIZE);
 		
-		JP_Grid.getGrid().unpaintCurrentCells();
+		JP_Grid.getGrid().unpaintCells(x, y);
 		
 		setColor(getOriginalColor());
 		
