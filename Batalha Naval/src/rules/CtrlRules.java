@@ -1,9 +1,12 @@
 package rules;
 
+import java.awt.geom.Rectangle2D;
 import java.util.*;
 
+import gui.board.Cell;
 import gui.ships.Ship;
 import main.K;
+import main.K.ORIENTATION;
 import rules.designPatterns.IObservable;
 import rules.designPatterns.IObserver;
 
@@ -32,10 +35,9 @@ public class CtrlRules implements IObservable{
         public int getValue() { return value; }
 	}
 	
-	private String jogador1;
-	private int tabuleiro1[][];
+	private int jogadorAtual;
 	
-	private String jogador2;
+	private int tabuleiro1[][];
 	private int tabuleiro2[][];
 	
 	private int turn;
@@ -58,6 +60,7 @@ public class CtrlRules implements IObservable{
 				tabuleiro2[i][j]=0;	
 			}
 		}
+		setJogadorAtual(1);
 	}
 	
 	public void cellClicked(int i,int j) {
@@ -72,20 +75,8 @@ public class CtrlRules implements IObservable{
 		return 0;
 	}
 	
-	public String getJogador1() {
-		return jogador1;
-	}
-
-	public void setJogador1(String jogador1) {
-		this.jogador1 = jogador1;
-	}
-
-	public String getJogador2() {
-		return jogador2;
-	}
-
-	public void setJogador2(String jogador2) {
-		this.jogador2 = jogador2;
+	public void setJogadorAtual(int jogador) {
+		this.jogadorAtual = jogador;
 	}
 
 	public int[][] getTabuleiro(int jogador) {
@@ -122,9 +113,10 @@ public class CtrlRules implements IObservable{
 			return;
 		}
 		
-		if(checkPos(x, y)) {
+		if(checkPos(x, y) != null) {
 			System.out.println("Posição válida. Posicionar Navio.");
 		}
+		
 		System.out.println("Posição inválida.");
 	}
 	
@@ -132,10 +124,82 @@ public class CtrlRules implements IObservable{
 		return selectedShip;
     }
 	
-	public boolean checkPos(int x, int y) {
-		String shipType = selectedShip.getClass().getName();
-		System.out.println(shipType);
-		return false;
+	private Object[] checkPosShip(int x, int y){
+		
+		Object[] pair = new Object[2];
+		int tabuleiroAtual[][] = getTabuleiro(jogadorAtual);
+		
+		int cellsToPaint[][] = K.cloneGrid(tabuleiroAtual);
+		boolean validPos = true;
+		
+		if(selectedShip.orientation == ORIENTATION.TOP) {
+			for(int i = selectedShip.shipSize-1; i >= 0; i--) {
+				try {
+					if(cellsToPaint[x][y-i] != 0) validPos = false;
+					cellsToPaint[x][y-i] = selectedShip.shipSize;
+				}
+				catch(Exception e) {
+					validPos = false;
+				}
+			}
+		}
+		if(selectedShip.orientation == ORIENTATION.RIGHT) {
+			for(int i = 0; i < selectedShip.shipSize; i++) {
+				try {
+					if(cellsToPaint[x+i][y] != 0) validPos = false;
+					cellsToPaint[x+i][y] = selectedShip.shipSize;
+				}
+				catch(Exception e) {
+					validPos = false;
+				}
+			}
+		}
+		if(selectedShip.orientation == ORIENTATION.DOWN) {
+			for(int i = 0; i < selectedShip.shipSize; i++) {
+				try {
+					if(cellsToPaint[x][y+i] != 0) validPos = false;
+					cellsToPaint[x][y+i] = selectedShip.shipSize;
+				}
+				catch(Exception e) {
+					validPos = false;
+				}
+			}
+		}
+		if(selectedShip.orientation == ORIENTATION.LEFT) {
+			for(int i = selectedShip.shipSize-1; i >= 0; i--) {
+				try {
+					if(cellsToPaint[x-i][y] != 0) validPos = false;
+					cellsToPaint[x-i][y] = selectedShip.shipSize;
+				}
+				catch(Exception e) {
+					validPos = false;
+				}
+			}
+		}
+		
+		pair[0] = validPos;
+		pair[1] = cellsToPaint;
+		return pair;
+	}
+	
+	private Object[] checkPosSeaplane(int x, int y){
+		return null;
+	}
+	
+	
+	public Object[] checkPos(int x, int y) {
+		
+		if(selectedShip == null) {
+			System.out.println("Selecione um navio.");
+			return null;
+		}
+		
+		System.out.printf("Positioning ship from position X: %d Y: %d\n", x, y);
+		
+		if(selectedShip.getClass().getName() == "gui.ships.Seaplane") {
+			return checkPosSeaplane(x, y);
+		}
+		return checkPosShip(x, y);
 	}
 
 	@Override

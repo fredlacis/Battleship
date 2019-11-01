@@ -9,7 +9,9 @@ import java.awt.event.MouseListener;
 import java.awt.geom.Rectangle2D;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
+import gui.ships.Ship;
 import main.K;
 import rules.designPatterns.Facade;
 
@@ -19,10 +21,10 @@ public class Cell extends JPanel implements MouseListener{
 	private int x;
 	private int y;
 	
-	private Rectangle2D.Double square = new Rectangle2D.Double(0, 0, K.SQUARE_SIZE, K.SQUARE_SIZE);
+	private Rectangle2D.Double square;
 	
-	private Color cellColor = new Color(150,150,150);
-	private Color borderColor = new Color(250,250,250);
+	private Color cellColor;
+	private Color borderColor;
 	
 	public Cell(int x, int y) {
 		
@@ -32,8 +34,22 @@ public class Cell extends JPanel implements MouseListener{
 		setBounds(x, y, K.SQUARE_SIZE, K.SQUARE_SIZE);
 		setOpaque(false);
 		
+		cellColor = new Color(150,150,150);
+		borderColor = new Color(250,250,250);
+		square = new Rectangle2D.Double(0, 0, K.SQUARE_SIZE, K.SQUARE_SIZE);
+		
 		addMouseListener(this);
 		
+	}
+	
+	public Cell cloneCell() {
+		Cell clonedCell = new Cell(x, y);
+		
+		clonedCell.cellColor = cellColor;
+		clonedCell.borderColor = borderColor;
+		clonedCell.square = square;
+				
+		return clonedCell;
 	}
 	
 	public void paintComponent(Graphics g){
@@ -51,14 +67,31 @@ public class Cell extends JPanel implements MouseListener{
 		
 	}
 	
+	public Color getOriginalColor() {
+		return new Color(150,150,150);
+	}
+	
 	public void setColor(Color color) {
 		cellColor = color;
+		repaint();
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
-		Facade.getFacade().positionShip(x/K.SQUARE_SIZE, y/K.SQUARE_SIZE);
+		
+		if(!SwingUtilities.isRightMouseButton(e)) {
+			Facade.getFacade().positionShip(x/K.SQUARE_SIZE, y/K.SQUARE_SIZE);
+			return;
+		}
+		
+		Ship selectedShip = Facade.getFacade().selectedShip();
+		if(selectedShip == null) return;
+		
+		selectedShip.rotate();
+		Facade.getFacade().checkPos(x/K.SQUARE_SIZE, y/K.SQUARE_SIZE);
+		
+		JP_Grid.getGrid().repaintCells();
 	}
 
 	@Override
@@ -78,11 +111,24 @@ public class Cell extends JPanel implements MouseListener{
 		
 		//System.out.printf("Mouse Entered Cell (%d, %d)\n", x/K.SQUARE_SIZE, y/K.SQUARE_SIZE);
 		
-		setColor(cellColor.darker());
+		Object[] pair = new Object[2];
+		boolean isValid;
+		int cellsToPaint[][];
+		
+		pair = Facade.getFacade().checkPos(x/K.SQUARE_SIZE, y/K.SQUARE_SIZE);
+		
+		if(pair == null) {
+			setColor(cellColor.darker());
+			repaint();
+			return;
+		}
+		
+		isValid = (boolean)pair[0];
+		cellsToPaint = (int[][])pair[1];
+		
+		JP_Grid.getGrid().paintCells(x/K.SQUARE_SIZE, y/K.SQUARE_SIZE, isValid, cellsToPaint);
 		
 		repaint();
-		
-		
 	}
 
 	@Override
@@ -90,7 +136,9 @@ public class Cell extends JPanel implements MouseListener{
 		
 		//System.out.printf("Mouse Exited Cell (%d, %d)\n", x/K.SQUARE_SIZE, y/K.SQUARE_SIZE);
 		
-		setColor(cellColor.brighter());
+		JP_Grid.getGrid().unpaintCurrentCells();
+		
+		setColor(getOriginalColor());
 		
 		repaint();
 		

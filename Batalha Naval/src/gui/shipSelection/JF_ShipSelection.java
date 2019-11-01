@@ -5,8 +5,11 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 import gui.JP_Utilities;
 import gui.ships.Ship;
@@ -14,7 +17,7 @@ import main.K;
 import rules.designPatterns.Facade;
 
 @SuppressWarnings("serial")
-public class JF_ShipSelection extends JFrame implements KeyListener{
+public class JF_ShipSelection extends JFrame implements KeyListener, MouseListener{
 
 	public JF_ShipSelection() {
 		Toolkit tk = Toolkit.getDefaultToolkit();
@@ -34,6 +37,7 @@ public class JF_ShipSelection extends JFrame implements KeyListener{
 		getContentPane().add(new JP_Utilities());
 		
 		addKeyListener(this);
+		addMouseListener(this);
 	}
 	
 	@Override
@@ -62,6 +66,37 @@ public class JF_ShipSelection extends JFrame implements KeyListener{
 			
 			Facade.getFacade().unsetSelectedShip();
 		}
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		if(!SwingUtilities.isRightMouseButton(e)) return;
+		
+		Ship selectedShip = Facade.getFacade().selectedShip();
+		if(selectedShip == null) return;
+		
+		selectedShip.rotate();
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

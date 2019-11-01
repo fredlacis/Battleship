@@ -9,7 +9,9 @@ import java.awt.geom.Rectangle2D;
 
 import javax.swing.JComponent;
 
+import gui.board.JP_Grid;
 import main.K;
+import main.K.ORIENTATION;
 import rules.designPatterns.Facade;
 
 @SuppressWarnings("serial")
@@ -19,6 +21,9 @@ public abstract class Ship extends JComponent implements MouseListener {
 	
 	private Color shipColor;
 	private Color shipBorderColor;
+	
+	public int shipSize;
+	public ORIENTATION orientation = ORIENTATION.RIGHT;
 
 	public void paintSquares(int squareNumbers) {
 
@@ -31,10 +36,12 @@ public abstract class Ship extends JComponent implements MouseListener {
 			squares[i].x = i * K.SQUARE_SIZE;
 			squares[i].y = 0;
 		}
-
+		
+		shipSize = squares.length;
+		
 		setColor(getOriginalColor());
 		setBorderColor(getOriginalColor().darker());
-		
+				
 		addMouseListener(this);
 
 		repaint();
@@ -82,9 +89,15 @@ public abstract class Ship extends JComponent implements MouseListener {
 		}
 		return Color.BLACK;
 	}
+	
+	public void rotate() {
+		Ship selectedShip = Facade.getFacade().selectedShip();
+				
+		orientation = orientation.next();
+		System.out.printf("Rotating ship %s to position: %s\n", selectedShip.getClass().getName(), orientation.name());
+	}
 
 	public void mouseEntered(MouseEvent e) {
-		//System.out.println("Mouse IN Ship");
 		Ship selectedShip = Facade.getFacade().selectedShip();
 		if(selectedShip != null && selectedShip == this) {
 			return;
@@ -105,6 +118,8 @@ public abstract class Ship extends JComponent implements MouseListener {
 			selectedShip.setColor(selectedShip.getOriginalColor());
 			selectedShip.setBorderColor(selectedShip.getOriginalColor().darker());
 			selectedShip.repaint();
+			selectedShip.orientation = ORIENTATION.TOP;
+			Facade.getFacade().unsetSelectedShip();
 		}
 		
 		Facade.getFacade().setSelectedShip(this);

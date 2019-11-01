@@ -37,6 +37,10 @@ public class Facade {
     public Ship selectedShip() {
     	return ctrl.selectedShip();
     }
+    
+    public Object[] checkPos(int x, int y) {
+		return ctrl.checkPos(x, y);
+	}
 //    
 //    public void novoJogo() {
 //        ctrl.novoJogo();
