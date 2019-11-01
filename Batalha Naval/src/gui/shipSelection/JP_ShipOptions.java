@@ -97,11 +97,11 @@ public class JP_ShipOptions extends JPanel{
 	}
 	public void addSeaplanes() {
 		
-		Seaplane seaplane= new Seaplane(OFFSET_X, OFFSET_Y*HYDROPLANE_POSITION);
+		Seaplane seaplane= new Seaplane(OFFSET_X, OFFSET_Y*HYDROPLANE_POSITION-25);
 		
 		JLabel seaplaneCount = new JLabel( "x" + Integer.toString(HYDROPLANE_COUNT) );
 		seaplaneCount.setFont(new Font("SansSerif", Font.PLAIN, 13));
-		seaplaneCount.setBounds(LABEL_OFFSET_X, OFFSET_Y*HYDROPLANE_POSITION+20, 30, 15);
+		seaplaneCount.setBounds(LABEL_OFFSET_X, OFFSET_Y*HYDROPLANE_POSITION+8, 30, 15);
 		
 		add(seaplane);
 		add(seaplaneCount);

@@ -72,7 +72,7 @@ public abstract class Ship extends JComponent implements MouseListener {
 	}
 
 	public void mouseEntered(MouseEvent e) {
-		System.out.println("Mouse IN");
+		//System.out.println("Mouse IN Ship");
 		
 		setColor(shipColor.darker());
 		
@@ -82,12 +82,12 @@ public abstract class Ship extends JComponent implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		System.out.println("Mouse CLICK");
+		//System.out.println("Mouse CLICK Ship");
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		System.out.println("Mouse OUT");
+		//System.out.println("Mouse OUT Ship");
 		
 		setColor(getOriginalColor());
 		

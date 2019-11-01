@@ -16,6 +16,10 @@ public class Facade {
         
         return f;    
     }
+    
+    public void cellClicked(int i,int j) {
+    	ctrl.cellClicked(i, j);
+    }
 //    
 //    public void novoJogo() {
 //        ctrl.novoJogo();
@@ -33,7 +37,7 @@ public class Facade {
 //        return ctrl.testaResultado();
 //    }
 //    
-//    public void register(Observer o) {
-//        ctrl.addObserver(o);
-//    }
+    public void register(IObserver o) {
+        ctrl.addObserver(o);
+    }
 }
