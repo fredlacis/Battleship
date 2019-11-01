@@ -10,6 +10,7 @@ import java.awt.geom.Rectangle2D;
 import javax.swing.JComponent;
 
 import main.K;
+import rules.designPatterns.Facade;
 
 @SuppressWarnings("serial")
 public abstract class Ship extends JComponent implements MouseListener {
@@ -17,6 +18,7 @@ public abstract class Ship extends JComponent implements MouseListener {
 	protected Rectangle2D.Double squares[];
 	
 	private Color shipColor;
+	private Color shipBorderColor;
 
 	public void paintSquares(int squareNumbers) {
 
@@ -31,6 +33,7 @@ public abstract class Ship extends JComponent implements MouseListener {
 		}
 
 		setColor(getOriginalColor());
+		setBorderColor(getOriginalColor().darker());
 		
 		addMouseListener(this);
 
@@ -47,7 +50,7 @@ public abstract class Ship extends JComponent implements MouseListener {
         for(int i = 0; i < squares.length; i++) {
         	g2d.setColor(getColor());
 			g2d.fill(squares[i]);
-			g2d.setColor(getColor().darker());
+			g2d.setColor(getBorderColor());
 			g2d.draw(squares[i]);
 		}
 	}
@@ -56,9 +59,18 @@ public abstract class Ship extends JComponent implements MouseListener {
 		shipColor = color;
 	}
 	
+	public void setBorderColor(Color color) {
+		shipBorderColor = color;
+	}
+	
 	public Color getColor() {
 		return shipColor;
 	}
+	
+	public Color getBorderColor() {
+		return shipBorderColor;
+	}
+
 	
 	public Color getOriginalColor() {
 		switch(squares.length) {
@@ -73,38 +85,58 @@ public abstract class Ship extends JComponent implements MouseListener {
 
 	public void mouseEntered(MouseEvent e) {
 		//System.out.println("Mouse IN Ship");
+		Ship selectedShip = Facade.getFacade().selectedShip();
+		if(selectedShip != null && selectedShip == this) {
+			return;
+		}
 		
 		setColor(shipColor.darker());
+		setColor(shipBorderColor.darker());
 		
 		repaint();
-		
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		//System.out.println("Mouse CLICK Ship");
+		
+		Ship selectedShip = Facade.getFacade().selectedShip();
+		
+		if(selectedShip != null) {
+			selectedShip.setColor(selectedShip.getOriginalColor());
+			selectedShip.setBorderColor(selectedShip.getOriginalColor().darker());
+			selectedShip.repaint();
+		}
+		
+		Facade.getFacade().setSelectedShip(this);
+		
+		setColor(Color.GREEN);
+		setBorderColor(Color.GREEN.darker());
+		
+		repaint();
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		//System.out.println("Mouse OUT Ship");
+		Ship selectedShip = Facade.getFacade().selectedShip();
+		
+		if(selectedShip != null && selectedShip == this) {
+			return;
+		}
 		
 		setColor(getOriginalColor());
+		setBorderColor(shipColor.darker());
 		
 		repaint();
-
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
-
 	}
 
 }

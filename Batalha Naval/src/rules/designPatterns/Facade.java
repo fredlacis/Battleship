@@ -1,5 +1,6 @@
 package rules.designPatterns;
 
+import gui.ships.Ship;
 import rules.CtrlRules;
 
 public class Facade {
@@ -10,7 +11,7 @@ public class Facade {
         ctrl=new CtrlRules();
     }
     
-    public static Facade getFachada() {
+    public static Facade getFacade() {
         if(f==null)
             f=new Facade();
         
@@ -19,6 +20,22 @@ public class Facade {
     
     public void cellClicked(int i,int j) {
     	ctrl.cellClicked(i, j);
+    }
+    
+    public void setSelectedShip(Ship ship) {
+    	ctrl.setSelectedShip(ship);
+    }
+    
+    public void unsetSelectedShip() {
+    	ctrl.unsetSelectedShip();
+    }
+    
+    public void positionShip(int x, int y) {
+		ctrl.positionShip(x, y);
+	}
+    
+    public Ship selectedShip() {
+    	return ctrl.selectedShip();
     }
 //    
 //    public void novoJogo() {

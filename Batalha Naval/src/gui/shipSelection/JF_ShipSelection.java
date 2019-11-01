@@ -3,13 +3,18 @@ package gui.shipSelection;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
 import javax.swing.JFrame;
 
 import gui.JP_Utilities;
+import gui.ships.Ship;
 import main.K;
+import rules.designPatterns.Facade;
 
 @SuppressWarnings("serial")
-public class JF_ShipSelection extends JFrame{
+public class JF_ShipSelection extends JFrame implements KeyListener{
 
 	public JF_ShipSelection() {
 		Toolkit tk = Toolkit.getDefaultToolkit();
@@ -27,7 +32,36 @@ public class JF_ShipSelection extends JFrame{
 		getContentPane().add(new JP_ShipOptions());
 		getContentPane().add(new JP_ShipPlacement());
 		getContentPane().add(new JP_Utilities());
+		
+		addKeyListener(this);
+	}
+	
+	@Override
+	public void keyPressed(KeyEvent k) {
+		// TODO Auto-generated method stub
+	}
 
+	@Override
+	public void keyReleased(KeyEvent k) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void keyTyped(KeyEvent k) {
+		int VK_ESCAPE = 27;
+		
+		if((int)k.getKeyChar() == VK_ESCAPE) {
+			
+			Ship selectedShip = Facade.getFacade().selectedShip();
+			
+			if(selectedShip == null) return;
+			
+			selectedShip.setColor(selectedShip.getOriginalColor());
+			selectedShip.setBorderColor(selectedShip.getOriginalColor().darker());
+			selectedShip.repaint();
+			
+			Facade.getFacade().unsetSelectedShip();
+		}
 	}
 
 }

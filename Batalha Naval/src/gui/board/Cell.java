@@ -11,6 +11,7 @@ import java.awt.geom.Rectangle2D;
 import javax.swing.JPanel;
 
 import main.K;
+import rules.designPatterns.Facade;
 
 @SuppressWarnings("serial")
 public class Cell extends JPanel implements MouseListener{
@@ -57,7 +58,7 @@ public class Cell extends JPanel implements MouseListener{
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+		Facade.getFacade().positionShip(x/K.SQUARE_SIZE, y/K.SQUARE_SIZE);
 	}
 
 	@Override
@@ -75,7 +76,7 @@ public class Cell extends JPanel implements MouseListener{
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		
-		System.out.printf("Mouse Entered Cell (%d, %d)\n", x/K.SQUARE_SIZE, y/K.SQUARE_SIZE);
+		//System.out.printf("Mouse Entered Cell (%d, %d)\n", x/K.SQUARE_SIZE, y/K.SQUARE_SIZE);
 		
 		setColor(cellColor.darker());
 		
@@ -87,7 +88,7 @@ public class Cell extends JPanel implements MouseListener{
 	@Override
 	public void mouseExited(MouseEvent e) {
 		
-		System.out.printf("Mouse Exited Cell (%d, %d)\n", x/K.SQUARE_SIZE, y/K.SQUARE_SIZE);
+		//System.out.printf("Mouse Exited Cell (%d, %d)\n", x/K.SQUARE_SIZE, y/K.SQUARE_SIZE);
 		
 		setColor(cellColor.brighter());
 		

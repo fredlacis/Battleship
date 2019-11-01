@@ -9,10 +9,11 @@ import javax.swing.JPanel;
 
 import main.K;
 import rules.*;
+import rules.designPatterns.Facade;
 
 @SuppressWarnings("serial")
-public class JF_InitialFrame extends JFrame {
-	
+public class JF_InitialFrame extends JFrame{
+
 	public JF_InitialFrame(/*CtrlRules c*/) {
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		Dimension screenSize = tk.getScreenSize();

@@ -2,12 +2,13 @@ package rules;
 
 import java.util.*;
 
+import gui.ships.Ship;
 import main.K;
 import rules.designPatterns.IObservable;
 import rules.designPatterns.IObserver;
 
 public class CtrlRules implements IObservable{
-	
+		
 	enum Ships{
 		//NAME    -> Alive cell of ship
 		//D_NAME  -> Destroyed cell of ship
@@ -38,6 +39,8 @@ public class CtrlRules implements IObservable{
 	private int tabuleiro2[][];
 	
 	private int turn;
+	
+	private Ship selectedShip;
 	
 	List<IObserver> lob = new ArrayList<IObserver>();
 	
@@ -77,7 +80,6 @@ public class CtrlRules implements IObservable{
 		this.jogador1 = jogador1;
 	}
 
-
 	public String getJogador2() {
 		return jogador2;
 	}
@@ -98,10 +100,42 @@ public class CtrlRules implements IObservable{
 		return turn;
 	}
 
-
-
 	public void setTurn(int vez) {
 		this.turn = vez;
+	}
+	
+	public void setSelectedShip(Ship ship) {
+		selectedShip = ship;
+		String shipType = selectedShip.getClass().getName();
+		System.out.printf("Selecionando navio: %s\n", shipType);
+    }
+	
+	public void unsetSelectedShip() {
+		String shipType = selectedShip.getClass().getName();
+		System.out.printf("Deselecionando navio: %s\n", shipType);
+    	selectedShip = null;
+    }
+	
+	public void positionShip(int x, int y) {
+		if(selectedShip == null) {
+			System.out.println("Selecione um navio.");
+			return;
+		}
+		
+		if(checkPos(x, y)) {
+			System.out.println("Posição válida. Posicionar Navio.");
+		}
+		System.out.println("Posição inválida.");
+	}
+	
+	public Ship selectedShip() {
+		return selectedShip;
+    }
+	
+	public boolean checkPos(int x, int y) {
+		String shipType = selectedShip.getClass().getName();
+		System.out.println(shipType);
+		return false;
 	}
 
 	@Override

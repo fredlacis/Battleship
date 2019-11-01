@@ -29,6 +29,7 @@ public class Seaplane extends Ship {
 		squares[2] = new Rectangle2D.Double(2*K.SQUARE_SIZE, K.SQUARE_SIZE, K.SQUARE_SIZE, K.SQUARE_SIZE);
 		
 		setColor(getOriginalColor());
+		setBorderColor(getOriginalColor().darker());
 		
 		addMouseListener(this);
 
