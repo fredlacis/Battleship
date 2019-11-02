@@ -9,10 +9,10 @@ import java.awt.geom.Rectangle2D;
 
 import javax.swing.JComponent;
 
-import gui.board.JP_Grid;
+import gui.board.JP_PositioningGrid;
 import main.K;
 import main.K.ORIENTATION;
-import rules.designPatterns.Facade;
+import rules.designPatterns.RulesFacade;
 
 @SuppressWarnings("serial")
 public abstract class Ship extends JComponent implements MouseListener {
@@ -23,7 +23,9 @@ public abstract class Ship extends JComponent implements MouseListener {
 	private Color shipBorderColor;
 	
 	public int shipSize;
-	public ORIENTATION orientation = ORIENTATION.RIGHT;
+	public ORIENTATION orientation;
+	
+	private boolean available = true;
 
 	public void paintSquares(int squareNumbers) {
 
@@ -36,8 +38,8 @@ public abstract class Ship extends JComponent implements MouseListener {
 			squares[i].x = i * K.SQUARE_SIZE;
 			squares[i].y = 0;
 		}
-		
-		shipSize = squares.length;
+				
+		shipSize = squareNumbers;
 		
 		setColor(getOriginalColor());
 		setBorderColor(getOriginalColor().darker());
@@ -90,16 +92,60 @@ public abstract class Ship extends JComponent implements MouseListener {
 		return Color.BLACK;
 	}
 	
-	public void rotate() {
-		Ship selectedShip = Facade.getFacade().selectedShip();
+	public void rotate() {		
+		Ship selectedShip = RulesFacade.getRules().selectedShip();
 				
 		orientation = orientation.next();
 		System.out.printf("Rotating ship %s to position: %s\n", selectedShip.getClass().getName(), orientation.name());
 	}
+	
+	public boolean getAvailability() {
+		return available;
+	}
+	
+	public void setAvailable() {
+		available = true;
+		
+		setColor(getOriginalColor());
+		setBorderColor(getOriginalColor().darker());
+		repaint();
+	}
+	
+	public void setUnavailable() {
+		available = false;
+		
+		setColor(Color.GRAY);
+		setBorderColor(Color.GRAY.darker());
+		repaint();
+		
+		repaint();
+	}
+	
+	private void unselectPreviousShip() {
+		Ship selectedShip = RulesFacade.getRules().selectedShip();
+		
+		if(selectedShip != null) {
+			if(!selectedShip.available) {
+				selectedShip.setColor(Color.GRAY);
+				selectedShip.setBorderColor(Color.GRAY.darker());
+				return;
+			}
+			
+			selectedShip.setColor(selectedShip.getOriginalColor());
+			selectedShip.setBorderColor(selectedShip.getOriginalColor().darker());
+			selectedShip.repaint();
+			selectedShip.orientation = ORIENTATION.RIGHT;
+			RulesFacade.getRules().unsetSelectedShip();
+		}
+	}
 
 	public void mouseEntered(MouseEvent e) {
-		Ship selectedShip = Facade.getFacade().selectedShip();
+		Ship selectedShip = RulesFacade.getRules().selectedShip();
 		if(selectedShip != null && selectedShip == this) {
+			return;
+		}
+		
+		if(!available) {
 			return;
 		}
 		
@@ -112,17 +158,13 @@ public abstract class Ship extends JComponent implements MouseListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		
-		Ship selectedShip = Facade.getFacade().selectedShip();
-		
-		if(selectedShip != null) {
-			selectedShip.setColor(selectedShip.getOriginalColor());
-			selectedShip.setBorderColor(selectedShip.getOriginalColor().darker());
-			selectedShip.repaint();
-			selectedShip.orientation = ORIENTATION.TOP;
-			Facade.getFacade().unsetSelectedShip();
+		if(!available) {
+			return;
 		}
 		
-		Facade.getFacade().setSelectedShip(this);
+		unselectPreviousShip();
+		
+		RulesFacade.getRules().setSelectedShip(this);
 		
 		setColor(Color.GREEN);
 		setBorderColor(Color.GREEN.darker());
@@ -132,9 +174,13 @@ public abstract class Ship extends JComponent implements MouseListener {
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		Ship selectedShip = Facade.getFacade().selectedShip();
+		Ship selectedShip = RulesFacade.getRules().selectedShip();
 		
 		if(selectedShip != null && selectedShip == this) {
+			return;
+		}
+		
+		if(!available) {
 			return;
 		}
 		
@@ -146,7 +192,18 @@ public abstract class Ship extends JComponent implements MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
+		if(!available) {
+			return;
+		}
+		
+		unselectPreviousShip();
+		
+		RulesFacade.getRules().setSelectedShip(this);
+		
+		setColor(Color.GREEN);
+		setBorderColor(Color.GREEN.darker());
+		
+		repaint();
 	}
 
 	@Override

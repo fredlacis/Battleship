@@ -12,9 +12,10 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import gui.JP_Utilities;
+import gui.board.JP_PositioningGrid;
 import gui.ships.Ship;
 import main.K;
-import rules.designPatterns.Facade;
+import rules.designPatterns.RulesFacade;
 
 @SuppressWarnings("serial")
 public class JF_ShipSelection extends JFrame implements KeyListener, MouseListener{
@@ -32,7 +33,7 @@ public class JF_ShipSelection extends JFrame implements KeyListener, MouseListen
 		setLayout(null);
 		getContentPane().setBackground(new Color(250, 250, 250));
 
-		getContentPane().add(new JP_ShipOptions());
+		getContentPane().add(JP_ShipOptions.getShipOptions());
 		getContentPane().add(new JP_ShipPlacement());
 		getContentPane().add(new JP_Utilities());
 		
@@ -56,7 +57,7 @@ public class JF_ShipSelection extends JFrame implements KeyListener, MouseListen
 		
 		if((int)k.getKeyChar() == VK_ESCAPE) {
 			
-			Ship selectedShip = Facade.getFacade().selectedShip();
+			Ship selectedShip = RulesFacade.getRules().selectedShip();
 			
 			if(selectedShip == null) return;
 			
@@ -64,7 +65,11 @@ public class JF_ShipSelection extends JFrame implements KeyListener, MouseListen
 			selectedShip.setBorderColor(selectedShip.getOriginalColor().darker());
 			selectedShip.repaint();
 			
-			Facade.getFacade().unsetSelectedShip();
+			RulesFacade.getRules().unsetSelectedShip();
+		}
+		
+		if(k.getKeyChar() == 'r') {
+			RulesFacade.getRules().resetGrid();
 		}
 	}
 
@@ -72,7 +77,7 @@ public class JF_ShipSelection extends JFrame implements KeyListener, MouseListen
 	public void mouseClicked(MouseEvent e) {
 		if(!SwingUtilities.isRightMouseButton(e)) return;
 		
-		Ship selectedShip = Facade.getFacade().selectedShip();
+		Ship selectedShip = RulesFacade.getRules().selectedShip();
 		if(selectedShip == null) return;
 		
 		selectedShip.rotate();

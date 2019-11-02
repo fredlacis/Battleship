@@ -4,11 +4,15 @@ import java.awt.geom.Rectangle2D;
 import java.util.*;
 
 import gui.board.Cell;
+import gui.board.JP_Grid;
+import gui.board.JP_PositioningGrid;
+import gui.shipSelection.JP_ShipOptions;
 import gui.ships.Ship;
 import main.K;
 import main.K.ORIENTATION;
 import rules.designPatterns.IObservable;
 import rules.designPatterns.IObserver;
+import rules.designPatterns.RulesFacade;
 
 public class CtrlRules implements IObservable{
 		
@@ -98,12 +102,10 @@ public class CtrlRules implements IObservable{
 	public void setSelectedShip(Ship ship) {
 		selectedShip = ship;
 		String shipType = selectedShip.getClass().getName();
-		System.out.printf("Selecionando navio: %s\n", shipType);
     }
 	
 	public void unsetSelectedShip() {
 		String shipType = selectedShip.getClass().getName();
-		System.out.printf("Deselecionando navio: %s\n", shipType);
     	selectedShip = null;
     }
 	
@@ -113,11 +115,29 @@ public class CtrlRules implements IObservable{
 			return;
 		}
 		
-		if(checkPos(x, y) != null) {
-			System.out.println("Posição válida. Posicionar Navio.");
+		Object[] pair = new Object[2];
+		boolean isValid;
+		int cellsToPaint[][];
+		
+		pair = checkPos(x, y);
+		
+		isValid = (boolean)pair[0];
+		cellsToPaint = (int[][])pair[1];
+		
+		if(!selectedShip.getAvailability()) {
+			System.out.println("Não ha mais navios desse tipo: Pressione R para limpar o grid.");
+			return;
 		}
 		
-		System.out.println("Posição inválida.");
+		if(!isValid) {
+			System.out.println("Posição inválida.");
+			return;
+		}
+		
+		System.out.printf("Posição válida. Posicionando a partir do bloco X: %d Y: %d.\n", x+1, y+1);
+		JP_PositioningGrid.getGrid().positionShip(cellsToPaint);
+		JP_ShipOptions.getShipOptions().reduceShipCount(selectedShip);
+		
 	}
 	
 	public Ship selectedShip() {
@@ -129,13 +149,14 @@ public class CtrlRules implements IObservable{
 		Object[] pair = new Object[2];
 		int tabuleiroAtual[][] = getTabuleiro(jogadorAtual);
 		
+		int[][] definedCells = JP_PositioningGrid.getGrid().getFinalGrid();
 		int cellsToPaint[][] = K.cloneGrid(tabuleiroAtual);
 		boolean validPos = true;
 		
 		if(selectedShip.orientation == ORIENTATION.TOP) {
 			for(int i = selectedShip.shipSize-1; i >= 0; i--) {
 				try {
-					if(cellsToPaint[x][y-i] != 0) validPos = false;
+					if(cellsToPaint[x][y-i] != 0 || definedCells[x][y-i] != 0) validPos = false;
 					cellsToPaint[x][y-i] = selectedShip.shipSize;
 				}
 				catch(Exception e) {
@@ -146,7 +167,7 @@ public class CtrlRules implements IObservable{
 		if(selectedShip.orientation == ORIENTATION.RIGHT) {
 			for(int i = 0; i < selectedShip.shipSize; i++) {
 				try {
-					if(cellsToPaint[x+i][y] != 0) validPos = false;
+					if(cellsToPaint[x+i][y] != 0 || definedCells[x+i][y] != 0) validPos = false;
 					cellsToPaint[x+i][y] = selectedShip.shipSize;
 				}
 				catch(Exception e) {
@@ -157,7 +178,7 @@ public class CtrlRules implements IObservable{
 		if(selectedShip.orientation == ORIENTATION.DOWN) {
 			for(int i = 0; i < selectedShip.shipSize; i++) {
 				try {
-					if(cellsToPaint[x][y+i] != 0) validPos = false;
+					if(cellsToPaint[x][y+i] != 0 || definedCells[x][y+i] != 0) validPos = false;
 					cellsToPaint[x][y+i] = selectedShip.shipSize;
 				}
 				catch(Exception e) {
@@ -168,7 +189,7 @@ public class CtrlRules implements IObservable{
 		if(selectedShip.orientation == ORIENTATION.LEFT) {
 			for(int i = selectedShip.shipSize-1; i >= 0; i--) {
 				try {
-					if(cellsToPaint[x-i][y] != 0) validPos = false;
+					if(cellsToPaint[x-i][y] != 0 || definedCells[x-i][y] != 0) validPos = false;
 					cellsToPaint[x-i][y] = selectedShip.shipSize;
 				}
 				catch(Exception e) {
@@ -177,29 +198,124 @@ public class CtrlRules implements IObservable{
 			}
 		}
 		
+		if(!selectedShip.getAvailability()) {
+			validPos = false;
+		}
+				
 		pair[0] = validPos;
 		pair[1] = cellsToPaint;
 		return pair;
 	}
 	
 	private Object[] checkPosSeaplane(int x, int y){
-		return null;
+		Object[] pair = new Object[2];
+		int tabuleiroAtual[][] = getTabuleiro(jogadorAtual);
+		
+		int[][] definedCells = JP_PositioningGrid.getGrid().getFinalGrid();
+		int cellsToPaint[][] = K.cloneGrid(tabuleiroAtual);
+		boolean validPos = true;
+		
+		if(selectedShip.orientation == ORIENTATION.TOP) {
+			if(cellsToPaint[x][y] != 0 || definedCells[x][y] != 0) validPos = false;
+			cellsToPaint[x][y] = selectedShip.shipSize;
+			try {
+				if(cellsToPaint[x-1][y-1] != 0 || definedCells[x-1][y-1] != 0) validPos = false;
+				cellsToPaint[x-1][y-1] = selectedShip.shipSize;
+			}
+			catch (Exception e){
+				validPos = false;
+			}
+			try {
+				if(cellsToPaint[x][y-2] != 0 || definedCells[x][y-2] != 0) validPos = false;
+				cellsToPaint[x][y-2] = selectedShip.shipSize;
+			}
+			catch (Exception e){
+				validPos = false;
+			}
+		}
+		if(selectedShip.orientation == ORIENTATION.RIGHT) {
+			if(cellsToPaint[x][y] != 0 || definedCells[x][y] != 0) validPos = false;
+			cellsToPaint[x][y] = selectedShip.shipSize;
+			try {
+				if(cellsToPaint[x+1][y-1] != 0 || definedCells[x+1][y-1] != 0) validPos = false;
+				cellsToPaint[x+1][y-1] = selectedShip.shipSize;
+			}
+			catch (Exception e){
+				validPos = false;
+			}
+			try {
+				if(cellsToPaint[x+2][y] != 0 || definedCells[x+2][y] != 0) validPos = false;
+				cellsToPaint[x+2][y] = selectedShip.shipSize;
+			}
+			catch (Exception e){
+				validPos = false;
+			}
+		}
+		if(selectedShip.orientation == ORIENTATION.DOWN) {
+			if(cellsToPaint[x][y] != 0 || definedCells[x][y] != 0) validPos = false;
+			cellsToPaint[x][y] = selectedShip.shipSize;
+			try {
+				if(cellsToPaint[x+1][y+1] != 0 || definedCells[x+1][y+1] != 0) validPos = false;
+				cellsToPaint[x+1][y+1] = selectedShip.shipSize;
+			}
+			catch (Exception e){
+				validPos = false;
+			}
+			try {
+				if(cellsToPaint[x][y+2] != 0 || definedCells[x][y+2] != 0) validPos = false;
+				cellsToPaint[x][y+2] = selectedShip.shipSize;
+			}
+			catch (Exception e){
+				validPos = false;
+			}
+		}
+		if(selectedShip.orientation == ORIENTATION.LEFT) {
+			if(cellsToPaint[x][y] != 0 || definedCells[x][y] != 0) validPos = false;
+			cellsToPaint[x][y] = selectedShip.shipSize;
+			try {
+				if(cellsToPaint[x-1][y+1] != 0 || definedCells[x-1][y+1] != 0) validPos = false;
+				cellsToPaint[x-1][y+1] = selectedShip.shipSize;
+			}
+			catch (Exception e){
+				validPos = false;
+			}
+			try {
+				if(cellsToPaint[x-2][y] != 0 || definedCells[x-2][y] != 0) validPos = false;
+				cellsToPaint[x-2][y] = selectedShip.shipSize;
+			}
+			catch (Exception e){
+				validPos = false;
+			}
+		}
+		
+		if(!selectedShip.getAvailability()) {
+			validPos = false;
+		}
+		
+		pair[0] = validPos;
+		pair[1] = cellsToPaint;
+		return pair;
 	}
 	
 	
 	public Object[] checkPos(int x, int y) {
 		
 		if(selectedShip == null) {
-			System.out.println("Selecione um navio.");
 			return null;
 		}
-		
-		System.out.printf("Positioning ship from position X: %d Y: %d\n", x, y);
-		
+				
 		if(selectedShip.getClass().getName() == "gui.ships.Seaplane") {
 			return checkPosSeaplane(x, y);
 		}
 		return checkPosShip(x, y);
+	}
+	
+	public void resetGrid() {
+		JP_PositioningGrid grid = JP_PositioningGrid.getGrid();
+		grid.reset();
+		
+		JP_ShipOptions shipOptions = JP_ShipOptions.getShipOptions();
+		shipOptions.resetShipCount();
 	}
 
 	@Override

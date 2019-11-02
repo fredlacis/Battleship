@@ -3,17 +3,17 @@ package rules.designPatterns;
 import gui.ships.Ship;
 import rules.CtrlRules;
 
-public class Facade {
+public class RulesFacade {
     CtrlRules ctrl;
-    static Facade f=null;
+    static RulesFacade f=null;
     
-    private Facade() {
+    private RulesFacade() {
         ctrl=new CtrlRules();
     }
     
-    public static Facade getFacade() {
+    public static RulesFacade getRules() {
         if(f==null)
-            f=new Facade();
+            f=new RulesFacade();
         
         return f;    
     }
@@ -40,6 +40,10 @@ public class Facade {
     
     public Object[] checkPos(int x, int y) {
 		return ctrl.checkPos(x, y);
+	}
+    
+    public void resetGrid() {
+		ctrl.resetGrid();
 	}
 //    
 //    public void novoJogo() {

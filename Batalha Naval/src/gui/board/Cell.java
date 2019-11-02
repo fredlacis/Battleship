@@ -13,7 +13,7 @@ import javax.swing.SwingUtilities;
 
 import gui.ships.Ship;
 import main.K;
-import rules.designPatterns.Facade;
+import rules.designPatterns.RulesFacade;
 
 @SuppressWarnings("serial")
 public class Cell extends JPanel implements MouseListener{
@@ -25,6 +25,8 @@ public class Cell extends JPanel implements MouseListener{
 	
 	private Color cellColor;
 	private Color borderColor;
+	
+	private Color shipColor;
 	
 	public Cell(int x, int y) {
 		
@@ -42,16 +44,6 @@ public class Cell extends JPanel implements MouseListener{
 		
 	}
 	
-	public Cell cloneCell() {
-		Cell clonedCell = new Cell(x, y);
-		
-		clonedCell.cellColor = cellColor;
-		clonedCell.borderColor = borderColor;
-		clonedCell.square = square;
-				
-		return clonedCell;
-	}
-	
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
@@ -63,11 +55,14 @@ public class Cell extends JPanel implements MouseListener{
 		
 		g2d.setColor( borderColor );
 		g2d.draw(square);
-		
-		
 	}
 	
 	public Color getOriginalColor() {
+		
+		if(shipColor != null) {
+			return shipColor;
+		}
+		
 		return new Color(150,150,150);
 	}
 	
@@ -75,47 +70,22 @@ public class Cell extends JPanel implements MouseListener{
 		cellColor = color;
 		repaint();
 	}
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-		if(!SwingUtilities.isRightMouseButton(e)) {
-			Facade.getFacade().positionShip(x/K.SQUARE_SIZE, y/K.SQUARE_SIZE);
-			return;
-		}
-		
-		Ship selectedShip = Facade.getFacade().selectedShip();
-		if(selectedShip == null) return;
-		
-		selectedShip.rotate();
-		Facade.getFacade().checkPos(x/K.SQUARE_SIZE, y/K.SQUARE_SIZE);
-		
-		JP_Grid.getGrid().repaint();
+	
+	public void setShipColor(Color color) {
+		cellColor = color;
+		shipColor = color;
+		repaint();
 	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
+	
+	private void paintSelectedCells() {
 		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		
-		//System.out.printf("Mouse Entered Cell (%d, %d)\n", x/K.SQUARE_SIZE, y/K.SQUARE_SIZE);
+		JP_PositioningGrid.getGrid().unpaintTemporaryCells(x, y);
 		
 		Object[] pair = new Object[2];
 		boolean isValid;
 		int cellsToPaint[][];
 		
-		pair = Facade.getFacade().checkPos(x/K.SQUARE_SIZE, y/K.SQUARE_SIZE);
+		pair = RulesFacade.getRules().checkPos(x/K.SQUARE_SIZE, y/K.SQUARE_SIZE);
 		
 		if(pair == null) {
 			setColor(cellColor.darker());
@@ -126,9 +96,47 @@ public class Cell extends JPanel implements MouseListener{
 		isValid = (boolean)pair[0];
 		cellsToPaint = (int[][])pair[1];
 		
-		JP_Grid.getGrid().paintCells(x/K.SQUARE_SIZE, y/K.SQUARE_SIZE, isValid, cellsToPaint);
+		JP_PositioningGrid.getGrid().paintTemporaryCells(isValid, cellsToPaint);
 		
 		repaint();
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+		if(SwingUtilities.isMiddleMouseButton(e)) {
+			return;
+		}
+		
+		if(!SwingUtilities.isRightMouseButton(e)) {
+			RulesFacade.getRules().positionShip(x/K.SQUARE_SIZE, y/K.SQUARE_SIZE);
+			return;
+		}
+		
+		Ship selectedShip = RulesFacade.getRules().selectedShip();
+		if(selectedShip == null) return;
+		
+		selectedShip.rotate();
+		
+		paintSelectedCells();
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		paintSelectedCells();
 	}
 
 	@Override
@@ -136,12 +144,11 @@ public class Cell extends JPanel implements MouseListener{
 		
 		//System.out.printf("Mouse Exited Cell (%d, %d)\n", x/K.SQUARE_SIZE, y/K.SQUARE_SIZE);
 		
-		JP_Grid.getGrid().unpaintCells(x, y);
+		JP_PositioningGrid.getGrid().unpaintTemporaryCells(x, y);
 		
 		setColor(getOriginalColor());
 		
 		repaint();
-		
 	}
 
 }

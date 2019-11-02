@@ -84,7 +84,7 @@ public class JP_Board extends JPanel{
 	}
 	
 	public void addGrid() {
-		add(JP_Grid.getGrid());
+		add(JP_PositioningGrid.getGrid());
 	}
 
 }

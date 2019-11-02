@@ -37,19 +37,7 @@ public class K {
 		}
 		return newGrid;
 	}
-	
-	public static Cell[][] cloneCellGrid(Cell grid[][]){
-		Cell newGrid[][] = new Cell[K.SQUARE_COUNT][K.SQUARE_COUNT];
-		for(int i = 0; i < K.SQUARE_COUNT; i++)
-		{
-			for(int j = 0; j < K.SQUARE_COUNT; j++)
-			{
-				newGrid[j][i] = grid[j][i].cloneCell();
-			}
-		}
-		return newGrid;
-	}
-	
+		
 	public static void printGrid(int grid[][]) {
 		for(int i = 0; i < K.SQUARE_COUNT; i++)
 		{
