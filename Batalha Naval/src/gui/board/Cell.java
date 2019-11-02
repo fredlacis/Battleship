@@ -79,8 +79,6 @@ public class Cell extends JPanel implements MouseListener{
 	
 	private void paintSelectedCells() {
 		
-		JP_PositioningGrid.getGrid().unpaintTemporaryCells(x, y);
-		
 		Object[] pair = new Object[2];
 		boolean isValid;
 		int cellsToPaint[][];

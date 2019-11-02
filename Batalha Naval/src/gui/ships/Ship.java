@@ -23,7 +23,7 @@ public abstract class Ship extends JComponent implements MouseListener {
 	private Color shipBorderColor;
 	
 	public int shipSize;
-	public ORIENTATION orientation;
+	public ORIENTATION orientation = ORIENTATION.RIGHT;;
 	
 	private boolean available = true;
 
@@ -192,18 +192,7 @@ public abstract class Ship extends JComponent implements MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if(!available) {
-			return;
-		}
 		
-		unselectPreviousShip();
-		
-		RulesFacade.getRules().setSelectedShip(this);
-		
-		setColor(Color.GREEN);
-		setBorderColor(Color.GREEN.darker());
-		
-		repaint();
 	}
 
 	@Override
