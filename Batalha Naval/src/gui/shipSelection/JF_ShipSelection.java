@@ -5,20 +5,15 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
 import gui.JP_Utilities;
-import gui.board.JP_PositioningGrid;
-import gui.ships.Ship;
 import main.K;
 import rules.designPatterns.RulesFacade;
 
 @SuppressWarnings("serial")
-public class JF_ShipSelection extends JFrame implements KeyListener, MouseListener{
+public class JF_ShipSelection extends JFrame implements KeyListener{
 
 	public JF_ShipSelection() {
 		Toolkit tk = Toolkit.getDefaultToolkit();
@@ -38,7 +33,6 @@ public class JF_ShipSelection extends JFrame implements KeyListener, MouseListen
 		getContentPane().add(new JP_Utilities());
 		
 		addKeyListener(this);
-		addMouseListener(this);
 	}
 	
 	@Override
@@ -55,53 +49,13 @@ public class JF_ShipSelection extends JFrame implements KeyListener, MouseListen
 	public void keyTyped(KeyEvent k) {
 		int VK_ESCAPE = 27;
 		
-		if((int)k.getKeyChar() == VK_ESCAPE) {
-			
-			Ship selectedShip = RulesFacade.getRules().selectedShip();
-			
-			if(selectedShip == null) return;
-			
-			selectedShip.setColor(selectedShip.getOriginalColor());
-			selectedShip.setBorderColor(selectedShip.getOriginalColor().darker());
-			selectedShip.repaint();
-			
+		if((int)k.getKeyChar() == VK_ESCAPE) {			
 			RulesFacade.getRules().unsetSelectedShip();
 		}
 		
 		if(k.getKeyChar() == 'r') {
 			RulesFacade.getRules().resetGrid();
 		}
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		if(!SwingUtilities.isRightMouseButton(e)) return;
-		
-		Ship selectedShip = RulesFacade.getRules().selectedShip();
-		if(selectedShip == null) return;
-		
-		selectedShip.rotate();
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

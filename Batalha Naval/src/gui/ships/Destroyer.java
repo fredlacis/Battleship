@@ -1,9 +1,8 @@
 package gui.ships;
 
-import java.awt.event.MouseEvent;
-
 import main.K;
 
+@SuppressWarnings("serial")
 public class Destroyer extends Ship {
 
 	private final int DESTROYER_SIZE = 2; 

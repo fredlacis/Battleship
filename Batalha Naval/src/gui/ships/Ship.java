@@ -8,8 +8,8 @@ import java.awt.event.MouseListener;
 import java.awt.geom.Rectangle2D;
 
 import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
 
-import gui.board.JP_PositioningGrid;
 import main.K;
 import main.K.ORIENTATION;
 import rules.designPatterns.RulesFacade;
@@ -92,11 +92,8 @@ public abstract class Ship extends JComponent implements MouseListener {
 		return Color.BLACK;
 	}
 	
-	public void rotate() {		
-		Ship selectedShip = RulesFacade.getRules().selectedShip();
-				
+	public void rotate() {				
 		orientation = orientation.next();
-		System.out.printf("Rotating ship %s to position: %s\n", selectedShip.getClass().getName(), orientation.name());
 	}
 	
 	public boolean getAvailability() {
@@ -116,7 +113,6 @@ public abstract class Ship extends JComponent implements MouseListener {
 		
 		setColor(Color.GRAY);
 		setBorderColor(Color.GRAY.darker());
-		repaint();
 		
 		repaint();
 	}
@@ -124,28 +120,19 @@ public abstract class Ship extends JComponent implements MouseListener {
 	private void unselectPreviousShip() {
 		Ship selectedShip = RulesFacade.getRules().selectedShip();
 		
-		if(selectedShip != null) {
-			if(!selectedShip.available) {
-				selectedShip.setColor(Color.GRAY);
-				selectedShip.setBorderColor(Color.GRAY.darker());
-				return;
-			}
-			
-			selectedShip.setColor(selectedShip.getOriginalColor());
-			selectedShip.setBorderColor(selectedShip.getOriginalColor().darker());
-			selectedShip.repaint();
-			selectedShip.orientation = ORIENTATION.RIGHT;
-			RulesFacade.getRules().unsetSelectedShip();
+		if(selectedShip == null || !selectedShip.available) {
+			return;
 		}
+		
+		selectedShip.setColor(selectedShip.getOriginalColor());
+		selectedShip.setBorderColor(selectedShip.getOriginalColor().darker());
+		selectedShip.repaint();
+		selectedShip.orientation = ORIENTATION.RIGHT;
 	}
 
 	public void mouseEntered(MouseEvent e) {
 		Ship selectedShip = RulesFacade.getRules().selectedShip();
-		if(selectedShip != null && selectedShip == this) {
-			return;
-		}
-		
-		if(!available) {
+		if(selectedShip == this || !available) {
 			return;
 		}
 		
@@ -157,6 +144,13 @@ public abstract class Ship extends JComponent implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		if(SwingUtilities.isRightMouseButton(e)) {
+			Ship selectedShip = RulesFacade.getRules().selectedShip();
+			if(selectedShip == null) return;
+			
+			selectedShip.rotate();
+		}
+		
 		if(!available) {
 			return;
 		}
@@ -175,11 +169,7 @@ public abstract class Ship extends JComponent implements MouseListener {
 	public void mouseExited(MouseEvent e) {
 		Ship selectedShip = RulesFacade.getRules().selectedShip();
 		
-		if(selectedShip != null && selectedShip == this) {
-			return;
-		}
-		
-		if(!available) {
+		if(selectedShip == this || !available) {
 			return;
 		}
 		
@@ -191,19 +181,7 @@ public abstract class Ship extends JComponent implements MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		Ship selectedShip = RulesFacade.getRules().selectedShip();
-		if(selectedShip != null && selectedShip == this) {
-			return;
-		}
-		
-		if(!available) {
-			return;
-		}
-		
-		setColor(shipColor.darker());
-		setColor(shipBorderColor.darker());
-		
-		repaint();
+		// TODO Auto-generated method stub
 	}
 
 	@Override

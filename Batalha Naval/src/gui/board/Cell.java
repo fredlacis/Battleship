@@ -104,7 +104,6 @@ public class Cell extends JPanel implements MouseListener{
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -119,7 +118,9 @@ public class Cell extends JPanel implements MouseListener{
 		}
 		
 		Ship selectedShip = RulesFacade.getRules().selectedShip();
-		if(selectedShip == null) return;
+		if(selectedShip == null) {
+			return;
+		}
 		
 		selectedShip.rotate();
 		
@@ -129,7 +130,6 @@ public class Cell extends JPanel implements MouseListener{
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -139,9 +139,7 @@ public class Cell extends JPanel implements MouseListener{
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		
-		//System.out.printf("Mouse Exited Cell (%d, %d)\n", x/K.SQUARE_SIZE, y/K.SQUARE_SIZE);
-		
+				
 		JP_PositioningGrid.getGrid().unpaintTemporaryCells(x, y);
 		
 		setColor(getOriginalColor());

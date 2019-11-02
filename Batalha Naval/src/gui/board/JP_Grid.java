@@ -12,6 +12,8 @@ import rules.designPatterns.RulesFacade;
 public class JP_Grid extends JPanel{
 	
 	protected Cell grid[][] = new Cell[K.SQUARE_COUNT][K.SQUARE_COUNT];
+	
+	protected int[][] definedCellsToPaint;
 			
 	public JP_Grid() {
 		
@@ -33,7 +35,27 @@ public class JP_Grid extends JPanel{
 				
 			}
 		}
+	}
+	
+	public void paintCells(int cellsToPaint[][]) {
 		
+		Color shipColor = RulesFacade.getRules().selectedShip().getOriginalColor();
+		
+		Cell cell;
+		for(int i = 0; i < K.SQUARE_COUNT; i++)
+		{
+			for(int j = 0; j < K.SQUARE_COUNT; j++)
+			{
+				if(cellsToPaint[j][i] != 0) {
+					
+					definedCellsToPaint[j][i] = cellsToPaint[j][i];
+					
+					cell = grid[j][i];
+					cell.setShipColor(shipColor);
+					cell.repaint();
+				}
+			}
+		}
 	}
 	
 }

@@ -1,7 +1,5 @@
 package main;
 
-import gui.board.Cell;
-
 public class K {
 	
 	public static final int LARG_DEFAULT = 1024;

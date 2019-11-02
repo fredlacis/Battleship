@@ -6,9 +6,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import gui.ships.*;
-import rules.CtrlRules;
-import rules.designPatterns.RulesFacade;
 
+@SuppressWarnings("serial")
 public class JP_ShipOptions extends JPanel{
 
 	private final int OFFSET_X = 70;
@@ -75,6 +74,7 @@ public class JP_ShipOptions extends JPanel{
 		
 		return label;
 	}
+	
 	public void paintLabels() {		
 		
 		battleshipCount = createLabel(BATTLESHIP_POSITION, BATTLESHIP_COUNT);
@@ -98,9 +98,7 @@ public class JP_ShipOptions extends JPanel{
 		remove(destroyerCount);
 		remove(submarineCount);
 		remove(seaplaneCount);
-		
-		repaint();
-		
+				
 		battleshipCount = createLabel(BATTLESHIP_POSITION, BATTLESHIP_COUNT);
 		cruiserCount = createLabel(CRUISER_POSITION, CRUISER_COUNT);
 		destroyerCount = createLabel(DESTROYER_POSITION, DESTROYER_COUNT);

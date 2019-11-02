@@ -2,6 +2,7 @@ package gui.ships;
 
 import main.K;
 
+@SuppressWarnings("serial")
 public class Cruiser extends Ship {
 
 	private final int CRUISER_SIZE = 4; 

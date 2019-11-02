@@ -3,13 +3,12 @@ package gui.board;
 import java.awt.Color;
 
 import main.K;
-import rules.designPatterns.RulesFacade;
 
+@SuppressWarnings("serial")
 public class JP_PositioningGrid extends JP_Grid{
 	
 	static JP_PositioningGrid g = null;
 	
-	private int[][] definedCellsToPaint;
 	private int[][] currentCellsToPaint;
 	
 	public static JP_PositioningGrid getGrid() {
@@ -28,27 +27,6 @@ public class JP_PositioningGrid extends JP_Grid{
 		for(int i = 0; i < K.SQUARE_COUNT; i++)
 			for(int j = 0; j < K.SQUARE_COUNT; j++)
 				definedCellsToPaint[j][i] = 0;
-	}
-	
-	public void positionShip(int cellsToPaint[][]) {
-		
-		Color shipColor = RulesFacade.getRules().selectedShip().getOriginalColor();
-		
-		Cell cell;
-		for(int i = 0; i < K.SQUARE_COUNT; i++)
-		{
-			for(int j = 0; j < K.SQUARE_COUNT; j++)
-			{
-				if(cellsToPaint[j][i] != 0) {
-					
-					definedCellsToPaint[j][i] = cellsToPaint[j][i];
-					
-					cell = grid[j][i];
-					cell.setShipColor(shipColor);
-					cell.repaint();
-				}
-			}
-		}
 	}
 	
 	public void paintTemporaryCells(boolean isValid, int cellsToPaint[][]) {
@@ -98,8 +76,6 @@ public class JP_PositioningGrid extends JP_Grid{
 	public void reset(){
 		
 		Cell cell;
-		
-		System.out.println("Limpando Grid");
 		
 		for(int i = 0; i < K.SQUARE_COUNT; i++)
 		{

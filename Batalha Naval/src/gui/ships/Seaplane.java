@@ -1,11 +1,8 @@
 package gui.ships;
 
-import java.awt.Color;
-import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 
 import main.K;
-import main.K.ORIENTATION;
 
 @SuppressWarnings("serial")
 public class Seaplane extends Ship {
