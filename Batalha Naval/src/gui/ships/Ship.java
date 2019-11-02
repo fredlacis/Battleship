@@ -157,7 +157,6 @@ public abstract class Ship extends JComponent implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		
 		if(!available) {
 			return;
 		}
@@ -192,7 +191,19 @@ public abstract class Ship extends JComponent implements MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
+		Ship selectedShip = RulesFacade.getRules().selectedShip();
+		if(selectedShip != null && selectedShip == this) {
+			return;
+		}
 		
+		if(!available) {
+			return;
+		}
+		
+		setColor(shipColor.darker());
+		setColor(shipBorderColor.darker());
+		
+		repaint();
 	}
 
 	@Override

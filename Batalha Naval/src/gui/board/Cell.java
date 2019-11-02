@@ -79,6 +79,8 @@ public class Cell extends JPanel implements MouseListener{
 	
 	private void paintSelectedCells() {
 		
+		JP_PositioningGrid.getGrid().unpaintTemporaryCells(x, y);
+		
 		Object[] pair = new Object[2];
 		boolean isValid;
 		int cellsToPaint[][];
@@ -106,9 +108,7 @@ public class Cell extends JPanel implements MouseListener{
 	}
 
 	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+	public void mousePressed(MouseEvent e) {		
 		if(SwingUtilities.isMiddleMouseButton(e)) {
 			return;
 		}
