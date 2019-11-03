@@ -35,7 +35,10 @@ public class CtrlRules implements IObservable{
         public int getValue() { return value; }
 	}
 	
-	private int jogadorAtual;
+	private int jogadorAtual = 1;
+	
+	private String player1;
+	private String player2;
 	
 	private int tabuleiro1[][];
 	private int tabuleiro2[][];
@@ -45,6 +48,8 @@ public class CtrlRules implements IObservable{
 	private Ship selectedShip;
 	
 	List<IObserver> lob = new ArrayList<IObserver>();
+	
+	List<String> messages = new ArrayList<String>();
 	
 	public CtrlRules() {
 		newGame();
@@ -78,6 +83,19 @@ public class CtrlRules implements IObservable{
 	public void setJogadorAtual(int jogador) {
 		this.jogadorAtual = jogador;
 	}
+	
+	public int getJogadorAtual() {
+		return jogadorAtual;
+	}
+	
+	public int getNextPlayer() {
+		if(jogadorAtual == 1) {
+			return jogadorAtual = 2;
+		}
+		else {
+			return jogadorAtual = 1;
+		}
+	}
 
 	public int[][] getTabuleiro(int jogador) {
 		switch(jogador) {
@@ -103,9 +121,25 @@ public class CtrlRules implements IObservable{
     	selectedShip = null;
     }
 	
+	public String getPlayer(int player) {
+		switch(player) {
+			case 1: return player1;
+			case 2: return player2;
+		}
+		return null;
+	}
+	
+	public void setPlayer(int playerNumber, String playerName) {
+		switch(playerNumber) {
+		case 1: player1 = playerName;
+		case 2: player2 = playerName;
+		}
+	}
+	
 	public void positionShip(int x, int y) {
 		if(selectedShip == null) {
 			System.out.println("Selecione um navio.");
+			addMessage("Select a ship");
 			return;
 		}
 		
@@ -119,16 +153,19 @@ public class CtrlRules implements IObservable{
 		cellsToPaint = (int[][])pair[1];
 		
 		if(!selectedShip.getAvailability()) {
-			System.out.println("Não ha mais navios desse tipo: Pressione R para limpar o grid.");
+			System.out.println("Nï¿½o ha mais navios desse tipo: Pressione R para limpar o grid.");
+			addMessage("No more ships of this type");
 			return;
 		}
 		
 		if(!isValid) {
-			System.out.println("Posição inválida.");
+			System.out.println("Posiï¿½ï¿½o invï¿½lida.");
+			addMessage("Invalid position");
 			return;
 		}
 		
-		System.out.printf("Posição válida. Posicionando a partir do bloco X: %d Y: %d.\n", x+1, y+1);
+		System.out.printf("Posiï¿½ï¿½o vï¿½lida. Posicionando a partir do bloco X: %d Y: %d.\n", x+1, y+1);
+		addMessage("Positioning ship");
 		JP_PositioningGrid.getGrid().paintCells(cellsToPaint);
 		JP_ShipOptions.getShipOptions().reduceShipCount(selectedShip);
 		
@@ -306,12 +343,21 @@ public class CtrlRules implements IObservable{
 	
 	public void resetGrid() {
 		System.out.println("Limpando Grid");
+		addMessage("Reseting Grid");
 		
 		JP_PositioningGrid grid = JP_PositioningGrid.getGrid();
 		grid.reset();
 		
 		JP_ShipOptions shipOptions = JP_ShipOptions.getShipOptions();
 		shipOptions.resetShipCount();
+	}
+	
+	public void addMessage(String message) {
+		messages.add(message);
+	}
+	
+	public List<String> getMessages() {
+		return messages;
 	}
 
 	@Override

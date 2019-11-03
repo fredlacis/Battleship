@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 import gui.shipSelection.JF_ShipSelection;
+import rules.designPatterns.RulesFacade;
 
 @SuppressWarnings("serial")
 public class JF_NameForm extends JFrame{
@@ -142,7 +143,11 @@ public class JF_NameForm extends JFrame{
             		
             	}
             	else {
-                	(new JF_ShipSelection(/*player1Txt.getText()*/)).setVisible(true);
+            		
+            		RulesFacade.getRules().setPlayer(1, player1Txt.getText());
+            		RulesFacade.getRules().setPlayer(2, player2Txt.getText());
+            		
+                	(JF_ShipSelection.getShipSelection()).setVisible(true);
                 	
                 	m.setVisible(false);
                     

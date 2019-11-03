@@ -8,7 +8,6 @@ import main.K;
 import rules.designPatterns.RulesFacade;
 
 @SuppressWarnings("serial")
-
 public class JP_Grid extends JPanel{
 	
 	protected Cell grid[][] = new Cell[K.SQUARE_COUNT][K.SQUARE_COUNT];

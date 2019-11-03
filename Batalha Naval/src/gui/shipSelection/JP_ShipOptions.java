@@ -3,9 +3,12 @@ package gui.shipSelection;
 import java.awt.Font;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import gui.atack.JF_Atack;
 import gui.ships.*;
+import rules.designPatterns.RulesFacade;
 
 @SuppressWarnings("serial")
 public class JP_ShipOptions extends JPanel{
@@ -13,18 +16,19 @@ public class JP_ShipOptions extends JPanel{
 	private final int OFFSET_X = 70;
 	private final int OFFSET_Y = 100;
 	private final int LABEL_OFFSET_X = 250;
-
-	public int BATTLESHIP_COUNT = 1;
-	public int CRUISER_COUNT = 2;
-	public int DESTROYER_COUNT = 3;
-	public int SUBMARINE_COUNT = 4;
-	public int SEAPLANE_COUNT = 5;
 	
 	private final int BATTLESHIP_POSITION = 2;
 	private final int CRUISER_POSITION = 3;
 	private final int DESTROYER_POSITION = 4;
 	private final int SUBMARINE_POSITION = 5;
 	private final int SEAPLANE_POSITION = 1;
+	
+	public int battleship_count = 1;
+	public int cruiser_count = 2;
+	public int destroyer_count = 3;
+	public int submarine_count = 4;
+	public int seaplane_count = 5;
+	public int ship_count = battleship_count + cruiser_count + destroyer_count + submarine_count + seaplane_count;
 	
 	JLabel battleshipCount;
 	JLabel cruiserCount;
@@ -77,11 +81,11 @@ public class JP_ShipOptions extends JPanel{
 	
 	public void paintLabels() {		
 		
-		battleshipCount = createLabel(BATTLESHIP_POSITION, BATTLESHIP_COUNT);
-		cruiserCount = createLabel(CRUISER_POSITION, CRUISER_COUNT);
-		destroyerCount = createLabel(DESTROYER_POSITION, DESTROYER_COUNT);
-		submarineCount = createLabel(SUBMARINE_POSITION, SUBMARINE_COUNT);
-		seaplaneCount = createLabel(SEAPLANE_POSITION, SEAPLANE_COUNT);
+		battleshipCount = createLabel(BATTLESHIP_POSITION, battleship_count);
+		cruiserCount = createLabel(CRUISER_POSITION, cruiser_count);
+		destroyerCount = createLabel(DESTROYER_POSITION, destroyer_count);
+		submarineCount = createLabel(SUBMARINE_POSITION, submarine_count);
+		seaplaneCount = createLabel(SEAPLANE_POSITION, seaplane_count);
 		
 		add(battleshipCount);
 		add(cruiserCount);
@@ -99,11 +103,11 @@ public class JP_ShipOptions extends JPanel{
 		remove(submarineCount);
 		remove(seaplaneCount);
 				
-		battleshipCount = createLabel(BATTLESHIP_POSITION, BATTLESHIP_COUNT);
-		cruiserCount = createLabel(CRUISER_POSITION, CRUISER_COUNT);
-		destroyerCount = createLabel(DESTROYER_POSITION, DESTROYER_COUNT);
-		submarineCount = createLabel(SUBMARINE_POSITION, SUBMARINE_COUNT);
-		seaplaneCount = createLabel(SEAPLANE_POSITION, SEAPLANE_COUNT);
+		battleshipCount = createLabel(BATTLESHIP_POSITION, battleship_count);
+		cruiserCount = createLabel(CRUISER_POSITION, cruiser_count);
+		destroyerCount = createLabel(DESTROYER_POSITION, destroyer_count);
+		submarineCount = createLabel(SUBMARINE_POSITION, submarine_count);
+		seaplaneCount = createLabel(SEAPLANE_POSITION, seaplane_count);
 		
 		add(battleshipCount);
 		add(cruiserCount);
@@ -143,50 +147,71 @@ public class JP_ShipOptions extends JPanel{
 		}
 		
 		if(shipName == "gui.ships.Battleship") {
-			BATTLESHIP_COUNT--;
+			battleship_count--;
+			ship_count--;
 			
-			if(BATTLESHIP_COUNT == 0) {
+			if(battleship_count == 0) {
 				ship.setUnavailable();
 			}
 		}
 		else if(shipName == "gui.ships.Cruiser") {
-			CRUISER_COUNT--;
+			cruiser_count--;
+			ship_count--;
 			
-			if(CRUISER_COUNT == 0) {
+			if(cruiser_count == 0) {
 				ship.setUnavailable();
 			}
 		}
 		else if(shipName == "gui.ships.Destroyer") {
-			DESTROYER_COUNT--;
+			destroyer_count--;
+			ship_count--;
 			
-			if(DESTROYER_COUNT == 0) {
+			if(destroyer_count == 0) {
 				ship.setUnavailable();
 			}
 		}
 		else if(shipName == "gui.ships.Submarine") {
-			SUBMARINE_COUNT--;
+			submarine_count--;
+			ship_count--;
 			
-			if(SUBMARINE_COUNT == 0) {
+			if(submarine_count == 0) {
 				ship.setUnavailable();
 			}
 		}
 		else if(shipName == "gui.ships.Seaplane") {
-			SEAPLANE_COUNT--;
+			seaplane_count--;
+			ship_count--;
 			
-			if(SEAPLANE_COUNT == 0) {
+			if(seaplane_count == 0) {
 				ship.setUnavailable();
 			}
 		}
 				
 		repaintLabels();
+		
+		if(ship_count == 0) {
+			JOptionPane.showMessageDialog(null, " You have placed all your ships! ");
+			if( RulesFacade.getRules().getJogadorAtual() == 2 ) {
+				//Vai pra proxima tela
+				(new JF_Atack()).setVisible(true);
+				JF_ShipSelection.getShipSelection().setVisible(false);
+			}
+			else {
+				RulesFacade.getRules().resetGrid();
+				JF_ShipSelection.getShipSelection().setTitle("Ship Selection - " + RulesFacade.getRules().getPlayer( RulesFacade.getRules().getNextPlayer() ));
+			}
+		}
+		
 	}
 	
 	public void resetShipCount() {
-		BATTLESHIP_COUNT = 1;
-		CRUISER_COUNT = 2;
-		DESTROYER_COUNT = 3;
-		SUBMARINE_COUNT = 4;
-		SEAPLANE_COUNT = 5;
+		battleship_count = 1;
+		cruiser_count = 2;
+		destroyer_count = 3;
+		submarine_count = 4;
+		seaplane_count = 5;
+		ship_count = battleship_count + cruiser_count + destroyer_count + submarine_count + seaplane_count;
+
 		
 		battleship.setAvailable();
 		cruiser.setAvailable();

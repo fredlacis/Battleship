@@ -14,7 +14,7 @@ import main.K;
 
 @SuppressWarnings("serial")
 public class JP_Board extends JPanel{
-	
+
 	public final int BOARD_SIZE = 500;
 	
 	final Color mainColor = new Color(120,120,120);
@@ -23,16 +23,13 @@ public class JP_Board extends JPanel{
 	
 	private JPanel charactersContainers[] = new JPanel[K.SQUARE_COUNT];
 	
-	
 	public JP_Board() {
 		
 		setLayout(null);
 		setBounds(0,0,BOARD_SIZE,BOARD_SIZE);
 		setOpaque(false);
 		
-		addLabels();
-		addGrid();
-		
+		addLabels();		
 	}
 	
 	public void paintComponent(Graphics g){
@@ -42,8 +39,6 @@ public class JP_Board extends JPanel{
 		g2d.setPaint(mainColor);
 		
 		g2d.setStroke(new BasicStroke(K.STROKE_WIDTH, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER ,10.0f));
-		
-		//g2d.draw(border);
 		
 	}
 	
@@ -83,8 +78,4 @@ public class JP_Board extends JPanel{
 		
 	}
 	
-	public void addGrid() {
-		add(JP_PositioningGrid.getGrid());
-	}
-
 }

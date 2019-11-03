@@ -8,14 +8,26 @@ import java.awt.event.KeyListener;
 
 import javax.swing.JFrame;
 
+import gui.JP_Title;
 import gui.JP_Utilities;
 import main.K;
 import rules.designPatterns.RulesFacade;
 
 @SuppressWarnings("serial")
 public class JF_ShipSelection extends JFrame implements KeyListener{
-
-	public JF_ShipSelection() {
+	
+	JP_Title titlePanel = new JP_Title("");
+	
+	static JF_ShipSelection shipSelection;
+    
+    public static JF_ShipSelection getShipSelection() {
+        if(shipSelection == null)
+        	shipSelection = new JF_ShipSelection();
+        
+        return shipSelection;    
+    }
+	
+	private JF_ShipSelection() {
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		Dimension screenSize = tk.getScreenSize();
 		int sl = screenSize.width;
@@ -28,11 +40,17 @@ public class JF_ShipSelection extends JFrame implements KeyListener{
 		setLayout(null);
 		getContentPane().setBackground(new Color(250, 250, 250));
 
+		setTitle("Ship Selection - " + RulesFacade.getRules().getPlayer(1));
+		getContentPane().add(titlePanel);
 		getContentPane().add(JP_ShipOptions.getShipOptions());
 		getContentPane().add(new JP_ShipPlacement());
 		getContentPane().add(new JP_Utilities());
 		
 		addKeyListener(this);
+	}
+	
+	public void setTitle(String title) {
+		titlePanel.setText(title);
 	}
 	
 	@Override
@@ -56,6 +74,8 @@ public class JF_ShipSelection extends JFrame implements KeyListener{
 		if(k.getKeyChar() == 'r') {
 			RulesFacade.getRules().resetGrid();
 		}
+		
+		repaint();
 	}
 
 }
