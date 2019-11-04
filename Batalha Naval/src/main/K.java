@@ -1,5 +1,7 @@
 package main;
 
+import java.awt.Color;
+
 public class K {
 	
 	public static final int LARG_DEFAULT = 1024;
@@ -24,6 +26,14 @@ public class K {
 	    }
 	}
 	
+	public static int[][] createEmptyGrid(){
+		int newGrid[][] = new int[K.SQUARE_COUNT][K.SQUARE_COUNT];
+		for(int i = 0; i < K.SQUARE_COUNT; i++)
+			for(int j = 0; j < K.SQUARE_COUNT; j++)
+				newGrid[j][i] = 0;
+		return newGrid;
+	}
+	
 	public static int[][] cloneGrid(int grid[][]){
 		int newGrid[][] = new int[K.SQUARE_COUNT][K.SQUARE_COUNT];
 		for(int i = 0; i < K.SQUARE_COUNT; i++)
@@ -45,5 +55,16 @@ public class K {
 			}
 			System.out.println();
 		}
+	}
+	
+	public static Color getShipColorBySize(int size) {
+		switch(size) {
+			case 1: return new Color( 106, 221, 221 ); //Cyan
+			case 2: return new Color( 57, 170, 99 ); //Green
+			case 3: return new Color( 235, 235, 52 ); //Yellow
+			case 4: return new Color( 34, 95, 167 ); //DarkBlue
+			case 5: return new Color( 253, 64, 117 ); //Pink
+		}
+		return Color.BLACK;
 	}
 }

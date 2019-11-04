@@ -26,7 +26,7 @@ public class JP_Title extends JPanel{
 		titleLabel.setVerticalAlignment(SwingConstants.CENTER);
 		titleLabel.setBounds(0, 5, 1024, 40);
 		titleLabel.setFont(new Font("SansSerif", Font.BOLD, 24));
-		titleLabel.setForeground(Color.BLACK);
+		titleLabel.setForeground(new Color(0, 0, 0));
 		
 		add(titleLabel);
 		

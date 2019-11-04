@@ -35,7 +35,7 @@ public class CtrlRules implements IObservable{
         public int getValue() { return value; }
 	}
 	
-	private int jogadorAtual = 1;
+	private int currentPlayer;
 	
 	private String player1;
 	private String player2;
@@ -65,7 +65,7 @@ public class CtrlRules implements IObservable{
 				tabuleiro2[i][j]=0;	
 			}
 		}
-		setJogadorAtual(1);
+		currentPlayer = 1;
 	}
 	
 	public void cellClicked(int i,int j) {
@@ -81,22 +81,29 @@ public class CtrlRules implements IObservable{
 	}
 	
 	public void setJogadorAtual(int jogador) {
-		this.jogadorAtual = jogador;
+		this.currentPlayer = jogador;
 	}
 	
 	public int getJogadorAtual() {
-		return jogadorAtual;
+		return currentPlayer;
 	}
 	
 	public int getNextPlayer() {
-		if(jogadorAtual == 1) {
-			return jogadorAtual = 2;
+		if(currentPlayer == 1) {
+			return currentPlayer = 2;
 		}
 		else {
-			return jogadorAtual = 1;
+			return currentPlayer = 1;
 		}
 	}
-
+	
+	public void setTabuleiro(int jogador) {
+		switch(jogador) {
+			case 1: tabuleiro1 = JP_PositioningGrid.getGrid().getFinalGrid();
+			case 2: tabuleiro2 = JP_PositioningGrid.getGrid().getFinalGrid();
+		}
+	}
+	
 	public int[][] getTabuleiro(int jogador) {
 		switch(jogador) {
 			case 1: return tabuleiro1;
@@ -171,17 +178,16 @@ public class CtrlRules implements IObservable{
 		
 	}
 	
-	public Ship selectedShip() {
+	public Ship getSelectedShip() {
 		return selectedShip;
     }
 	
 	private Object[] checkPosShip(int x, int y){
 		
 		Object[] pair = new Object[2];
-		int tabuleiroAtual[][] = getTabuleiro(jogadorAtual);
 		
 		int[][] definedCells = JP_PositioningGrid.getGrid().getFinalGrid();
-		int cellsToPaint[][] = K.cloneGrid(tabuleiroAtual);
+		int cellsToPaint[][] = K.createEmptyGrid();
 		boolean validPos = true;
 		
 		if(selectedShip.orientation == ORIENTATION.TOP) {
@@ -240,10 +246,9 @@ public class CtrlRules implements IObservable{
 	
 	private Object[] checkPosSeaplane(int x, int y){
 		Object[] pair = new Object[2];
-		int tabuleiroAtual[][] = getTabuleiro(jogadorAtual);
 		
 		int[][] definedCells = JP_PositioningGrid.getGrid().getFinalGrid();
-		int cellsToPaint[][] = K.cloneGrid(tabuleiroAtual);
+		int cellsToPaint[][] = K.createEmptyGrid();
 		boolean validPos = true;
 		
 		if(selectedShip.orientation == ORIENTATION.TOP) {
@@ -328,7 +333,6 @@ public class CtrlRules implements IObservable{
 		return pair;
 	}
 	
-	
 	public Object[] checkPos(int x, int y) {
 		
 		if(selectedShip == null) {
@@ -350,6 +354,8 @@ public class CtrlRules implements IObservable{
 		
 		JP_ShipOptions shipOptions = JP_ShipOptions.getShipOptions();
 		shipOptions.resetShipCount();
+		
+		unsetSelectedShip();
 	}
 	
 	public void addMessage(String message) {

@@ -1,4 +1,4 @@
-package gui.atack;
+package gui.attack;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -12,18 +12,18 @@ import gui.board.JP_BattleBoard;
 import main.K;
 
 @SuppressWarnings("serial")
-public class JF_Atack extends JFrame {
+public class JF_Attack extends JFrame {
 
-	JP_Title titlePanel = new JP_Title("Atack");
+	JP_Title titlePanel = new JP_Title("Attack Phase");
 	
-	public JF_Atack() {
+	public JF_Attack() {
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		Dimension screenSize = tk.getScreenSize();
 		int sl = screenSize.width;
 		int sa = screenSize.height;
 		int x = sl/2-K.LARG_DEFAULT/2;
 		int y = sa/2-K.ALT_DEFAULT/2;
-		setBounds(x,y,K.LARG_DEFAULT,K.ALT_DEFAULT);
+		setBounds(x,y,K.LARG_DEFAULT, K.ALT_DEFAULT);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setResizable(false);
 		setLayout(null);

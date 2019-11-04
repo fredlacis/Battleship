@@ -21,12 +21,6 @@ public class JP_PositioningGrid extends JP_Grid{
 	
 	private JP_PositioningGrid() {
 		super();
-		
-		definedCellsToPaint = new int[K.SQUARE_COUNT][K.SQUARE_COUNT];
-		
-		for(int i = 0; i < K.SQUARE_COUNT; i++)
-			for(int j = 0; j < K.SQUARE_COUNT; j++)
-				definedCellsToPaint[j][i] = 0;
 	}
 	
 	public void paintTemporaryCells(boolean isValid, int cellsToPaint[][]) {
@@ -93,6 +87,6 @@ public class JP_PositioningGrid extends JP_Grid{
 	
 	
 	public int[][] getFinalGrid() {
-		return definedCellsToPaint;
+		return K.cloneGrid(definedCellsToPaint);
 	}
 }

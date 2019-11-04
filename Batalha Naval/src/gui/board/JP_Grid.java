@@ -20,6 +20,8 @@ public class JP_Grid extends JPanel{
 		setOpaque(false);
 		setBounds(K.JPANEL_BORDER, K.JPANEL_BORDER, K.SQUARE_SIZE * K.SQUARE_COUNT, K.SQUARE_SIZE * K.SQUARE_COUNT);
 		
+		definedCellsToPaint = K.createEmptyGrid();
+		
 		addCells();
 		
 	}
@@ -37,9 +39,7 @@ public class JP_Grid extends JPanel{
 	}
 	
 	public void paintCells(int cellsToPaint[][]) {
-		
-		Color shipColor = RulesFacade.getRules().selectedShip().getOriginalColor();
-		
+				
 		Cell cell;
 		for(int i = 0; i < K.SQUARE_COUNT; i++)
 		{
@@ -47,6 +47,7 @@ public class JP_Grid extends JPanel{
 			{
 				if(cellsToPaint[j][i] != 0) {
 					
+					Color shipColor = K.getShipColorBySize(cellsToPaint[j][i]);
 					definedCellsToPaint[j][i] = cellsToPaint[j][i];
 					
 					cell = grid[j][i];

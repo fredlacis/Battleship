@@ -28,7 +28,6 @@ public class JP_Utilities extends JPanel{
 		setLayout(null);
 		
 		setBounds(0, K.ALT_DEFAULT - UTILITIES_HEIGHT, K.LARG_DEFAULT, UTILITIES_HEIGHT);
-		//setBackground(Color.BLUE);
 		setOpaque(false);
 		
 		JPanel infoPanel = new JPanel();
@@ -39,11 +38,11 @@ public class JP_Utilities extends JPanel{
 		JLabel key2 = new JLabel("R - Reset board");
 		JLabel key3 = new JLabel("Right Click - Rotate Ship");
 		
-		infoPanel.add(Box.createRigidArea(new Dimension(0, 27)));
+		infoPanel.add(Box.createRigidArea(new Dimension(20, 27)));
 		infoPanel.add(key3);
-		infoPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+		infoPanel.add(Box.createRigidArea(new Dimension(20, 15)));
 		infoPanel.add(key1);
-		infoPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+		infoPanel.add(Box.createRigidArea(new Dimension(20, 15)));
 		infoPanel.add(key2);
 		
 		JPanel messagesPanel = new JPanel();

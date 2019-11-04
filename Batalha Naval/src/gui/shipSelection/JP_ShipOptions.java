@@ -6,8 +6,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import gui.atack.JF_Atack;
+import gui.attack.JF_Attack;
 import gui.ships.*;
+import main.K;
 import rules.designPatterns.RulesFacade;
 
 @SuppressWarnings("serial")
@@ -148,7 +149,6 @@ public class JP_ShipOptions extends JPanel{
 		
 		if(shipName == "gui.ships.Battleship") {
 			battleship_count--;
-			ship_count--;
 			
 			if(battleship_count == 0) {
 				ship.setUnavailable();
@@ -156,7 +156,6 @@ public class JP_ShipOptions extends JPanel{
 		}
 		else if(shipName == "gui.ships.Cruiser") {
 			cruiser_count--;
-			ship_count--;
 			
 			if(cruiser_count == 0) {
 				ship.setUnavailable();
@@ -164,7 +163,6 @@ public class JP_ShipOptions extends JPanel{
 		}
 		else if(shipName == "gui.ships.Destroyer") {
 			destroyer_count--;
-			ship_count--;
 			
 			if(destroyer_count == 0) {
 				ship.setUnavailable();
@@ -172,7 +170,6 @@ public class JP_ShipOptions extends JPanel{
 		}
 		else if(shipName == "gui.ships.Submarine") {
 			submarine_count--;
-			ship_count--;
 			
 			if(submarine_count == 0) {
 				ship.setUnavailable();
@@ -180,20 +177,22 @@ public class JP_ShipOptions extends JPanel{
 		}
 		else if(shipName == "gui.ships.Seaplane") {
 			seaplane_count--;
-			ship_count--;
 			
 			if(seaplane_count == 0) {
 				ship.setUnavailable();
 			}
 		}
-				
+		
+		ship_count--;	
 		repaintLabels();
 		
 		if(ship_count == 0) {
 			JOptionPane.showMessageDialog(null, " You have placed all your ships! ");
+			
+			RulesFacade.getRules().setTabuleiro(RulesFacade.getRules().getJogadorAtual());
+						
 			if( RulesFacade.getRules().getJogadorAtual() == 2 ) {
-				//Vai pra proxima tela
-				(new JF_Atack()).setVisible(true);
+				(new JF_Attack()).setVisible(true);
 				JF_ShipSelection.getShipSelection().setVisible(false);
 			}
 			else {

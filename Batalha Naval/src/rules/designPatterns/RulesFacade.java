@@ -2,6 +2,7 @@ package rules.designPatterns;
 
 import java.util.List;
 
+import gui.board.JP_PositioningGrid;
 import gui.ships.Ship;
 import rules.CtrlRules;
 
@@ -37,7 +38,7 @@ public class RulesFacade {
 	}
     
     public Ship selectedShip() {
-    	return ctrl.selectedShip();
+    	return ctrl.getSelectedShip();
     }
     
     public Object[] checkPos(int x, int y) {
@@ -66,6 +67,10 @@ public class RulesFacade {
     
 	public int getJogadorAtual() {
 		return ctrl.getJogadorAtual();
+	}
+	
+	public void setTabuleiro(int jogador) {
+		ctrl.setTabuleiro(jogador);
 	}
 	
 	public int[][] getTabuleiro(int jogador) {
