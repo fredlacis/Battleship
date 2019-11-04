@@ -3,6 +3,7 @@ package rules;
 import java.util.*;
 
 import gui.board.JP_PositioningGrid;
+import gui.shipSelection.JP_SelectionUtilities;
 import gui.shipSelection.JP_ShipOptions;
 import gui.ships.Ship;
 import main.K;
@@ -44,6 +45,8 @@ public class CtrlRules implements IObservable{
 	private int tabuleiro2[][];
 	
 	private int turn;
+	
+	private boolean isValid;
 	
 	private Ship selectedShip;
 	
@@ -151,7 +154,6 @@ public class CtrlRules implements IObservable{
 		}
 		
 		Object[] pair = new Object[2];
-		boolean isValid;
 		int cellsToPaint[][];
 		
 		pair = checkPos(x, y);
@@ -360,10 +362,16 @@ public class CtrlRules implements IObservable{
 	
 	public void addMessage(String message) {
 		messages.add(message);
+		for(IObserver o:lob)
+			o.notify(this);
 	}
 	
 	public List<String> getMessages() {
 		return messages;
+	}
+	
+	public boolean getIsValid() {
+		return isValid;
 	}
 
 	@Override

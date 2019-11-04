@@ -187,18 +187,19 @@ public class JP_ShipOptions extends JPanel{
 		repaintLabels();
 		
 		if(ship_count == 0) {
-			JOptionPane.showMessageDialog(null, " You have placed all your ships! ");
+			//JOptionPane.showMessageDialog(null, " You have placed all your ships! ");
+			JP_SelectionUtilities.getSelectionUtilites().buttonEnable();
 			
-			RulesFacade.getRules().setTabuleiro(RulesFacade.getRules().getJogadorAtual());
-						
-			if( RulesFacade.getRules().getJogadorAtual() == 2 ) {
-				(new JF_Attack()).setVisible(true);
-				JF_ShipSelection.getShipSelection().setVisible(false);
-			}
-			else {
-				RulesFacade.getRules().resetGrid();
-				JF_ShipSelection.getShipSelection().setTitle("Ship Selection - " + RulesFacade.getRules().getPlayer( RulesFacade.getRules().getNextPlayer() ));
-			}
+//			RulesFacade.getRules().setTabuleiro(RulesFacade.getRules().getJogadorAtual());
+//						
+//			if( RulesFacade.getRules().getJogadorAtual() == 2 ) {
+//				(new JF_Attack()).setVisible(true);
+//				JF_ShipSelection.getShipSelection().setVisible(false);
+//			}
+//			else {
+//				RulesFacade.getRules().resetGrid();
+//				JF_ShipSelection.getShipSelection().setTitle("Ship Selection - " + RulesFacade.getRules().getPlayer( RulesFacade.getRules().getNextPlayer() ));
+//			}
 		}
 		
 	}

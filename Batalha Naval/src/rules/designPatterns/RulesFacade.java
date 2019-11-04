@@ -85,6 +85,10 @@ public class RulesFacade {
 		return ctrl.getMessages();
 	}
 	
+	public boolean getIsValid() {
+		return ctrl.getIsValid();
+	}
+	
 //    
 //    public void novoJogo() {
 //        ctrl.novoJogo();

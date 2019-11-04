@@ -9,7 +9,6 @@ import java.awt.event.KeyListener;
 import javax.swing.JFrame;
 
 import gui.JP_Title;
-import gui.JP_Utilities;
 import main.K;
 import rules.designPatterns.RulesFacade;
 
@@ -44,7 +43,7 @@ public class JF_ShipSelection extends JFrame implements KeyListener{
 		getContentPane().add(titlePanel);
 		getContentPane().add(JP_ShipOptions.getShipOptions());
 		getContentPane().add(new JP_ShipPlacement());
-		getContentPane().add(new JP_Utilities());
+		getContentPane().add(JP_SelectionUtilities.getSelectionUtilites());
 		
 		addKeyListener(this);
 	}

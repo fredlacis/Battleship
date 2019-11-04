@@ -7,8 +7,8 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 
 import gui.JP_Title;
-import gui.JP_Utilities;
 import gui.board.JP_BattleBoard;
+import gui.shipSelection.JP_SelectionUtilities;
 import main.K;
 
 @SuppressWarnings("serial")
@@ -38,7 +38,7 @@ public class JF_Attack extends JFrame {
 		getContentPane().add(titlePanel);
 		getContentPane().add(board1);
 		getContentPane().add(board2);
-		getContentPane().add(new JP_Utilities());
+		//getContentPane().add(new JP_SelectionUtilities());
 		
 	}
 	
