@@ -351,6 +351,7 @@ public class CtrlRules implements IObservable{
 	
 	public void resetGrid() {
 		System.out.println("Limpando Grid");
+		isValid = true;
 		addMessage("Reseting Grid");
 		
 		JP_PositioningGrid grid = JP_PositioningGrid.getGrid();
