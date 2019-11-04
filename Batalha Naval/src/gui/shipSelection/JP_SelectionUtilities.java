@@ -110,7 +110,7 @@ public class JP_SelectionUtilities extends JPanel implements IObserver{
 		next.setBackground(new Color(0, 218, 60));
 		next.setForeground(new Color(100, 100, 100));
 		next.setFont(new Font("SansSerif", Font.BOLD, 16));
-		next.setEnabled(false);
+		buttonDisable();
 		
 		next.addActionListener(new ActionListener() { 
 			public void actionPerformed(ActionEvent e) { 
@@ -140,11 +140,13 @@ public class JP_SelectionUtilities extends JPanel implements IObserver{
 	}
 	
 	public void buttonEnable() {
+		next.setBackground(new Color(0, 218, 60));
 		next.setEnabled(true);
 		this.repaint();
 	}
 	
 	public void buttonDisable() {
+		next.setBackground(Color.LIGHT_GRAY.darker());
 		next.setEnabled(false);
 		this.repaint();
 	}

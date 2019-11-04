@@ -128,7 +128,8 @@ public class CtrlRules implements IObservable{
     }
 	
 	public void unsetSelectedShip() {
-    	selectedShip = null;
+    	selectedShip.unselectPreviousShip();
+		selectedShip = null;
     }
 	
 	public String getPlayer(int player) {
@@ -149,6 +150,7 @@ public class CtrlRules implements IObservable{
 	public void positionShip(int x, int y) {
 		if(selectedShip == null) {
 			System.out.println("Selecione um navio.");
+			isValid = false;
 			addMessage("Select a ship");
 			return;
 		}

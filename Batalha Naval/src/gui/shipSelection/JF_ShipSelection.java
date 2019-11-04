@@ -24,6 +24,7 @@ public class JF_ShipSelection extends JFrame implements KeyListener{
         	shipSelection = new JF_ShipSelection();
         
         return shipSelection;    
+        
     }
 	
 	private JF_ShipSelection() {

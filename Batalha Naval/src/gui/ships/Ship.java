@@ -117,7 +117,7 @@ public abstract class Ship extends JComponent implements MouseListener {
 		repaint();
 	}
 	
-	private void unselectPreviousShip() {
+	public void unselectPreviousShip() {
 		Ship selectedShip = RulesFacade.getRules().selectedShip();
 		
 		if(selectedShip == null || !selectedShip.available) {
