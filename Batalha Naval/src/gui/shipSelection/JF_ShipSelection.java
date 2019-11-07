@@ -40,7 +40,7 @@ public class JF_ShipSelection extends JFrame implements KeyListener{
 		setLayout(null);
 		getContentPane().setBackground(new Color(250, 250, 250));
 
-		setTitle("Ship Selection - Player " + RulesFacade.getRules().getPlayer(1));
+		setTitle("Ship Selection - " + RulesFacade.getRules().getPlayer(1));
 		getContentPane().add(titlePanel);
 		getContentPane().add(JP_ShipOptions.getShipOptions());
 		getContentPane().add(new JP_ShipPlacement());

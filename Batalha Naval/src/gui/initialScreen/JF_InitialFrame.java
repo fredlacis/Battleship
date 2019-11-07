@@ -8,8 +8,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import main.K;
-import rules.*;
-import rules.designPatterns.RulesFacade;
 
 @SuppressWarnings("serial")
 public class JF_InitialFrame extends JFrame{

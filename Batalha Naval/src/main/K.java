@@ -26,6 +26,23 @@ public class K {
 	    }
 	}
 	
+	public enum objectValues{
+		BOARD_1(0),
+		BOARD_2(1),
+		CURRENT_PLAYER(2),
+		RESULT(3),
+		MESSAGES(4),
+		IS_VALID(5);
+		
+		private final int value;
+
+		objectValues(final int newValue) {
+            value = newValue;
+        }
+
+        public int getValue() { return value; }
+	}
+	
 	public static int[][] createEmptyGrid(){
 		int newGrid[][] = new int[K.SQUARE_COUNT][K.SQUARE_COUNT];
 		for(int i = 0; i < K.SQUARE_COUNT; i++)

@@ -3,9 +3,11 @@ package gui.board;
 import java.awt.Color;
 
 import main.K;
+import rules.designPatterns.IObservable;
+import rules.designPatterns.IObserver;
 
 @SuppressWarnings("serial")
-public class JP_PositioningGrid extends JP_Grid{
+public class JP_PositioningGrid extends JP_Grid implements IObserver{
 	
 	static JP_PositioningGrid g = null;
 	
@@ -88,5 +90,12 @@ public class JP_PositioningGrid extends JP_Grid{
 	
 	public int[][] getFinalGrid() {
 		return K.cloneGrid(definedCellsToPaint);
+	}
+
+	@Override
+	public void notify(IObservable o) {
+		
+		
+		
 	}
 }

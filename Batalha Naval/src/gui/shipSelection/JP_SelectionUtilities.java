@@ -15,7 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import gui.attack.JF_Attack;
-import gui.initialScreen.JF_NameForm;
 import main.K;
 import rules.designPatterns.IObservable;
 import rules.designPatterns.IObserver;
@@ -151,7 +150,7 @@ public class JP_SelectionUtilities extends JPanel implements IObserver{
 		this.repaint();
 	}
 	
-	public void setMessages(List<String> messages) {
+	public void setMessages(List<String> messages, boolean isValid) {
 		try {
 			message1.setText( messages.get( messages.size() - 1 ) );
 			message2.setText( messages.get( messages.size() - 2 ) );
@@ -161,7 +160,7 @@ public class JP_SelectionUtilities extends JPanel implements IObserver{
 			
 		}
 		
-		if( RulesFacade.getRules().getIsValid() ) {
+		if( isValid ) {
 			message1.setForeground(Color.GREEN.darker().darker());
 		}
 		else {
@@ -171,10 +170,17 @@ public class JP_SelectionUtilities extends JPanel implements IObserver{
 		repaint();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void notify(IObservable o) {
 		
-		setMessages(RulesFacade.getRules().getMessages());
+		Object lob[] = (Object []) o.get();
+		
+		List<String> newMessages = (List<String>) lob[K.objectValues.MESSAGES.getValue()];
+		boolean isValid = (boolean) lob[ K.objectValues.IS_VALID.getValue() ];
+		
+		setMessages(newMessages, isValid);
+		//setMessages(RulesFacade.getRules().getMessages());
 		
 	}
 	

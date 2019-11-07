@@ -1,8 +1,5 @@
 package rules.designPatterns;
 
-import java.util.List;
-
-import gui.board.JP_PositioningGrid;
 import gui.ships.Ship;
 import rules.CtrlRules;
 
@@ -70,19 +67,15 @@ public class RulesFacade {
 	}
 	
 	public void setTabuleiro(int jogador) {
-		ctrl.setTabuleiro(jogador);
+		ctrl.setBoard(jogador);
 	}
 	
 	public int[][] getTabuleiro(int jogador) {
-		return ctrl.getTabuleiro(jogador);
+		return ctrl.getBoard(jogador);
 	}
 	
 	public void addMessage(String message) {
 		ctrl.addMessage(message);
-	}
-	
-	public List<String> getMessages() {
-		return ctrl.getMessages();
 	}
 	
 	public boolean getIsValid() {

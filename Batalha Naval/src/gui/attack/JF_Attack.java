@@ -8,7 +8,6 @@ import javax.swing.JFrame;
 
 import gui.JP_Title;
 import gui.board.JP_BattleBoard;
-import gui.shipSelection.JP_SelectionUtilities;
 import main.K;
 
 @SuppressWarnings("serial")

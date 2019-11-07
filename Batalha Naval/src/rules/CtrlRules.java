@@ -3,7 +3,6 @@ package rules;
 import java.util.*;
 
 import gui.board.JP_PositioningGrid;
-import gui.shipSelection.JP_SelectionUtilities;
 import gui.shipSelection.JP_ShipOptions;
 import gui.ships.Ship;
 import main.K;
@@ -37,21 +36,19 @@ public class CtrlRules implements IObservable{
 	}
 	
 	private int currentPlayer;
-	
+
 	private String player1;
 	private String player2;
-	
-	private int tabuleiro1[][];
-	private int tabuleiro2[][];
-	
-	private int turn;
-	
+
+	private int board1[][];
+	private int board2[][];
+
 	private boolean isValid;
-	
+
 	private Ship selectedShip;
-	
+
 	List<IObserver> lob = new ArrayList<IObserver>();
-	
+
 	List<String> messages = new ArrayList<String>();
 	
 	public CtrlRules() {
@@ -59,13 +56,12 @@ public class CtrlRules implements IObservable{
 	}
 	
 	public void newGame() {
-		turn=-1;
-		tabuleiro1=new int[K.SQUARE_COUNT][K.SQUARE_COUNT];
-		tabuleiro2=new int[K.SQUARE_COUNT][K.SQUARE_COUNT];
+		board1=new int[K.SQUARE_COUNT][K.SQUARE_COUNT];
+		board2=new int[K.SQUARE_COUNT][K.SQUARE_COUNT];
 		for(int i=0;i<3;i++) {
 			for(int j=0;j<3;j++) {
-				tabuleiro1[i][j]=0;	
-				tabuleiro2[i][j]=0;	
+				board1[i][j]=0;	
+				board2[i][j]=0;	
 			}
 		}
 		currentPlayer = 1;
@@ -75,7 +71,7 @@ public class CtrlRules implements IObservable{
 		
 	}
 	
-	public int testaResultado() {
+	public int checkResult() {
 //		
 //		Funcao para testar se alguem ganhou
 //		
@@ -100,29 +96,21 @@ public class CtrlRules implements IObservable{
 		}
 	}
 	
-	public void setTabuleiro(int jogador) {
+	public void setBoard(int jogador) {
 		switch(jogador) {
-			case 1: tabuleiro1 = JP_PositioningGrid.getGrid().getFinalGrid();
-			case 2: tabuleiro2 = JP_PositioningGrid.getGrid().getFinalGrid();
+			case 1: board1 = JP_PositioningGrid.getGrid().getFinalGrid();
+			case 2: board2 = JP_PositioningGrid.getGrid().getFinalGrid();
 		}
 	}
 	
-	public int[][] getTabuleiro(int jogador) {
+	public int[][] getBoard(int jogador) {
 		switch(jogador) {
-			case 1: return tabuleiro1;
-			case 2: return tabuleiro2;
+			case 1: return board1;
+			case 2: return board2;
 		}
 		return null;
 	}
 
-	public int getTurn() {
-		return turn;
-	}
-
-	public void setTurn(int vez) {
-		this.turn = vez;
-	}
-	
 	public void setSelectedShip(Ship ship) {
 		selectedShip = ship;
     }
@@ -156,26 +144,25 @@ public class CtrlRules implements IObservable{
 		}
 		
 		Object[] pair = new Object[2];
-		int cellsToPaint[][];
 		
 		pair = checkPos(x, y);
 		
 		isValid = (boolean)pair[0];
-		cellsToPaint = (int[][])pair[1];
+		int cellsToPaint[][] = (int[][])pair[1]; 
 		
 		if(!selectedShip.getAvailability()) {
-			System.out.println("N�o ha mais navios desse tipo: Pressione R para limpar o grid.");
+			//System.out.println("N�o ha mais navios desse tipo: Pressione R para limpar o grid.");
 			addMessage("No more ships of this type");
 			return;
 		}
 		
 		if(!isValid) {
-			System.out.println("Posi��o inv�lida.");
+			//System.out.println("Posi��o inv�lida.");
 			addMessage("Invalid position");
 			return;
 		}
 		
-		System.out.printf("Posi��o v�lida. Posicionando a partir do bloco X: %d Y: %d.\n", x+1, y+1);
+		//System.out.printf("Posi��o v�lida. Posicionando a partir do bloco X: %d Y: %d.\n", x+1, y+1);
 		addMessage("Positioning ship");
 		JP_PositioningGrid.getGrid().paintCells(cellsToPaint);
 		JP_ShipOptions.getShipOptions().reduceShipCount(selectedShip);
@@ -467,7 +454,6 @@ public class CtrlRules implements IObservable{
 		
 		return validPos;
 	}
-
 	
 	public Object[] checkPos(int x, int y) {
 		
@@ -500,11 +486,7 @@ public class CtrlRules implements IObservable{
 		for(IObserver o:lob)
 			o.notify(this);
 	}
-	
-	public List<String> getMessages() {
-		return messages;
-	}
-	
+		
 	public boolean getIsValid() {
 		return isValid;
 	}
@@ -518,17 +500,19 @@ public class CtrlRules implements IObservable{
 	public void removeObserver(IObserver o) {
 		lob.remove(o);
 	}
-
+	
 	@Override
 	public Object get() {
-//		Object dados[]=new Object[5];
-//		
-//		dados[0]=tabuleiro;
-//		dados[1]=new Integer(vez);
-//		dados[2]=new Integer(testaResultado());
-//		
-//		return dados;
-		return null;
+		Object dados[] = new Object[ K.objectValues.values().length ];
+		
+		dados[ K.objectValues.BOARD_1.getValue() ] 			= board1;
+		dados[ K.objectValues.BOARD_2.getValue() ] 			= board2;
+		dados[ K.objectValues.CURRENT_PLAYER.getValue() ] 	= new Integer(currentPlayer);
+		dados[ K.objectValues.RESULT.getValue() ] 			= new Integer(checkResult());
+		dados[ K.objectValues.MESSAGES.getValue() ] 		= messages;
+		dados[ K.objectValues.IS_VALID.getValue() ] 		= new Boolean(isValid);
+		
+		return dados;
 	}
 
 }

@@ -3,13 +3,9 @@ package gui.shipSelection;
 import java.awt.Font;
 
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import gui.attack.JF_Attack;
 import gui.ships.*;
-import main.K;
-import rules.designPatterns.RulesFacade;
 
 @SuppressWarnings("serial")
 public class JP_ShipOptions extends JPanel{
