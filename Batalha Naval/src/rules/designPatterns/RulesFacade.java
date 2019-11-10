@@ -18,10 +18,6 @@ public class RulesFacade {
         return f;    
     }
     
-    public void cellClicked(int i,int j) {
-    	ctrl.cellClicked(i, j);
-    }
-    
     public void setSelectedShip(Ship ship) {
     	ctrl.setSelectedShip(ship);
     }
@@ -30,16 +26,16 @@ public class RulesFacade {
     	ctrl.unsetSelectedShip();
     }
     
-    public void positionShip(int x, int y) {
-		ctrl.positionShip(x, y);
+    public void positionShip(int x, int y, int[][] definedCells) {
+		ctrl.positionShip(x, y, definedCells);
 	}
     
     public Ship selectedShip() {
     	return ctrl.getSelectedShip();
     }
     
-    public Object[] checkPos(int x, int y) {
-		return ctrl.checkPos(x, y);
+    public void checkPos(int x, int y, int[][] definedCells) {
+		ctrl.checkPos(x, y, definedCells);
 	}
     
     public void resetGrid() {
@@ -76,10 +72,6 @@ public class RulesFacade {
 	
 	public void addMessage(String message) {
 		ctrl.addMessage(message);
-	}
-	
-	public boolean getIsValid() {
-		return ctrl.getIsValid();
 	}
 	
 //    

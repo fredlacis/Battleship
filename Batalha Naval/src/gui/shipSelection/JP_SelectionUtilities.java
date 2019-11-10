@@ -150,7 +150,7 @@ public class JP_SelectionUtilities extends JPanel implements IObserver{
 		this.repaint();
 	}
 	
-	public void setMessages(List<String> messages, boolean isValid) {
+	public void setMessages(List<String> messages, boolean validation) {
 		try {
 			message1.setText( messages.get( messages.size() - 1 ) );
 			message2.setText( messages.get( messages.size() - 2 ) );
@@ -160,7 +160,7 @@ public class JP_SelectionUtilities extends JPanel implements IObserver{
 			
 		}
 		
-		if( isValid ) {
+		if( validation ) {
 			message1.setForeground(Color.GREEN.darker().darker());
 		}
 		else {
@@ -177,10 +177,9 @@ public class JP_SelectionUtilities extends JPanel implements IObserver{
 		Object lob[] = (Object []) o.get();
 		
 		List<String> newMessages = (List<String>) lob[K.objectValues.MESSAGES.getValue()];
-		boolean isValid = (boolean) lob[ K.objectValues.IS_VALID.getValue() ];
+		boolean validation = (boolean) lob[ K.objectValues.IS_VALID.getValue() ];
 		
-		setMessages(newMessages, isValid);
-		//setMessages(RulesFacade.getRules().getMessages());
+		setMessages(newMessages, validation);
 		
 	}
 	

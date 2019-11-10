@@ -46,11 +46,17 @@ public class CtrlRules implements IObservable{
 	private boolean isValid;
 
 	private Ship selectedShip;
+	
+	private int cellsToPaint[][];
 
 	List<IObserver> lob = new ArrayList<IObserver>();
 
 	List<String> messages = new ArrayList<String>();
 	
+	/*
+	 * CONSTRUTOR
+	 */
+
 	public CtrlRules() {
 		newGame();
 	}
@@ -67,9 +73,9 @@ public class CtrlRules implements IObservable{
 		currentPlayer = 1;
 	}
 	
-	public void cellClicked(int i,int j) {
-		
-	}
+	/*
+	 * RESULTADO
+	 */
 	
 	public int checkResult() {
 //		
@@ -79,86 +85,33 @@ public class CtrlRules implements IObservable{
 		return 0;
 	}
 	
-	public void setJogadorAtual(int jogador) {
-		this.currentPlayer = jogador;
-	}
+	/*
+	 * FUNCOES DO TABULEIRO
+	 */
 	
-	public int getJogadorAtual() {
-		return currentPlayer;
-	}
-	
-	public int getNextPlayer() {
-		if(currentPlayer == 1) {
-			return currentPlayer = 2;
-		}
-		else {
-			return currentPlayer = 1;
-		}
-	}
-	
-	public void setBoard(int jogador) {
-		switch(jogador) {
-			case 1: board1 = JP_PositioningGrid.getGrid().getFinalGrid();
-			case 2: board2 = JP_PositioningGrid.getGrid().getFinalGrid();
-		}
-	}
-	
-	public int[][] getBoard(int jogador) {
-		switch(jogador) {
-			case 1: return board1;
-			case 2: return board2;
-		}
-		return null;
-	}
-
-	public void setSelectedShip(Ship ship) {
-		selectedShip = ship;
-    }
-	
-	public void unsetSelectedShip() {
-    	selectedShip.unselectPreviousShip();
-		selectedShip = null;
-    }
-	
-	public String getPlayer(int player) {
-		switch(player) {
-			case 1: return player1;
-			case 2: return player2;
-		}
-		return null;
-	}
-	
-	public void setPlayer(int playerNumber, String playerName) {
-		switch(playerNumber) {
-		case 1: player1 = playerName;
-		case 2: player2 = playerName;
-		}
-	}
-	
-	public void positionShip(int x, int y) {
+	public void positionShip(int x, int y, int[][] definedCells) {
 		if(selectedShip == null) {
 			System.out.println("Selecione um navio.");
-			isValid = false;
+			setIsValid(false);
 			addMessage("Select a ship");
 			return;
 		}
-		
-		Object[] pair = new Object[2];
-		
-		pair = checkPos(x, y);
-		
-		isValid = (boolean)pair[0];
-		int cellsToPaint[][] = (int[][])pair[1]; 
-		
+				
+		checkPos(x, y, definedCells);
+				
 		if(!selectedShip.getAvailability()) {
 			//System.out.println("N�o ha mais navios desse tipo: Pressione R para limpar o grid.");
 			addMessage("No more ships of this type");
+			for(IObserver o:lob)
+				o.notify(this);
 			return;
 		}
 		
 		if(!isValid) {
 			//System.out.println("Posi��o inv�lida.");
 			addMessage("Invalid position");
+			for(IObserver o:lob)
+				o.notify(this);
 			return;
 		}
 		
@@ -167,172 +120,186 @@ public class CtrlRules implements IObservable{
 		JP_PositioningGrid.getGrid().paintCells(cellsToPaint);
 		JP_ShipOptions.getShipOptions().reduceShipCount(selectedShip);
 		
+		for(IObserver o:lob)
+			o.notify(this);
+		
 	}
 	
-	public Ship getSelectedShip() {
-		return selectedShip;
-    }
+	public void checkPos(int x, int y, int[][] definedCells) {
+		
+		if(selectedShip == null) {
+			return;
+		}
+				
+		if(selectedShip.getClass().getName() == "gui.ships.Seaplane") {
+			checkPosSeaplane(x, y, definedCells);
+		}
+		
+		checkPosShip(x, y, definedCells);
+	}
 	
-	private Object[] checkPosShip(int x, int y){
+	public void resetGrid() {
+		//System.out.println("Limpando Grid");
+		setIsValid(true);
 		
-		Object[] pair = new Object[2];
+		addMessage("Reseting Grid");
 		
-		int[][] definedCells = JP_PositioningGrid.getGrid().getFinalGrid();
-		int cellsToPaint[][] = K.createEmptyGrid();
-		boolean validPos = true;
+		JP_PositioningGrid.getGrid().reset();
+		
+		JP_ShipOptions.getShipOptions().resetShipCount();
+		
+		unsetSelectedShip();
+	}
+
+	private void checkPosShip(int x, int y, int[][] definedCells){
+				
+		cellsToPaint = K.createEmptyGrid();
 		
 		if(!selectedShip.getAvailability()) {
-			validPos = false;
+			setIsValid(false);
 		}
 		
 		if(selectedShip.orientation == ORIENTATION.TOP) {
 			for(int i = selectedShip.shipSize-1; i >= 0; i--) {
 				try {
-					if(definedCells[x][y-i] != 0) validPos = false;
+					if(definedCells[x][y-i] != 0) setIsValid(false);
 					cellsToPaint[x][y-i] = selectedShip.shipSize;
 				}
 				catch(Exception e) {
-					validPos = false;
+					 setIsValid(false);
 				}
 			}
 		}
 		if(selectedShip.orientation == ORIENTATION.RIGHT) {
 			for(int i = 0; i < selectedShip.shipSize; i++) {
 				try {
-					if(definedCells[x+i][y] != 0) validPos = false;
+					if(definedCells[x+i][y] != 0) setIsValid(false);
 					cellsToPaint[x+i][y] = selectedShip.shipSize;
 				}
 				catch(Exception e) {
-					validPos = false;
+					setIsValid(false);
 				}
 			}
 		}
 		if(selectedShip.orientation == ORIENTATION.DOWN) {
 			for(int i = 0; i < selectedShip.shipSize; i++) {
 				try {
-					if(definedCells[x][y+i] != 0) validPos = false;
+					if(definedCells[x][y+i] != 0) setIsValid(false);
 					cellsToPaint[x][y+i] = selectedShip.shipSize;
 				}
 				catch(Exception e) {
-					validPos = false;
+					setIsValid(false);
 				}
 			}
 		}
 		if(selectedShip.orientation == ORIENTATION.LEFT) {
 			for(int i = selectedShip.shipSize-1; i >= 0; i--) {
 				try {
-					if(definedCells[x-i][y] != 0) validPos = false;
+					if(definedCells[x-i][y] != 0) setIsValid(false);
 					cellsToPaint[x-i][y] = selectedShip.shipSize;
 				}
 				catch(Exception e) {
-					validPos = false;
+					setIsValid(false);
 				}
 			}
 		}
 		
-		if(validPos) {
-			validPos = checkSurroundingsShip(x, y);
+		if(isValid) {
+			setIsValid( checkSurroundingsShip(x, y, definedCells) );
 		}
-				
-		pair[0] = validPos;
-		pair[1] = cellsToPaint;
-		return pair;
+		
+		
+		
+		for(IObserver o:lob)
+			o.notify(this);
+		
 	}
 	
-	private Object[] checkPosSeaplane(int x, int y){
-		Object[] pair = new Object[2];
+	private void checkPosSeaplane(int x, int y, int [][] definedCells){
 		
-		int[][] definedCells = JP_PositioningGrid.getGrid().getFinalGrid();
-		int cellsToPaint[][] = K.createEmptyGrid();
-		boolean validPos = true;
+		cellsToPaint = K.createEmptyGrid();
 		
 		if(!selectedShip.getAvailability()) {
-			validPos = false;
+			setIsValid(false);
 		}
 		
-		if(definedCells[x][y] != 0) validPos = false;
+		if(definedCells[x][y] != 0) setIsValid(false);
 		if(selectedShip.orientation == ORIENTATION.TOP) {
 			cellsToPaint[x][y] = selectedShip.shipSize;
 			try {
-				if(definedCells[x-1][y-1] != 0) validPos = false;
+				if(definedCells[x-1][y-1] != 0) setIsValid(false);
 				cellsToPaint[x-1][y-1] = selectedShip.shipSize;
 			}
 			catch (Exception e){
-				validPos = false;
+				setIsValid(false);
 			}
 			try {
-				if(definedCells[x][y-2] != 0) validPos = false;
+				if(definedCells[x][y-2] != 0) setIsValid(false);
 				cellsToPaint[x][y-2] = selectedShip.shipSize;
 			}
 			catch (Exception e){
-				validPos = false;
+				setIsValid(false);
 			}
 		}
 		if(selectedShip.orientation == ORIENTATION.RIGHT) {
 			cellsToPaint[x][y] = selectedShip.shipSize;
 			try {
-				if(definedCells[x+1][y-1] != 0) validPos = false;
+				if(definedCells[x+1][y-1] != 0) setIsValid(false);
 				cellsToPaint[x+1][y-1] = selectedShip.shipSize;
 			}
 			catch (Exception e){
-				validPos = false;
+				setIsValid(false);
 			}
 			try {
-				if(definedCells[x+2][y] != 0) validPos = false;
+				if(definedCells[x+2][y] != 0) setIsValid(false);
 				cellsToPaint[x+2][y] = selectedShip.shipSize;
 			}
 			catch (Exception e){
-				validPos = false;
+				setIsValid(false);
 			}
 		}
 		if(selectedShip.orientation == ORIENTATION.DOWN) {
 			cellsToPaint[x][y] = selectedShip.shipSize;
 			try {
-				if(definedCells[x+1][y+1] != 0) validPos = false;
+				if(definedCells[x+1][y+1] != 0) setIsValid(false);
 				cellsToPaint[x+1][y+1] = selectedShip.shipSize;
 			}
 			catch (Exception e){
-				validPos = false;
+				setIsValid(false);
 			}
 			try {
-				if(definedCells[x][y+2] != 0) validPos = false;
+				if(definedCells[x][y+2] != 0) setIsValid(false);
 				cellsToPaint[x][y+2] = selectedShip.shipSize;
 			}
 			catch (Exception e){
-				validPos = false;
+				setIsValid(false);
 			}
 		}
 		if(selectedShip.orientation == ORIENTATION.LEFT) {
 			cellsToPaint[x][y] = selectedShip.shipSize;
 			try {
-				if(definedCells[x-1][y+1] != 0) validPos = false;
+				if(definedCells[x-1][y+1] != 0) setIsValid(false);
 				cellsToPaint[x-1][y+1] = selectedShip.shipSize;
 			}
 			catch (Exception e){
-				validPos = false;
+				setIsValid(false);
 			}
 			try {
-				if(definedCells[x-2][y] != 0) validPos = false;
+				if(definedCells[x-2][y] != 0) setIsValid(false);
 				cellsToPaint[x-2][y] = selectedShip.shipSize;
 			}
 			catch (Exception e){
-				validPos = false;
+				setIsValid(false);
 			}
 		}
 		
-		if(validPos) {
-			validPos = checkSurroundingsSeaplane(x, y);
+		if(isValid) {
+			setIsValid( checkSurroundingsSeaplane(x, y, definedCells) );
 		}
 		
-		pair[0] = validPos;
-		pair[1] = cellsToPaint;
-		return pair;
 	}
 	
-	private boolean checkSurroundingsShip(int x, int y) {
-		
-		int[][] definedCells = JP_PositioningGrid.getGrid().getFinalGrid();
-		boolean validPos = true;
+	private boolean checkSurroundingsShip(int x, int y, int[][] definedCells) {
 		
 		if(selectedShip.orientation == ORIENTATION.TOP) {
 			for(int i = selectedShip.shipSize-1; i >= 0; i--) {
@@ -379,13 +346,12 @@ public class CtrlRules implements IObservable{
 			}
 		}
 		
-		return validPos;
+		System.out.println("*********returning true");
+		
+		return true;
 	}
 	
-	private boolean checkSurroundingsSeaplane(int x, int y) {
-		
-		int[][] definedCells = JP_PositioningGrid.getGrid().getFinalGrid();
-		boolean validPos = true;
+	private boolean checkSurroundingsSeaplane(int x, int y, int[][] definedCells) {
 		
 		try {
 			if(definedCells[x+1][y] != 0) return false;
@@ -452,45 +418,93 @@ public class CtrlRules implements IObservable{
 			catch(Exception e) {}
 		}
 		
-		return validPos;
+		return true;
 	}
 	
-	public Object[] checkPos(int x, int y) {
-		
-		if(selectedShip == null) {
-			return null;
-		}
-				
-		if(selectedShip.getClass().getName() == "gui.ships.Seaplane") {
-			return checkPosSeaplane(x, y);
-		}
-		return checkPosShip(x, y);
-	}
-	
-	public void resetGrid() {
-		System.out.println("Limpando Grid");
-		isValid = true;
-		addMessage("Reseting Grid");
-		
-		JP_PositioningGrid grid = JP_PositioningGrid.getGrid();
-		grid.reset();
-		
-		JP_ShipOptions shipOptions = JP_ShipOptions.getShipOptions();
-		shipOptions.resetShipCount();
-		
-		unsetSelectedShip();
-	}
-	
+	/*
+	 * LISTA DE MENSAGENS
+	 */
+
 	public void addMessage(String message) {
 		messages.add(message);
 		for(IObserver o:lob)
 			o.notify(this);
 	}
 		
-	public boolean getIsValid() {
-		return isValid;
+	/*
+	 * METODOS GET E SET
+	 */
+	public void setIsValid(boolean validation) {
+		isValid = validation;
+		for(IObserver o:lob)
+			o.notify(this);
 	}
+	
+	public void setSelectedShip(Ship ship) {
+		selectedShip = ship;
+    }
 
+	public void unsetSelectedShip() {
+    	selectedShip.unselectPreviousShip();
+		selectedShip = null;
+    }
+
+	public void setJogadorAtual(int jogador) {
+		this.currentPlayer = jogador;
+	}
+	
+	public int getJogadorAtual() {
+		return currentPlayer;
+	}
+	
+	public int getNextPlayer() {
+		if(currentPlayer == 1) {
+			return currentPlayer = 2;
+		}
+		else {
+			return currentPlayer = 1;
+		}
+	}
+	
+	public void setBoard(int jogador) {
+		switch(jogador) {
+			case 1: board1 = JP_PositioningGrid.getGrid().getFinalGrid();
+			case 2: board2 = JP_PositioningGrid.getGrid().getFinalGrid();
+		}
+	}
+	
+	public int[][] getBoard(int jogador) {
+		switch(jogador) {
+			case 1: return board1;
+			case 2: return board2;
+		}
+		return null;
+	}
+	
+	public String getPlayer(int player) {
+		switch(player) {
+			case 1: return player1;
+			case 2: return player2;
+		}
+		return null;
+	}
+	
+	public void setPlayer(int playerNumber, String playerName) {
+		switch(playerNumber) {
+		case 1: player1 = playerName;
+		case 2: player2 = playerName;
+		}
+	}
+	
+	public Ship getSelectedShip() {
+		
+		return selectedShip;
+	}
+	
+	/*
+	 * FUNCOES DO OBSERVER
+	 */
+	
 	@Override
 	public void addObserver(IObserver o) {
 		lob.add(o);
@@ -511,6 +525,9 @@ public class CtrlRules implements IObservable{
 		dados[ K.objectValues.RESULT.getValue() ] 			= new Integer(checkResult());
 		dados[ K.objectValues.MESSAGES.getValue() ] 		= messages;
 		dados[ K.objectValues.IS_VALID.getValue() ] 		= new Boolean(isValid);
+		dados[ K.objectValues.CELLS_TO_PAINT.getValue() ] 	= cellsToPaint;
+		
+		//TODO: criar cellsToPaint no CtrlRules
 		
 		return dados;
 	}

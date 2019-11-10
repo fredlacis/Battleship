@@ -32,7 +32,8 @@ public class K {
 		CURRENT_PLAYER(2),
 		RESULT(3),
 		MESSAGES(4),
-		IS_VALID(5);
+		IS_VALID(5),
+		CELLS_TO_PAINT(6);
 		
 		private final int value;
 

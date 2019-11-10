@@ -13,10 +13,12 @@ import javax.swing.SwingUtilities;
 
 import gui.ships.Ship;
 import main.K;
+import rules.designPatterns.IObservable;
+import rules.designPatterns.IObserver;
 import rules.designPatterns.RulesFacade;
 
 @SuppressWarnings("serial")
-public class Cell extends JPanel implements MouseListener{
+public class Cell extends JPanel implements MouseListener, IObserver{
 	
 	private int x;
 	private int y;
@@ -28,7 +30,13 @@ public class Cell extends JPanel implements MouseListener{
 	
 	private Color shipColor;
 	
+	private boolean validation = false;
+	
+	private int[][] cellsToPaint = K.createEmptyGrid();
+	
 	public Cell(int x, int y) {
+		
+		RulesFacade.getRules().register(this);
 		
 		this.x = x;
 		this.y = y;
@@ -81,22 +89,18 @@ public class Cell extends JPanel implements MouseListener{
 		
 		JP_PositioningGrid.getGrid().unpaintTemporaryCells(x, y);
 		
-		Object[] pair = new Object[2];
-		boolean isValid;
-		int cellsToPaint[][];
+		RulesFacade.getRules().checkPos(x/K.SQUARE_SIZE, y/K.SQUARE_SIZE, JP_PositioningGrid.getGrid().getFinalGrid());
 		
-		pair = RulesFacade.getRules().checkPos(x/K.SQUARE_SIZE, y/K.SQUARE_SIZE);
+//		if(pair == null) {
+//			setColor(cellColor.darker());
+//			repaint();
+//			return;
+//		}
 		
-		if(pair == null) {
-			setColor(cellColor.darker());
-			repaint();
-			return;
-		}
+		//JP_PositioningGrid.getGrid().paintTemporaryCells();
 		
-		isValid = (boolean)pair[0];
-		cellsToPaint = (int[][])pair[1];
-		
-		JP_PositioningGrid.getGrid().paintTemporaryCells(isValid, cellsToPaint);
+		System.out.printf("%b", validation);
+		K.printGrid(cellsToPaint);
 		
 		repaint();
 	}
@@ -113,7 +117,7 @@ public class Cell extends JPanel implements MouseListener{
 		}
 		
 		if(!SwingUtilities.isRightMouseButton(e)) {
-			RulesFacade.getRules().positionShip(x/K.SQUARE_SIZE, y/K.SQUARE_SIZE);
+			RulesFacade.getRules().positionShip(x/K.SQUARE_SIZE, y/K.SQUARE_SIZE, JP_PositioningGrid.getGrid().getFinalGrid());
 			return;
 		}
 		
@@ -134,6 +138,7 @@ public class Cell extends JPanel implements MouseListener{
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
+		//System.out.println("Mouse entered");
 		paintSelectedCells();
 	}
 
@@ -145,6 +150,20 @@ public class Cell extends JPanel implements MouseListener{
 		setColor(getOriginalColor());
 		
 		repaint();
+	}
+
+	@Override
+	public void notify(IObservable o) {
+		
+		//System.out.println("Celula NOTIFICADA");
+		
+		Object lob[] = (Object []) o.get();
+		
+		cellsToPaint = (int[][]) lob[K.objectValues.CELLS_TO_PAINT.getValue()];
+		validation = (boolean) lob[ K.objectValues.IS_VALID.getValue() ];
+		
+		JP_PositioningGrid.getGrid().paintTemporaryCells( validation, cellsToPaint );
+				
 	}
 
 }

@@ -5,6 +5,7 @@ import java.awt.Color;
 import main.K;
 import rules.designPatterns.IObservable;
 import rules.designPatterns.IObserver;
+import rules.designPatterns.RulesFacade;
 
 @SuppressWarnings("serial")
 public class JP_PositioningGrid extends JP_Grid implements IObserver{
@@ -12,6 +13,10 @@ public class JP_PositioningGrid extends JP_Grid implements IObserver{
 	static JP_PositioningGrid g = null;
 	
 	private int[][] currentCellsToPaint;
+	
+	private int[][] cellsToPaint = K.createEmptyGrid();
+	
+	private boolean validation = false;
 	
 	public static JP_PositioningGrid getGrid() {
 		
@@ -23,9 +28,10 @@ public class JP_PositioningGrid extends JP_Grid implements IObserver{
 	
 	private JP_PositioningGrid() {
 		super();
+		RulesFacade.getRules().register(this);
 	}
 	
-	public void paintTemporaryCells(boolean isValid, int cellsToPaint[][]) {
+	public void paintTemporaryCells(boolean validation, int[][] cellsToPaint) {
 		
 		Cell cell;
 		
@@ -35,7 +41,7 @@ public class JP_PositioningGrid extends JP_Grid implements IObserver{
 			{
 				if(cellsToPaint[j][i] != 0) {
 					cell = grid[j][i];
-					if(isValid) {
+					if(validation) {
 						cell.setColor(Color.GREEN);
 						cell.repaint();
 					}
@@ -95,7 +101,14 @@ public class JP_PositioningGrid extends JP_Grid implements IObserver{
 	@Override
 	public void notify(IObservable o) {
 		
+		System.out.println("Positioning Grid NOTIFICADO");
 		
+		Object lob[] = (Object []) o.get();
+		
+		cellsToPaint = (int[][]) lob[K.objectValues.CELLS_TO_PAINT.getValue()];
+		validation = (boolean) lob[ K.objectValues.IS_VALID.getValue() ];
+		
+		//paintTemporaryCells();
 		
 	}
 }
