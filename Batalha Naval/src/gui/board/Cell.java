@@ -99,8 +99,8 @@ public class Cell extends JPanel implements MouseListener, IObserver{
 		
 		//JP_PositioningGrid.getGrid().paintTemporaryCells();
 		
-		System.out.printf("%b", validation);
-		K.printGrid(cellsToPaint);
+//		System.out.printf("%b\n", validation);
+//		K.printGrid(cellsToPaint);
 		
 		repaint();
 	}

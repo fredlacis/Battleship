@@ -125,19 +125,6 @@ public class CtrlRules implements IObservable{
 		
 	}
 	
-	public void checkPos(int x, int y, int[][] definedCells) {
-		
-		if(selectedShip == null) {
-			return;
-		}
-				
-		if(selectedShip.getClass().getName() == "gui.ships.Seaplane") {
-			checkPosSeaplane(x, y, definedCells);
-		}
-		
-		checkPosShip(x, y, definedCells);
-	}
-	
 	public void resetGrid() {
 		//System.out.println("Limpando Grid");
 		setIsValid(true);
@@ -151,9 +138,26 @@ public class CtrlRules implements IObservable{
 		unsetSelectedShip();
 	}
 
+	public void checkPos(int x, int y, int[][] definedCells) {
+		
+		if(selectedShip == null) {
+			return;
+		}
+				
+		if(selectedShip.getClass().getName() == "gui.ships.Seaplane") {
+			checkPosSeaplane(x, y, definedCells);
+		}
+		
+		checkPosShip(x, y, definedCells);
+	}
+	
 	private void checkPosShip(int x, int y, int[][] definedCells){
 				
 		cellsToPaint = K.createEmptyGrid();
+		
+		K.printGrid(definedCells);
+		
+		setIsValid(true);
 		
 		if(!selectedShip.getAvailability()) {
 			setIsValid(false);
@@ -218,6 +222,8 @@ public class CtrlRules implements IObservable{
 	private void checkPosSeaplane(int x, int y, int [][] definedCells){
 		
 		cellsToPaint = K.createEmptyGrid();
+		
+		setIsValid(true);
 		
 		if(!selectedShip.getAvailability()) {
 			setIsValid(false);
@@ -527,7 +533,8 @@ public class CtrlRules implements IObservable{
 		dados[ K.objectValues.IS_VALID.getValue() ] 		= new Boolean(isValid);
 		dados[ K.objectValues.CELLS_TO_PAINT.getValue() ] 	= cellsToPaint;
 		
-		//TODO: criar cellsToPaint no CtrlRules
+		System.out.printf("CtrlRules isValid = %b\n", isValid);
+		//K.printGrid(cellsToPaint);
 		
 		return dados;
 	}
