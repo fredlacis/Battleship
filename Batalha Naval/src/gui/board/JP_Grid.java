@@ -58,17 +58,3 @@ public class JP_Grid extends JPanel{
 	}
 	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -50,17 +50,14 @@ public class CtrlRules implements IObservable{
 	private int cellsToPaint[][];
 
 	List<IObserver> lob = new ArrayList<IObserver>();
-
 	List<String> messages = new ArrayList<String>();
 	
-	/*
-	 * CONSTRUTOR
-	 */
+	
+	/* CONSTRUTOR */
 
 	public CtrlRules() {
 		newGame();
 	}
-	
 	public void newGame() {
 		board1=new int[K.SQUARE_COUNT][K.SQUARE_COUNT];
 		board2=new int[K.SQUARE_COUNT][K.SQUARE_COUNT];
@@ -73,22 +70,20 @@ public class CtrlRules implements IObservable{
 		currentPlayer = 1;
 	}
 	
-	/*
-	 * RESULTADO
-	 */
+	
+	/* RESULTADO */
 	
 	public int checkResult() {
-//		
-//		Funcao para testar se alguem ganhou
-//		
-//		
 		return 0;
 	}
 	
-	/*
-	 * FUNCOES DO TABULEIRO
-	 */
 	
+	/* FUNCOES PUBLICAS PARA POSICIONAMENTO DO TABULEIRO */
+	
+	public void shipRotate() {
+		selectedShip.rotate();
+		refreshBoard();
+	}
 	public void positionShip(int x, int y, int[][] definedCells) {
 		if(selectedShip == null) {
 			System.out.println("Selecione um navio.");
@@ -102,16 +97,14 @@ public class CtrlRules implements IObservable{
 		if(!selectedShip.getAvailability()) {
 			//System.out.println("N�o ha mais navios desse tipo: Pressione R para limpar o grid.");
 			addMessage("No more ships of this type");
-			for(IObserver o:lob)
-				o.notify(this);
+			refreshBoard();
 			return;
 		}
 		
 		if(!isValid) {
 			//System.out.println("Posi��o inv�lida.");
 			addMessage("Invalid position");
-			for(IObserver o:lob)
-				o.notify(this);
+			refreshBoard();
 			return;
 		}
 		
@@ -120,11 +113,9 @@ public class CtrlRules implements IObservable{
 		JP_PositioningGrid.getGrid().paintCells(cellsToPaint);
 		JP_ShipOptions.getShipOptions().reduceShipCount(selectedShip);
 		
-		for(IObserver o:lob)
-			o.notify(this);
+		refreshBoard();
 		
 	}
-	
 	public void resetGrid() {
 		//System.out.println("Limpando Grid");
 		setIsValid(true);
@@ -137,7 +128,6 @@ public class CtrlRules implements IObservable{
 		
 		unsetSelectedShip();
 	}
-
 	public void checkPos(int x, int y, int[][] definedCells) {
 		
 		if(selectedShip == null) {
@@ -147,14 +137,19 @@ public class CtrlRules implements IObservable{
 		if(selectedShip.getClass().getName() == "gui.ships.Seaplane") {
 			checkPosSeaplane(x, y, definedCells);
 		}
+		else{
+			checkPosShip(x, y, definedCells);
+		}
 		
-		checkPosShip(x, y, definedCells);
+		refreshBoard();
 	}
 	
+	
+	/* FUNCOES PRIVADAS PARA POSICIONAMENTO DO TABULEIRO */
+	
 	private void checkPosShip(int x, int y, int[][] definedCells){
-				
+		
 		cellsToPaint = K.createEmptyGrid();
-				
 		setIsValid(true);
 		
 		if(!selectedShip.getAvailability()) {
@@ -163,13 +158,13 @@ public class CtrlRules implements IObservable{
 		}
 		
 		if(selectedShip.orientation == ORIENTATION.TOP) {
-			for(int i = selectedShip.shipSize-1; i >= 0; i--) {
+			for(int i = 0; i < selectedShip.shipSize; i++) {
 				try {
 					if(definedCells[x][y-i] != 0) setIsValid(false);
 					cellsToPaint[x][y-i] = selectedShip.shipSize;
 				}
 				catch(Exception e) {
-					 setIsValid(false);
+					setIsValid(false);
 				}
 			}
 		}
@@ -196,7 +191,7 @@ public class CtrlRules implements IObservable{
 			}
 		}
 		else if(selectedShip.orientation == ORIENTATION.LEFT) {
-			for(int i = selectedShip.shipSize-1; i >= 0; i--) {
+			for(int i = 0; i < selectedShip.shipSize; i++) {
 				try {
 					if(definedCells[x-i][y] != 0) setIsValid(false);
 					cellsToPaint[x-i][y] = selectedShip.shipSize;
@@ -210,9 +205,8 @@ public class CtrlRules implements IObservable{
 		if(isValid) {
 			setIsValid( checkSurroundingsShip(x, y, definedCells) );
 		}
-				
+						
 	}
-	
 	private void checkPosSeaplane(int x, int y, int [][] definedCells){
 		
 		cellsToPaint = K.createEmptyGrid();
@@ -226,7 +220,6 @@ public class CtrlRules implements IObservable{
 		
 		if(definedCells[x][y] != 0) {
 			setIsValid(false);
-			return;
 		}
 		
 		if(selectedShip.orientation == ORIENTATION.TOP) {
@@ -245,9 +238,8 @@ public class CtrlRules implements IObservable{
 			catch (Exception e){
 				setIsValid(false);
 			}
-			return;
 		}
-		if(selectedShip.orientation == ORIENTATION.RIGHT) {
+		else if(selectedShip.orientation == ORIENTATION.RIGHT) {
 			cellsToPaint[x][y] = selectedShip.shipSize;
 			try {
 				if(definedCells[x+1][y-1] != 0) setIsValid(false);
@@ -263,9 +255,8 @@ public class CtrlRules implements IObservable{
 			catch (Exception e){
 				setIsValid(false);
 			}
-			return;
 		}
-		if(selectedShip.orientation == ORIENTATION.DOWN) {
+		else if(selectedShip.orientation == ORIENTATION.DOWN) {
 			cellsToPaint[x][y] = selectedShip.shipSize;
 			try {
 				if(definedCells[x+1][y+1] != 0) setIsValid(false);
@@ -281,9 +272,8 @@ public class CtrlRules implements IObservable{
 			catch (Exception e){
 				setIsValid(false);
 			}
-			return;
 		}
-		if(selectedShip.orientation == ORIENTATION.LEFT) {
+		else if(selectedShip.orientation == ORIENTATION.LEFT) {
 			cellsToPaint[x][y] = selectedShip.shipSize;
 			try {
 				if(definedCells[x-1][y+1] != 0) setIsValid(false);
@@ -299,177 +289,132 @@ public class CtrlRules implements IObservable{
 			catch (Exception e){
 				setIsValid(false);
 			}
-			return;
 		}
 		
 		if(isValid) {
 			setIsValid( checkSurroundingsSeaplane(x, y, definedCells) );
 		}
-		
+				
 	}
-	
 	private boolean checkSurroundingsShip(int x, int y, int[][] definedCells) {
 		
 		if(selectedShip.orientation == ORIENTATION.TOP) {
 			for(int i = selectedShip.shipSize-1; i >= 0; i--) {
-				try {
-					if(definedCells[x+1][y-i] != 0) return false;
-					if(definedCells[x][y-i+1] != 0) return false;
-					if(definedCells[x-1][y-i] != 0) return false;
-					if(definedCells[x][y-i-1] != 0) return false;
-				}
-				catch(Exception e) {}
+				try { if(definedCells[x+1][y-i] != 0) return false; } catch(Exception e) {}
+				try { if(definedCells[x][y-i+1] != 0) return false; } catch(Exception e) {}
+				try { if(definedCells[x-1][y-i] != 0) return false; } catch(Exception e) {}
+				try { if(definedCells[x][y-i-1] != 0) return false; } catch(Exception e) {}
 			}
 		}
 		else if(selectedShip.orientation == ORIENTATION.RIGHT) {
 			for(int i = 0; i < selectedShip.shipSize; i++) {
-				try {
-					if(definedCells[x+i+1][y] != 0) return false;
-					if(definedCells[x+i][y+1] != 0) return false;
-					if(definedCells[x+i-1][y] != 0) return false;
-					if(definedCells[x+i][y-1] != 0) return false;
-				}
-				catch(Exception e) {}
+				try { if(definedCells[x+i+1][y] != 0) return false; } catch(Exception e) {}
+				try { if(definedCells[x+i][y+1] != 0) return false; } catch(Exception e) {}
+				try { if(definedCells[x+i-1][y] != 0) return false; } catch(Exception e) {}
+				try { if(definedCells[x+i][y-1] != 0) return false; } catch(Exception e) {}
 			}
 		}
 		else if(selectedShip.orientation == ORIENTATION.DOWN) {
 			for(int i = 0; i < selectedShip.shipSize; i++) {
-				try {
-					if(definedCells[x+1][y+i] != 0) return false;
-					if(definedCells[x][y+i+1] != 0) return false;
-					if(definedCells[x-1][y+i] != 0) return false;
-					if(definedCells[x][y+i-1] != 0) return false;
-				}
-				catch(Exception e) {}
+				try { if(definedCells[x+1][y+i] != 0) return false; } catch(Exception e) {}
+				try { if(definedCells[x][y+i+1] != 0) return false; } catch(Exception e) {}
+				try { if(definedCells[x-1][y+i] != 0) return false; } catch(Exception e) {}
+				try { if(definedCells[x][y+i-1] != 0) return false; } catch(Exception e) {}	
 			}
 		}
 		else if(selectedShip.orientation == ORIENTATION.LEFT) {
 			for(int i = selectedShip.shipSize-1; i >= 0; i--) {
-				try {
-					if(definedCells[x-i+1][y] != 0) return false;
-					if(definedCells[x-i][y+1] != 0) return false;
-					if(definedCells[x-i-1][y] != 0) return false;
-					if(definedCells[x-i][y-1] != 0) return false;
-				}
-				catch(Exception e) {}
+				try { if(definedCells[x-i+1][y] != 0) return false; } catch(Exception e) {}
+				try { if(definedCells[x-i][y+1] != 0) return false; } catch(Exception e) {}
+				try { if(definedCells[x-i-1][y] != 0) return false; } catch(Exception e) {}
+				try { if(definedCells[x-i][y-1] != 0) return false; } catch(Exception e) {}
 			}
 		}
 		
 		return true;
 	}
-		
 	private boolean checkSurroundingsSeaplane(int x, int y, int[][] definedCells) {
 		
-		try {
-			if(definedCells[x+1][y] != 0) return false;
-			if(definedCells[x][y+1] != 0) return false;
-			if(definedCells[x-1][y] != 0) return false;
-			if(definedCells[x][y-1] != 0) return false;
-		}
-		catch(Exception e) {}
+		try { if(definedCells[x+1][y] != 0) return false; } catch(Exception e) {}
+		try { if(definedCells[x][y+1] != 0) return false; } catch(Exception e) {}
+		try { if(definedCells[x-1][y] != 0) return false; } catch(Exception e) {}
+		try { if(definedCells[x][y-1] != 0) return false; } catch(Exception e) {}
 		
 		if(selectedShip.orientation == ORIENTATION.TOP) {
-			try {
-				if(definedCells[x-1+1][y-1] != 0) return false;
-				if(definedCells[x-1][y-1+1] != 0) return false;
-				if(definedCells[x-1-1][y-1] != 0) return false;
-				if(definedCells[x-1][y-1-1] != 0) return false;
+			try { if(definedCells[x-1+1][y-1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x-1][y-1+1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x-1-1][y-1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x-1][y-1-1] != 0) return false; } catch(Exception e) {}
 				
-				if(definedCells[x+1][y-2] != 0) return false;
-				if(definedCells[x][y-2+1] != 0) return false;
-				if(definedCells[x-1][y-2] != 0) return false;
-				if(definedCells[x][y-2-1] != 0) return false;
-			}
-			catch(Exception e) {}
+			try { if(definedCells[x+1][y-2] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x][y-2+1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x-1][y-2] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x][y-2-1] != 0) return false; } catch(Exception e) {}
 		}
 		else if(selectedShip.orientation == ORIENTATION.RIGHT) {
-			try {
-				if(definedCells[x+1+1][y-1] != 0) return false;
-				if(definedCells[x+1][y-1+1] != 0) return false;
-				if(definedCells[x+1-1][y-1] != 0) return false;
-				if(definedCells[x+1][y-1-1] != 0) return false;
-				
-				if(definedCells[x+2+1][y] != 0) return false;
-				if(definedCells[x+2][y+1] != 0) return false;
-				if(definedCells[x+2-1][y] != 0) return false;
-				if(definedCells[x+2][y-1] != 0) return false;
-			}
-			catch(Exception e) {}
+			try { if(definedCells[x+1+1][y-1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x+1][y-1+1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x+1-1][y-1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x+1][y-1-1] != 0) return false; } catch(Exception e) {}
+			
+			try { if(definedCells[x+2+1][y] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x+2][y+1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x+2-1][y] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x+2][y-1] != 0) return false; } catch(Exception e) {}
 		}
 		else if(selectedShip.orientation == ORIENTATION.DOWN) {
-			try {
-				if(definedCells[x+1+1][y+1] != 0) return false;
-				if(definedCells[x+1][y+1+1] != 0) return false;
-				if(definedCells[x+1-1][y+1] != 0) return false;
-				if(definedCells[x+1][y+1-1] != 0) return false;
-				
-				if(definedCells[x+1][y+2] != 0) return false;
-				if(definedCells[x][y+2+1] != 0) return false;
-				if(definedCells[x-1][y+2] != 0) return false;
-				if(definedCells[x][y+2-1] != 0) return false;
-			}
-			catch(Exception e) {}
+			try { if(definedCells[x+1+1][y+1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x+1][y+1+1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x+1-1][y+1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x+1][y+1-1] != 0) return false; } catch(Exception e) {}
+			
+			try { if(definedCells[x+1][y+2] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x][y+2+1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x-1][y+2] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x][y+2-1] != 0) return false; } catch(Exception e) {}
 		}
 		else if(selectedShip.orientation == ORIENTATION.LEFT) {
-			try {
-				if(definedCells[x-1+1][y+1] != 0) return false;
-				if(definedCells[x-1][y+1+1] != 0) return false;
-				if(definedCells[x-1-1][y+1] != 0) return false;
-				if(definedCells[x-1][y+1-1] != 0) return false;
-				
-				if(definedCells[x-2+1][y] != 0) return false;
-				if(definedCells[x-2][y+1] != 0) return false;
-				if(definedCells[x-2-1][y] != 0) return false;
-				if(definedCells[x-2][y-1] != 0) return false;
-			}
-			catch(Exception e) {}
+			try { if(definedCells[x-1+1][y+1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x-1][y+1+1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x-1-1][y+1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x-1][y+1-1] != 0) return false; } catch(Exception e) {}
+			
+			try { if(definedCells[x-2+1][y] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x-2][y+1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x-2-1][y] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x-2][y-1] != 0) return false; } catch(Exception e) {}
 		}
 		
 		return true;
 	}
 	
-	public void shipRotate() {
-		selectedShip.rotate();
-		for(IObserver o:lob)
-			o.notify(this);
-	}
 	
-	/*
-	 * LISTA DE MENSAGENS
-	 */
+	/* LISTA DE MENSAGENS */
 
 	public void addMessage(String message) {
 		messages.add(message);
-		for(IObserver o:lob)
-			o.notify(this);
+		refreshBoard();
 	}
 		
-	/*
-	 * METODOS GET E SET
-	 */
+	
+	/* METODOS GET E SET */
+	
 	public void setIsValid(boolean validation) {
 		isValid = validation;
-		for(IObserver o:lob)
-			o.notify(this);
 	}
-	
 	public void setSelectedShip(Ship ship) {
 		selectedShip = ship;
     }
-
 	public void unsetSelectedShip() {
     	selectedShip.unselectPreviousShip();
 		selectedShip = null;
     }
-
 	public void setJogadorAtual(int jogador) {
 		this.currentPlayer = jogador;
 	}
-	
 	public int getJogadorAtual() {
 		return currentPlayer;
 	}
-	
 	public int getNextPlayer() {
 		if(currentPlayer == 1) {
 			return currentPlayer = 2;
@@ -478,14 +423,12 @@ public class CtrlRules implements IObservable{
 			return currentPlayer = 1;
 		}
 	}
-	
 	public void setBoard(int jogador) {
 		switch(jogador) {
 			case 1: board1 = JP_PositioningGrid.getGrid().getFinalGrid();
 			case 2: board2 = JP_PositioningGrid.getGrid().getFinalGrid();
 		}
 	}
-	
 	public int[][] getBoard(int jogador) {
 		switch(jogador) {
 			case 1: return board1;
@@ -493,7 +436,6 @@ public class CtrlRules implements IObservable{
 		}
 		return null;
 	}
-	
 	public String getPlayer(int player) {
 		switch(player) {
 			case 1: return player1;
@@ -501,38 +443,31 @@ public class CtrlRules implements IObservable{
 		}
 		return null;
 	}
-	
 	public void setPlayer(int playerNumber, String playerName) {
 		switch(playerNumber) {
 		case 1: player1 = playerName;
 		case 2: player2 = playerName;
 		}
 	}
-	
 	public Ship getSelectedShip() {
 		
 		return selectedShip;
 	}
 	
-	/*
-	 * FUNCOES DO OBSERVER
-	 */
+	
+	/* FUNCOES DO OBSERVER */
 	
 	@Override
 	public void addObserver(IObserver o) {
 		lob.add(o);
 	}
-
 	@Override
 	public void removeObserver(IObserver o) {
 		lob.remove(o);
 	}
-	
 	@Override
 	public Object get() {
-		
-		//K.printGrid(cellsToPaint);
-		
+				
 		Object dados[] = new Object[ K.objectValues.values().length ];
 		
 		dados[ K.objectValues.BOARD_1.getValue() ] 			= board1;
@@ -544,6 +479,10 @@ public class CtrlRules implements IObservable{
 		dados[ K.objectValues.CELLS_TO_PAINT.getValue() ] 	= cellsToPaint;
 		
 		return dados;
+	}
+	private void refreshBoard() {
+		for(IObserver o:lob)
+			o.notify(this);
 	}
 
 }

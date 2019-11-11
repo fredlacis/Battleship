@@ -25,7 +25,6 @@ public class Cell extends JPanel implements MouseListener{
 	
 	private Color cellColor;
 	private Color borderColor;
-	
 	private Color shipColor;
 	
 	public Cell(int x, int y) {
@@ -78,19 +77,15 @@ public class Cell extends JPanel implements MouseListener{
 	}
 	
 	private void paintSelectedCells() {
-				
 		RulesFacade.getRules().checkPos(x/K.SQUARE_SIZE, y/K.SQUARE_SIZE, JP_PositioningGrid.getGrid().getFinalGrid());
-		
-		repaint();
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
 	}
-
 	@Override
-	public void mousePressed(MouseEvent e) {		
+	public void mousePressed(MouseEvent e) {
 		if(SwingUtilities.isMiddleMouseButton(e)) {
 			return;
 		}
@@ -109,18 +104,14 @@ public class Cell extends JPanel implements MouseListener{
 		
 		paintSelectedCells();
 	}
-
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
 	}
-
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		//System.out.println("Mouse entered");
 		paintSelectedCells();
 	}
-
 	@Override
 	public void mouseExited(MouseEvent e) {
 				
@@ -130,6 +121,5 @@ public class Cell extends JPanel implements MouseListener{
 		
 		repaint();
 	}
-
 
 }

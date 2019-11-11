@@ -13,7 +13,6 @@ public class JP_PositioningGrid extends JP_Grid implements IObserver{
 	static JP_PositioningGrid g = null;
 		
 	private int[][] cellsToPaint;
-	
 	private boolean validation = false;
 	
 	public static JP_PositioningGrid getGrid() {
@@ -33,9 +32,7 @@ public class JP_PositioningGrid extends JP_Grid implements IObserver{
 	public void paintTemporaryCells() {
 		
 		Cell cell;
-		
-		System.out.println(validation);
-		
+				
 		for(int i = 0; i < K.SQUARE_COUNT; i++)
 		{
 			for(int j = 0; j < K.SQUARE_COUNT; j++)
@@ -55,7 +52,6 @@ public class JP_PositioningGrid extends JP_Grid implements IObserver{
 		}
 		
 	}
-	
 	public void unpaintTemporaryCells() {
 		
 		Cell cell;	
@@ -74,7 +70,6 @@ public class JP_PositioningGrid extends JP_Grid implements IObserver{
 			}
 		}
 	}
-	
 	public void reset(){
 		
 		Cell cell;
@@ -93,7 +88,6 @@ public class JP_PositioningGrid extends JP_Grid implements IObserver{
 		}
 	}
 	
-	
 	public int[][] getFinalGrid() {
 		return K.cloneGrid(definedCellsToPaint);
 	}
@@ -106,10 +100,8 @@ public class JP_PositioningGrid extends JP_Grid implements IObserver{
 		Object lob[] = (Object []) o.get();
 		
 		cellsToPaint = (int[][]) lob[K.objectValues.CELLS_TO_PAINT.getValue()];
-		validation = (boolean) lob[ K.objectValues.IS_VALID.getValue() ];
-		
-		K.printGrid(cellsToPaint);
-		
+		validation = (boolean) lob[K.objectValues.IS_VALID.getValue()];
+			
 		paintTemporaryCells();
 		
 	}
