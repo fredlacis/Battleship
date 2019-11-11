@@ -62,28 +62,39 @@ public class CtrlRules implements IObservable{
 		newGame();
 	}
 	public void newGame() {
-		board1=new int[K.SQUARE_COUNT][K.SQUARE_COUNT];
-		board2=new int[K.SQUARE_COUNT][K.SQUARE_COUNT];
-		for(int i=0;i<3;i++) {
-			for(int j=0;j<3;j++) {
-				board1[i][j]=0;	
-				board2[i][j]=0;	
-			}
-		}
+		phase = PHASE.POSITION;
+		board1 = K.createEmptyGrid();
+		board2 = K.createEmptyGrid();
 		currentPlayer = 1;
 	}
 	
 	
-	/* RESULTADO */
+	/* FUNCOES PUBLICAS PARA FASE DE ATAQUES */
 	
-	public int checkResult() {
-		return 0;
+	public void startGame() {
+		phase = PHASE.ATTACK;
+		nextPlayer();
 	}
-	
+	public void nextPlayer() {
+		currentPlayer = getNextPlayer();
+		refreshBoard();
+	}
+	public void attack(int x, int y) {
+		System.out.printf("Ataque do jogador %s na posicao X:%d Y:%d", getCurrentPlayerName(), x, y);
+		if(checkResult()) {
+			endGame();
+			return;
+		}
+	}
+	public boolean checkResult() {
+		return false;
+	}
+	public void endGame() {}
 	
 	/* FUNCOES PUBLICAS PARA POSICIONAMENTO DO TABULEIRO */
 	
 	public void shipRotate() {
+		if(selectedShip == null) return;
 		selectedShip.rotate();
 		refreshBoard();
 	}
@@ -111,7 +122,8 @@ public class CtrlRules implements IObservable{
 		addMessage("Positioning ship");
 		JP_PositioningGrid.getGrid().paintCells(cellsToPaint);
 		JP_ShipOptions.getShipOptions().reduceShipCount(selectedShip);
-				
+		
+		cellsToPaint = K.createEmptyGrid();
 		refreshBoard();
 		
 	}
@@ -398,8 +410,8 @@ public class CtrlRules implements IObservable{
 	
 	/* METODOS GET E SET */
 	
-	public void setPhase(PHASE phase) {
-		this.phase = phase;
+	public PHASE getPhase() {
+		return phase;
 	}
 	public void setIsValid(boolean validation) {
 		isValid = validation;
@@ -423,10 +435,10 @@ public class CtrlRules implements IObservable{
 	}
 	public int getNextPlayer() {
 		if(currentPlayer == 1) {
-			return currentPlayer = 2;
+			return 2;
 		}
 		else {
-			return currentPlayer = 1;
+			return 1;
 		}
 	}
 	public void setBoard(int playerNum) {
@@ -477,10 +489,10 @@ public class CtrlRules implements IObservable{
 		
 		dados[ K.objectValues.BOARD_1.getValue() ] 			= board1;
 		dados[ K.objectValues.BOARD_2.getValue() ] 			= board2;
-		dados[ K.objectValues.CURRENT_PLAYER.getValue() ] 	= new Integer(currentPlayer);
-		dados[ K.objectValues.RESULT.getValue() ] 			= new Integer(checkResult());
+		dados[ K.objectValues.CURRENT_PLAYER.getValue() ] 	= currentPlayer;
+		dados[ K.objectValues.RESULT.getValue() ] 			= checkResult();
 		dados[ K.objectValues.MESSAGES.getValue() ] 		= messages;
-		dados[ K.objectValues.IS_VALID.getValue() ] 		= new Boolean(isValid);
+		dados[ K.objectValues.IS_VALID.getValue() ] 		= isValid;
 		dados[ K.objectValues.CELLS_TO_PAINT.getValue() ] 	= cellsToPaint;
 		
 		return dados;

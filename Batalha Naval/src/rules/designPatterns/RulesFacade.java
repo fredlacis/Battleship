@@ -1,6 +1,7 @@
 package rules.designPatterns;
 
 import gui.ships.Ship;
+import main.K.PHASE;
 import rules.CtrlRules;
 
 public class RulesFacade {
@@ -41,6 +42,14 @@ public class RulesFacade {
     public void resetGrid() {
 		ctrl.resetGrid();
 	}
+    
+    public void startGame() {
+    	ctrl.startGame();
+    }
+      
+    public PHASE getPhase() {
+    	return ctrl.getPhase();
+    }
     
     public void setCurrentPlayer(int jogador) {
     	ctrl.setCurrentPlayer(jogador);

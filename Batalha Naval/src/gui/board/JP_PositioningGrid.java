@@ -32,6 +32,8 @@ public class JP_PositioningGrid extends JP_Grid implements IObserver{
 	public void paintTemporaryCells() {
 		
 		Cell cell;
+		
+		if(cellsToPaint == null) return;
 				
 		for(int i = 0; i < K.SQUARE_COUNT; i++)
 		{

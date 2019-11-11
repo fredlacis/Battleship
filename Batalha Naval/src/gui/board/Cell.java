@@ -13,6 +13,7 @@ import javax.swing.SwingUtilities;
 
 import gui.ships.Ship;
 import main.K;
+import main.K.PHASE;
 import rules.designPatterns.RulesFacade;
 
 @SuppressWarnings("serial")
@@ -90,19 +91,19 @@ public class Cell extends JPanel implements MouseListener{
 			return;
 		}
 		
-		if(!SwingUtilities.isRightMouseButton(e)) {
-			RulesFacade.getRules().positionShip(x/K.SQUARE_SIZE, y/K.SQUARE_SIZE, JP_PositioningGrid.getGrid().getFinalGrid());
+		if(SwingUtilities.isRightMouseButton(e)) {
+			RulesFacade.getRules().shipRotate();
+			paintSelectedCells();
 			return;
 		}
 		
-		Ship selectedShip = RulesFacade.getRules().getSelectedShip();
-		if(selectedShip == null) {
+		if(RulesFacade.getRules().getPhase() == PHASE.POSITION) {
+			RulesFacade.getRules().positionShip(x/K.SQUARE_SIZE, y/K.SQUARE_SIZE, 
+				JP_PositioningGrid.getGrid().getFinalGrid());
 			return;
 		}
 		
-		RulesFacade.getRules().shipRotate();
 		
-		paintSelectedCells();
 	}
 	@Override
 	public void mouseReleased(MouseEvent e) {
@@ -110,7 +111,8 @@ public class Cell extends JPanel implements MouseListener{
 	}
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		if(RulesFacade.getRules().getSelectedShip() != null) {
+		if(RulesFacade.getRules().getPhase() == PHASE.POSITION 
+				&& RulesFacade.getRules().getSelectedShip() != null) {
 			paintSelectedCells();
 			return;
 		}
@@ -119,12 +121,12 @@ public class Cell extends JPanel implements MouseListener{
 		repaint();
 	}
 	@Override
-	public void mouseExited(MouseEvent e) {
-				
-		JP_PositioningGrid.getGrid().unpaintTemporaryCells();
+	public void mouseExited(MouseEvent e) {	
+		if(RulesFacade.getRules().getPhase() == PHASE.POSITION) {
+			JP_PositioningGrid.getGrid().unpaintTemporaryCells();
+		}
 		
 		setColor(getOriginalColor());
-		
 		repaint();
 	}
 

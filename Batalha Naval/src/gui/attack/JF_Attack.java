@@ -39,6 +39,8 @@ public class JF_Attack extends JFrame {
 		getContentPane().add(board1);
 		getContentPane().add(board2);
 		
+		RulesFacade.getRules().startGame();
+		
 	}
 	
 }

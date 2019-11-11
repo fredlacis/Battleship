@@ -57,8 +57,6 @@ public class JP_ShipOptions extends JPanel{
 	}
 
 	public void displayShipOptions() {
-		System.out.println("Loading Ship Options");
-
 		addBattleships();
 		addCruisers();
 		addDestroyers();
