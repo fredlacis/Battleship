@@ -118,7 +118,7 @@ public abstract class Ship extends JComponent implements MouseListener {
 	}
 	
 	public void unselectPreviousShip() {
-		Ship selectedShip = RulesFacade.getRules().selectedShip();
+		Ship selectedShip = RulesFacade.getRules().getSelectedShip();
 		
 		if(selectedShip == null || !selectedShip.available) {
 			return;
@@ -131,7 +131,7 @@ public abstract class Ship extends JComponent implements MouseListener {
 	}
 
 	public void mouseEntered(MouseEvent e) {
-		Ship selectedShip = RulesFacade.getRules().selectedShip();
+		Ship selectedShip = RulesFacade.getRules().getSelectedShip();
 		if(selectedShip == this || !available) {
 			return;
 		}
@@ -145,7 +145,7 @@ public abstract class Ship extends JComponent implements MouseListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if(SwingUtilities.isRightMouseButton(e)) {
-			Ship selectedShip = RulesFacade.getRules().selectedShip();
+			Ship selectedShip = RulesFacade.getRules().getSelectedShip();
 			if(selectedShip == null) return;
 			
 			selectedShip.rotate();
@@ -167,7 +167,7 @@ public abstract class Ship extends JComponent implements MouseListener {
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		Ship selectedShip = RulesFacade.getRules().selectedShip();
+		Ship selectedShip = RulesFacade.getRules().getSelectedShip();
 		
 		if(selectedShip == this || !available) {
 			return;

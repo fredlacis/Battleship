@@ -95,7 +95,7 @@ public class Cell extends JPanel implements MouseListener{
 			return;
 		}
 		
-		Ship selectedShip = RulesFacade.getRules().selectedShip();
+		Ship selectedShip = RulesFacade.getRules().getSelectedShip();
 		if(selectedShip == null) {
 			return;
 		}
@@ -110,7 +110,13 @@ public class Cell extends JPanel implements MouseListener{
 	}
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		paintSelectedCells();
+		if(RulesFacade.getRules().getSelectedShip() != null) {
+			paintSelectedCells();
+			return;
+		}
+		
+		setColor(getOriginalColor().darker());
+		repaint();
 	}
 	@Override
 	public void mouseExited(MouseEvent e) {

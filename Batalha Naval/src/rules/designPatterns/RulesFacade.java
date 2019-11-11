@@ -30,7 +30,7 @@ public class RulesFacade {
 		ctrl.positionShip(x, y, definedCells);
 	}
     
-    public Ship selectedShip() {
+    public Ship getSelectedShip() {
     	return ctrl.getSelectedShip();
     }
     
@@ -42,12 +42,12 @@ public class RulesFacade {
 		ctrl.resetGrid();
 	}
     
-    public void setJogadorAtual(int jogador) {
-    	ctrl.setJogadorAtual(jogador);
+    public void setCurrentPlayer(int jogador) {
+    	ctrl.setCurrentPlayer(jogador);
     }
     
-	public String getPlayer(int player) {
-		return ctrl.getPlayer(player);
+	public String getCurrentPlayer() {
+		return ctrl.getCurrentPlayerName();
 	}
 	
 	public void setPlayer(int playerNumber, String playerName) {
@@ -59,7 +59,7 @@ public class RulesFacade {
 	}
     
 	public int getJogadorAtual() {
-		return ctrl.getJogadorAtual();
+		return ctrl.getCurrentPlayer();
 	}
 	
 	public void setTabuleiro(int jogador) {

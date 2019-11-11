@@ -7,6 +7,7 @@ import gui.shipSelection.JP_ShipOptions;
 import gui.ships.Ship;
 import main.K;
 import main.K.ORIENTATION;
+import main.K.PHASE;
 import rules.designPatterns.IObservable;
 import rules.designPatterns.IObserver;
 
@@ -35,8 +36,10 @@ public class CtrlRules implements IObservable{
         public int getValue() { return value; }
 	}
 	
-	private int currentPlayer;
-
+	private int currentPlayer;	
+	
+	private PHASE phase;
+	
 	private String player1;
 	private String player2;
 
@@ -86,7 +89,6 @@ public class CtrlRules implements IObservable{
 	}
 	public void positionShip(int x, int y, int[][] definedCells) {
 		if(selectedShip == null) {
-			System.out.println("Selecione um navio.");
 			setIsValid(false);
 			addMessage("Select a ship");
 			return;
@@ -95,24 +97,21 @@ public class CtrlRules implements IObservable{
 		checkPos(x, y, definedCells);
 				
 		if(!selectedShip.getAvailability()) {
-			//System.out.println("N�o ha mais navios desse tipo: Pressione R para limpar o grid.");
 			addMessage("No more ships of this type");
 			refreshBoard();
 			return;
 		}
 		
 		if(!isValid) {
-			//System.out.println("Posi��o inv�lida.");
 			addMessage("Invalid position");
 			refreshBoard();
 			return;
 		}
 		
-		//System.out.printf("Posi��o v�lida. Posicionando a partir do bloco X: %d Y: %d.\n", x+1, y+1);
 		addMessage("Positioning ship");
 		JP_PositioningGrid.getGrid().paintCells(cellsToPaint);
 		JP_ShipOptions.getShipOptions().reduceShipCount(selectedShip);
-		
+				
 		refreshBoard();
 		
 	}
@@ -399,6 +398,9 @@ public class CtrlRules implements IObservable{
 	
 	/* METODOS GET E SET */
 	
+	public void setPhase(PHASE phase) {
+		this.phase = phase;
+	}
 	public void setIsValid(boolean validation) {
 		isValid = validation;
 	}
@@ -406,13 +408,17 @@ public class CtrlRules implements IObservable{
 		selectedShip = ship;
     }
 	public void unsetSelectedShip() {
+		if(selectedShip == null) return;
     	selectedShip.unselectPreviousShip();
 		selectedShip = null;
+		
+		cellsToPaint = K.createEmptyGrid();
+		refreshBoard();
     }
-	public void setJogadorAtual(int jogador) {
-		this.currentPlayer = jogador;
+	public void setCurrentPlayer(int playerNum) {
+		currentPlayer = playerNum;
 	}
-	public int getJogadorAtual() {
+	public int getCurrentPlayer() {
 		return currentPlayer;
 	}
 	public int getNextPlayer() {
@@ -423,21 +429,21 @@ public class CtrlRules implements IObservable{
 			return currentPlayer = 1;
 		}
 	}
-	public void setBoard(int jogador) {
-		switch(jogador) {
+	public void setBoard(int playerNum) {
+		switch(playerNum) {
 			case 1: board1 = JP_PositioningGrid.getGrid().getFinalGrid();
 			case 2: board2 = JP_PositioningGrid.getGrid().getFinalGrid();
 		}
 	}
-	public int[][] getBoard(int jogador) {
-		switch(jogador) {
+	public int[][] getBoard(int playerNum) {
+		switch(playerNum) {
 			case 1: return board1;
 			case 2: return board2;
 		}
 		return null;
 	}
-	public String getPlayer(int player) {
-		switch(player) {
+	public String getCurrentPlayerName() {
+		switch(currentPlayer) {
 			case 1: return player1;
 			case 2: return player2;
 		}
@@ -450,7 +456,6 @@ public class CtrlRules implements IObservable{
 		}
 	}
 	public Ship getSelectedShip() {
-		
 		return selectedShip;
 	}
 	

@@ -9,11 +9,12 @@ import javax.swing.JFrame;
 import gui.JP_Title;
 import gui.board.JP_BattleBoard;
 import main.K;
+import rules.designPatterns.RulesFacade;
 
 @SuppressWarnings("serial")
 public class JF_Attack extends JFrame {
 
-	JP_Title titlePanel = new JP_Title("Attack Phase");
+	JP_Title titlePanel = new JP_Title("Attack Phase - " + RulesFacade.getRules().getCurrentPlayer());
 	
 	public JF_Attack() {
 		Toolkit tk = Toolkit.getDefaultToolkit();
@@ -37,7 +38,6 @@ public class JF_Attack extends JFrame {
 		getContentPane().add(titlePanel);
 		getContentPane().add(board1);
 		getContentPane().add(board2);
-		//getContentPane().add(new JP_SelectionUtilities());
 		
 	}
 	

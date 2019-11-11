@@ -6,6 +6,8 @@ import rules.designPatterns.RulesFacade;
 public class JP_BattleBoard extends JP_Board{
 	
 	private JP_Grid battleGrid;
+	
+	private int[][] hiddenCells;
 
 	public JP_BattleBoard(int jogador) {
 		
@@ -13,8 +15,9 @@ public class JP_BattleBoard extends JP_Board{
 		setBounds(0, 0, BOARD_SIZE, BOARD_SIZE);
 		setOpaque(false);
 		
+		hiddenCells = RulesFacade.getRules().getTabuleiro(jogador);
+		
 		battleGrid = new JP_Grid();
-		battleGrid.paintCells( RulesFacade.getRules().getTabuleiro(jogador) );
 		
 		addLabels();
 		

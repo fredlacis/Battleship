@@ -26,6 +26,11 @@ public class K {
 	    }
 	}
 	
+	public static enum PHASE {
+		POSITION,
+		ATTACK
+	}
+	
 	public enum objectValues{
 		BOARD_1(0),
 		BOARD_2(1),

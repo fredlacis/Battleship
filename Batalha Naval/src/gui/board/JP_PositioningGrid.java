@@ -54,7 +54,7 @@ public class JP_PositioningGrid extends JP_Grid implements IObserver{
 	}
 	public void unpaintTemporaryCells() {
 		
-		Cell cell;	
+		Cell cell;
 		
 		if(cellsToPaint == null) return;
 		

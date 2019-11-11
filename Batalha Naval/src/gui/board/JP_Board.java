@@ -54,7 +54,6 @@ public class JP_Board extends JPanel{
 			numbersContainers[i].setLayout(new GridBagLayout());
 			numbersContainers[i].setBounds(labelSpace, K.JPANEL_BORDER - K.LABELS_SIZE, K.SQUARE_SIZE, K.LABELS_SIZE);
 			numbersContainers[i].setOpaque(false);
-			//numbersContainers[i].setBackground(new Color((i+1)*10,(i+1)*10,(i+1)*10));
 			
 			JLabel number = new JLabel(Integer.toString(i+1));
 			number.setFont(new Font("SansSerif", Font.PLAIN, 13));

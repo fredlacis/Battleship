@@ -39,8 +39,10 @@ public class JF_ShipSelection extends JFrame implements KeyListener{
 		setResizable(false);
 		setLayout(null);
 		getContentPane().setBackground(new Color(250, 250, 250));
-
-		setTitle("Ship Selection - " + RulesFacade.getRules().getPlayer(1));
+			
+		setFocusable(true);
+		
+		setTitle("Ship Selection - " + RulesFacade.getRules().getCurrentPlayer());
 		getContentPane().add(titlePanel);
 		getContentPane().add(JP_ShipOptions.getShipOptions());
 		getContentPane().add(new JP_ShipPlacement());
@@ -73,9 +75,7 @@ public class JF_ShipSelection extends JFrame implements KeyListener{
 		
 		if(k.getKeyChar() == 'r') {
 			RulesFacade.getRules().resetGrid();
-		}
-		
-		repaint();
+		}		
 	}
 
 }

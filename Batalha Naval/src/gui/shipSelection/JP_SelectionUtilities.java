@@ -116,6 +116,7 @@ public class JP_SelectionUtilities extends JPanel implements IObserver{
 				
 				buttonDisable();
 				
+				RulesFacade.getRules().unsetSelectedShip();
 				RulesFacade.getRules().setTabuleiro(RulesFacade.getRules().getJogadorAtual());
 				
 				if( RulesFacade.getRules().getJogadorAtual() == 2 ) {
@@ -124,7 +125,8 @@ public class JP_SelectionUtilities extends JPanel implements IObserver{
 				}
 				else {
 					RulesFacade.getRules().resetGrid();
-					JF_ShipSelection.getShipSelection().setTitle("Ship Selection - " + RulesFacade.getRules().getPlayer( RulesFacade.getRules().getNextPlayer() ));
+					RulesFacade.getRules().setCurrentPlayer(2);
+					JF_ShipSelection.getShipSelection().setTitle("Ship Selection - " + RulesFacade.getRules().getCurrentPlayer());
 				}
 				
 			} 
