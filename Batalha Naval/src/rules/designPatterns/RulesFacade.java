@@ -73,7 +73,10 @@ public class RulesFacade {
 	public void addMessage(String message) {
 		ctrl.addMessage(message);
 	}
-	
+
+	public void shipRotate() {
+		ctrl.shipRotate();
+	}
 //    
 //    public void novoJogo() {
 //        ctrl.novoJogo();

@@ -13,12 +13,10 @@ import javax.swing.SwingUtilities;
 
 import gui.ships.Ship;
 import main.K;
-import rules.designPatterns.IObservable;
-import rules.designPatterns.IObserver;
 import rules.designPatterns.RulesFacade;
 
 @SuppressWarnings("serial")
-public class Cell extends JPanel implements MouseListener, IObserver{
+public class Cell extends JPanel implements MouseListener{
 	
 	private int x;
 	private int y;
@@ -30,14 +28,8 @@ public class Cell extends JPanel implements MouseListener, IObserver{
 	
 	private Color shipColor;
 	
-	private boolean validation = false;
-	
-	private int[][] cellsToPaint = K.createEmptyGrid();
-	
 	public Cell(int x, int y) {
-		
-		RulesFacade.getRules().register(this);
-		
+			
 		this.x = x;
 		this.y = y;
 		
@@ -86,21 +78,8 @@ public class Cell extends JPanel implements MouseListener, IObserver{
 	}
 	
 	private void paintSelectedCells() {
-		
-		JP_PositioningGrid.getGrid().unpaintTemporaryCells(x, y);
-		
+				
 		RulesFacade.getRules().checkPos(x/K.SQUARE_SIZE, y/K.SQUARE_SIZE, JP_PositioningGrid.getGrid().getFinalGrid());
-		
-//		if(pair == null) {
-//			setColor(cellColor.darker());
-//			repaint();
-//			return;
-//		}
-		
-		//JP_PositioningGrid.getGrid().paintTemporaryCells();
-		
-//		System.out.printf("%b\n", validation);
-//		K.printGrid(cellsToPaint);
 		
 		repaint();
 	}
@@ -126,7 +105,7 @@ public class Cell extends JPanel implements MouseListener, IObserver{
 			return;
 		}
 		
-		selectedShip.rotate();
+		RulesFacade.getRules().shipRotate();
 		
 		paintSelectedCells();
 	}
@@ -145,25 +124,12 @@ public class Cell extends JPanel implements MouseListener, IObserver{
 	@Override
 	public void mouseExited(MouseEvent e) {
 				
-		JP_PositioningGrid.getGrid().unpaintTemporaryCells(x, y);
+		JP_PositioningGrid.getGrid().unpaintTemporaryCells();
 		
 		setColor(getOriginalColor());
 		
 		repaint();
 	}
 
-	@Override
-	public void notify(IObservable o) {
-		
-		//System.out.println("Celula NOTIFICADA");
-		
-		Object lob[] = (Object []) o.get();
-		
-		cellsToPaint = (int[][]) lob[K.objectValues.CELLS_TO_PAINT.getValue()];
-		validation = (boolean) lob[ K.objectValues.IS_VALID.getValue() ];
-		
-		JP_PositioningGrid.getGrid().paintTemporaryCells( validation, cellsToPaint );
-				
-	}
 
 }

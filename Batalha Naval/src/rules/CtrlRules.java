@@ -154,13 +154,12 @@ public class CtrlRules implements IObservable{
 	private void checkPosShip(int x, int y, int[][] definedCells){
 				
 		cellsToPaint = K.createEmptyGrid();
-		
-		K.printGrid(definedCells);
-		
+				
 		setIsValid(true);
 		
 		if(!selectedShip.getAvailability()) {
 			setIsValid(false);
+			return;
 		}
 		
 		if(selectedShip.orientation == ORIENTATION.TOP) {
@@ -174,7 +173,7 @@ public class CtrlRules implements IObservable{
 				}
 			}
 		}
-		if(selectedShip.orientation == ORIENTATION.RIGHT) {
+		else if(selectedShip.orientation == ORIENTATION.RIGHT) {
 			for(int i = 0; i < selectedShip.shipSize; i++) {
 				try {
 					if(definedCells[x+i][y] != 0) setIsValid(false);
@@ -185,7 +184,7 @@ public class CtrlRules implements IObservable{
 				}
 			}
 		}
-		if(selectedShip.orientation == ORIENTATION.DOWN) {
+		else if(selectedShip.orientation == ORIENTATION.DOWN) {
 			for(int i = 0; i < selectedShip.shipSize; i++) {
 				try {
 					if(definedCells[x][y+i] != 0) setIsValid(false);
@@ -196,7 +195,7 @@ public class CtrlRules implements IObservable{
 				}
 			}
 		}
-		if(selectedShip.orientation == ORIENTATION.LEFT) {
+		else if(selectedShip.orientation == ORIENTATION.LEFT) {
 			for(int i = selectedShip.shipSize-1; i >= 0; i--) {
 				try {
 					if(definedCells[x-i][y] != 0) setIsValid(false);
@@ -211,12 +210,7 @@ public class CtrlRules implements IObservable{
 		if(isValid) {
 			setIsValid( checkSurroundingsShip(x, y, definedCells) );
 		}
-		
-		
-		
-		for(IObserver o:lob)
-			o.notify(this);
-		
+				
 	}
 	
 	private void checkPosSeaplane(int x, int y, int [][] definedCells){
@@ -227,9 +221,14 @@ public class CtrlRules implements IObservable{
 		
 		if(!selectedShip.getAvailability()) {
 			setIsValid(false);
+			return;
 		}
 		
-		if(definedCells[x][y] != 0) setIsValid(false);
+		if(definedCells[x][y] != 0) {
+			setIsValid(false);
+			return;
+		}
+		
 		if(selectedShip.orientation == ORIENTATION.TOP) {
 			cellsToPaint[x][y] = selectedShip.shipSize;
 			try {
@@ -246,6 +245,7 @@ public class CtrlRules implements IObservable{
 			catch (Exception e){
 				setIsValid(false);
 			}
+			return;
 		}
 		if(selectedShip.orientation == ORIENTATION.RIGHT) {
 			cellsToPaint[x][y] = selectedShip.shipSize;
@@ -263,6 +263,7 @@ public class CtrlRules implements IObservable{
 			catch (Exception e){
 				setIsValid(false);
 			}
+			return;
 		}
 		if(selectedShip.orientation == ORIENTATION.DOWN) {
 			cellsToPaint[x][y] = selectedShip.shipSize;
@@ -280,6 +281,7 @@ public class CtrlRules implements IObservable{
 			catch (Exception e){
 				setIsValid(false);
 			}
+			return;
 		}
 		if(selectedShip.orientation == ORIENTATION.LEFT) {
 			cellsToPaint[x][y] = selectedShip.shipSize;
@@ -297,6 +299,7 @@ public class CtrlRules implements IObservable{
 			catch (Exception e){
 				setIsValid(false);
 			}
+			return;
 		}
 		
 		if(isValid) {
@@ -318,7 +321,7 @@ public class CtrlRules implements IObservable{
 				catch(Exception e) {}
 			}
 		}
-		if(selectedShip.orientation == ORIENTATION.RIGHT) {
+		else if(selectedShip.orientation == ORIENTATION.RIGHT) {
 			for(int i = 0; i < selectedShip.shipSize; i++) {
 				try {
 					if(definedCells[x+i+1][y] != 0) return false;
@@ -329,7 +332,7 @@ public class CtrlRules implements IObservable{
 				catch(Exception e) {}
 			}
 		}
-		if(selectedShip.orientation == ORIENTATION.DOWN) {
+		else if(selectedShip.orientation == ORIENTATION.DOWN) {
 			for(int i = 0; i < selectedShip.shipSize; i++) {
 				try {
 					if(definedCells[x+1][y+i] != 0) return false;
@@ -340,7 +343,7 @@ public class CtrlRules implements IObservable{
 				catch(Exception e) {}
 			}
 		}
-		if(selectedShip.orientation == ORIENTATION.LEFT) {
+		else if(selectedShip.orientation == ORIENTATION.LEFT) {
 			for(int i = selectedShip.shipSize-1; i >= 0; i--) {
 				try {
 					if(definedCells[x-i+1][y] != 0) return false;
@@ -352,11 +355,9 @@ public class CtrlRules implements IObservable{
 			}
 		}
 		
-		System.out.println("*********returning true");
-		
 		return true;
 	}
-	
+		
 	private boolean checkSurroundingsSeaplane(int x, int y, int[][] definedCells) {
 		
 		try {
@@ -381,7 +382,7 @@ public class CtrlRules implements IObservable{
 			}
 			catch(Exception e) {}
 		}
-		if(selectedShip.orientation == ORIENTATION.RIGHT) {
+		else if(selectedShip.orientation == ORIENTATION.RIGHT) {
 			try {
 				if(definedCells[x+1+1][y-1] != 0) return false;
 				if(definedCells[x+1][y-1+1] != 0) return false;
@@ -395,7 +396,7 @@ public class CtrlRules implements IObservable{
 			}
 			catch(Exception e) {}
 		}
-		if(selectedShip.orientation == ORIENTATION.DOWN) {
+		else if(selectedShip.orientation == ORIENTATION.DOWN) {
 			try {
 				if(definedCells[x+1+1][y+1] != 0) return false;
 				if(definedCells[x+1][y+1+1] != 0) return false;
@@ -409,7 +410,7 @@ public class CtrlRules implements IObservable{
 			}
 			catch(Exception e) {}
 		}
-		if(selectedShip.orientation == ORIENTATION.LEFT) {
+		else if(selectedShip.orientation == ORIENTATION.LEFT) {
 			try {
 				if(definedCells[x-1+1][y+1] != 0) return false;
 				if(definedCells[x-1][y+1+1] != 0) return false;
@@ -425,6 +426,12 @@ public class CtrlRules implements IObservable{
 		}
 		
 		return true;
+	}
+	
+	public void shipRotate() {
+		selectedShip.rotate();
+		for(IObserver o:lob)
+			o.notify(this);
 	}
 	
 	/*
@@ -523,6 +530,9 @@ public class CtrlRules implements IObservable{
 	
 	@Override
 	public Object get() {
+		
+		//K.printGrid(cellsToPaint);
+		
 		Object dados[] = new Object[ K.objectValues.values().length ];
 		
 		dados[ K.objectValues.BOARD_1.getValue() ] 			= board1;
@@ -532,9 +542,6 @@ public class CtrlRules implements IObservable{
 		dados[ K.objectValues.MESSAGES.getValue() ] 		= messages;
 		dados[ K.objectValues.IS_VALID.getValue() ] 		= new Boolean(isValid);
 		dados[ K.objectValues.CELLS_TO_PAINT.getValue() ] 	= cellsToPaint;
-		
-		System.out.printf("CtrlRules isValid = %b\n", isValid);
-		//K.printGrid(cellsToPaint);
 		
 		return dados;
 	}
