@@ -153,20 +153,24 @@ public class JP_SelectionUtilities extends JPanel implements IObserver{
 	}
 	
 	public void setMessages(List<String> messages, boolean validation) {
+		
 		try {
+			if( this.message1.getText() != messages.get( messages.size() - 1 ) ) {
+				if( validation ) {
+					message1.setForeground(Color.GREEN.darker().darker());
+				}
+				else {
+					message1.setForeground(Color.RED);
+				}
+			}
+		
+		
 			message1.setText( messages.get( messages.size() - 1 ) );
 			message2.setText( messages.get( messages.size() - 2 ) );
 			message3.setText( messages.get( messages.size() - 3 ) );
 		}
 		catch(IndexOutOfBoundsException e) {
 			
-		}
-		
-		if( validation ) {
-			message1.setForeground(Color.GREEN.darker().darker());
-		}
-		else {
-			message1.setForeground(Color.RED);
 		}
 		
 		repaint();
