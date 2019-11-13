@@ -5,6 +5,7 @@ import java.awt.Color;
 import javax.swing.JPanel;
 
 import main.K;
+import rules.designPatterns.RulesFacade;
 
 @SuppressWarnings("serial")
 public class JP_Grid extends JPanel{
@@ -12,14 +13,18 @@ public class JP_Grid extends JPanel{
 	protected Cell grid[][] = new Cell[K.SQUARE_COUNT][K.SQUARE_COUNT];
 	
 	protected int[][] definedCellsToPaint;
+	
+	private int owner;
 			
-	public JP_Grid() {
+	public JP_Grid(int owner) {
 		
 		setLayout(null);
 		setOpaque(false);
 		setBounds(K.JPANEL_BORDER, K.JPANEL_BORDER, K.SQUARE_SIZE * K.SQUARE_COUNT, K.SQUARE_SIZE * K.SQUARE_COUNT);
 		
 		definedCellsToPaint = K.createEmptyGrid();
+		
+		this.owner = owner;
 		
 		addCells();
 		
@@ -30,7 +35,7 @@ public class JP_Grid extends JPanel{
 		for(int i = 0; i < K.SQUARE_COUNT; i++) {
 			for(int j = 0; j < K.SQUARE_COUNT; j++) {
 				
-				grid[i][j] = new Cell(i*K.SQUARE_SIZE, j*K.SQUARE_SIZE);
+				grid[i][j] = new Cell(i*K.SQUARE_SIZE, j*K.SQUARE_SIZE, owner);
 				add(grid[i][j]);
 				
 			}
@@ -40,13 +45,21 @@ public class JP_Grid extends JPanel{
 	public void paintCells(int cellsToPaint[][]) {
 				
 		Cell cell;
+		Color shipColor;
+		
 		for(int i = 0; i < K.SQUARE_COUNT; i++)
 		{
 			for(int j = 0; j < K.SQUARE_COUNT; j++)
 			{
 				if(cellsToPaint[j][i] != 0) {
 					
-					Color shipColor = K.getShipColorBySize(cellsToPaint[j][i]);
+					
+					if(cellsToPaint[j][i] < 0) {
+						shipColor = Color.GRAY;
+					}
+					else {
+						shipColor = K.getShipColorBySize(cellsToPaint[j][i]);
+					}
 					definedCellsToPaint[j][i] = cellsToPaint[j][i];
 					
 					cell = grid[j][i];

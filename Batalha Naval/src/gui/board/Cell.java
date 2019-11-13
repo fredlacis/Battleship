@@ -11,6 +11,7 @@ import java.awt.geom.Rectangle2D;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import gui.shipPositioning.JP_PositioningGrid;
 import gui.ships.Ship;
 import main.K;
 import main.K.PHASE;
@@ -22,13 +23,15 @@ public class Cell extends JPanel implements MouseListener{
 	private int x;
 	private int y;
 	
+	private int owner;
+	
 	private Rectangle2D.Double square;
 	
 	private Color cellColor;
 	private Color borderColor;
 	private Color shipColor;
-	
-	public Cell(int x, int y) {
+		
+	public Cell(int x, int y, int owner) {
 			
 		this.x = x;
 		this.y = y;
@@ -39,6 +42,8 @@ public class Cell extends JPanel implements MouseListener{
 		cellColor = new Color(150,150,150);
 		borderColor = new Color(250,250,250);
 		square = new Rectangle2D.Double(0, 0, K.SQUARE_SIZE, K.SQUARE_SIZE);
+		
+		this.owner = owner;
 		
 		addMouseListener(this);
 		
@@ -103,6 +108,12 @@ public class Cell extends JPanel implements MouseListener{
 			return;
 		}
 		
+		if(owner == RulesFacade.getRules().getCurrentPlayer()) {
+			System.out.println("Can't attack your own ships!");
+			return;
+		}
+		
+		RulesFacade.getRules().attack(x/K.SQUARE_SIZE, y/K.SQUARE_SIZE);
 		
 	}
 	@Override
@@ -114,6 +125,10 @@ public class Cell extends JPanel implements MouseListener{
 		if(RulesFacade.getRules().getPhase() == PHASE.POSITION 
 				&& RulesFacade.getRules().getSelectedShip() != null) {
 			paintSelectedCells();
+			return;
+		}
+		
+		if(owner == RulesFacade.getRules().getCurrentPlayer()) {
 			return;
 		}
 		

@@ -7,16 +7,21 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 
 import gui.JP_Title;
-import gui.board.JP_BattleBoard;
 import main.K;
+import rules.designPatterns.IObservable;
+import rules.designPatterns.IObserver;
 import rules.designPatterns.RulesFacade;
 
 @SuppressWarnings("serial")
-public class JF_Attack extends JFrame {
-
-	JP_Title titlePanel = new JP_Title("Attack Phase - " + RulesFacade.getRules().getCurrentPlayer());
+public class JF_Attack extends JFrame implements IObserver{
+	
+	private String currentPlayerName;
+	
+	JP_Title titlePanel = new JP_Title("");
 	
 	public JF_Attack() {
+		RulesFacade.getRules().register(this);
+		
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		Dimension screenSize = tk.getScreenSize();
 		int sl = screenSize.width;
@@ -40,7 +45,19 @@ public class JF_Attack extends JFrame {
 		getContentPane().add(board2);
 		
 		RulesFacade.getRules().startGame();
+	}
+
+	@Override
+	public void notify(IObservable o) {
+		// TODO Auto-generated method stub
+		Object lob[] = (Object []) o.get();
 		
+		int currentPlayer = (int) lob[K.objectValues.CURRENT_PLAYER.getValue()];
+		currentPlayerName = RulesFacade.getRules().getPlayerName(currentPlayer);
+		
+		getContentPane().remove(titlePanel);
+		titlePanel.setText("ATTACKING PLAYER - " + currentPlayerName);
+		getContentPane().add(titlePanel);
 	}
 	
 }

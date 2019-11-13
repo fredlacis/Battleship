@@ -2,12 +2,17 @@ package rules;
 
 import java.util.*;
 
-import gui.board.JP_PositioningGrid;
-import gui.shipSelection.JP_ShipOptions;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+
+import gui.shipPositioning.JP_PositioningGrid;
+import gui.shipPositioning.JP_ShipOptions;
 import gui.ships.Ship;
 import main.K;
 import main.K.ORIENTATION;
 import main.K.PHASE;
+import main.Launcher;
 import rules.designPatterns.IObservable;
 import rules.designPatterns.IObserver;
 
@@ -66,6 +71,7 @@ public class CtrlRules implements IObservable{
 		board1 = K.createEmptyGrid();
 		board2 = K.createEmptyGrid();
 		currentPlayer = 1;
+		refreshBoard();
 	}
 	
 	
@@ -73,23 +79,45 @@ public class CtrlRules implements IObservable{
 	
 	public void startGame() {
 		phase = PHASE.ATTACK;
-		nextPlayer();
 	}
 	public void nextPlayer() {
 		currentPlayer = getNextPlayer();
 		refreshBoard();
 	}
 	public void attack(int x, int y) {
-		System.out.printf("Ataque do jogador %s na posicao X:%d Y:%d", getCurrentPlayerName(), x, y);
+		System.out.printf("Attack from player %s in position X:%d Y:%d\n", getPlayerName(currentPlayer), x, y);
+		
+		if(getBoard(currentPlayer)[x][y] > 0) {
+			System.out.printf("HIT! Player %s destroying Ship : %d!\n", currentPlayer, getBoard(currentPlayer)[x][y]);
+			//playSound("explosion.wav");
+			
+			destroyShip(x, y);
+		}
+		
 		if(checkResult()) {
 			endGame();
 			return;
 		}
+		
+		nextPlayer();
+		refreshBoard();
 	}
 	public boolean checkResult() {
+		//TODO
 		return false;
 	}
-	public void endGame() {}
+	public void endGame() {
+		//TODO
+	}
+	
+	/* FUNCOES PRIVADAS PARA FASE DE ATAQUES */
+	
+	private void destroyShip(int x, int y) {
+		int[][] currentBoard = getBoard(currentPlayer);
+		
+		currentBoard[x][y] = -currentBoard[x][y];
+	}
+	
 	
 	/* FUNCOES PUBLICAS PARA POSICIONAMENTO DO TABULEIRO */
 	
@@ -315,6 +343,10 @@ public class CtrlRules implements IObservable{
 				try { if(definedCells[x][y-i+1] != 0) return false; } catch(Exception e) {}
 				try { if(definedCells[x-1][y-i] != 0) return false; } catch(Exception e) {}
 				try { if(definedCells[x][y-i-1] != 0) return false; } catch(Exception e) {}
+				try { if(definedCells[x+1][y-i+1] != 0) return false; } catch(Exception e) {}
+				try { if(definedCells[x-1][y-i+1] != 0) return false; } catch(Exception e) {}
+				try { if(definedCells[x+1][y-i-1] != 0) return false; } catch(Exception e) {}
+				try { if(definedCells[x-1][y-i-1] != 0) return false; } catch(Exception e) {}
 			}
 		}
 		else if(selectedShip.orientation == ORIENTATION.RIGHT) {
@@ -323,6 +355,10 @@ public class CtrlRules implements IObservable{
 				try { if(definedCells[x+i][y+1] != 0) return false; } catch(Exception e) {}
 				try { if(definedCells[x+i-1][y] != 0) return false; } catch(Exception e) {}
 				try { if(definedCells[x+i][y-1] != 0) return false; } catch(Exception e) {}
+				try { if(definedCells[x+i+1][y+1] != 0) return false; } catch(Exception e) {}
+				try { if(definedCells[x+i-1][y+1] != 0) return false; } catch(Exception e) {}
+				try { if(definedCells[x+i+1][y-1] != 0) return false; } catch(Exception e) {}
+				try { if(definedCells[x+i-1][y-1] != 0) return false; } catch(Exception e) {}
 			}
 		}
 		else if(selectedShip.orientation == ORIENTATION.DOWN) {
@@ -330,7 +366,11 @@ public class CtrlRules implements IObservable{
 				try { if(definedCells[x+1][y+i] != 0) return false; } catch(Exception e) {}
 				try { if(definedCells[x][y+i+1] != 0) return false; } catch(Exception e) {}
 				try { if(definedCells[x-1][y+i] != 0) return false; } catch(Exception e) {}
-				try { if(definedCells[x][y+i-1] != 0) return false; } catch(Exception e) {}	
+				try { if(definedCells[x][y+i-1] != 0) return false; } catch(Exception e) {}
+				try { if(definedCells[x+1][y+i+1] != 0) return false; } catch(Exception e) {}
+				try { if(definedCells[x-1][y+i+1] != 0) return false; } catch(Exception e) {}
+				try { if(definedCells[x+1][y+i-1] != 0) return false; } catch(Exception e) {}
+				try { if(definedCells[x-1][y+i-1] != 0) return false; } catch(Exception e) {}	
 			}
 		}
 		else if(selectedShip.orientation == ORIENTATION.LEFT) {
@@ -339,6 +379,10 @@ public class CtrlRules implements IObservable{
 				try { if(definedCells[x-i][y+1] != 0) return false; } catch(Exception e) {}
 				try { if(definedCells[x-i-1][y] != 0) return false; } catch(Exception e) {}
 				try { if(definedCells[x-i][y-1] != 0) return false; } catch(Exception e) {}
+				try { if(definedCells[x-i+1][y+1] != 0) return false; } catch(Exception e) {}
+				try { if(definedCells[x-i-1][y+1] != 0) return false; } catch(Exception e) {}
+				try { if(definedCells[x-i+1][y-1] != 0) return false; } catch(Exception e) {}
+				try { if(definedCells[x-i-1][y-1] != 0) return false; } catch(Exception e) {}
 			}
 		}
 		
@@ -351,16 +395,32 @@ public class CtrlRules implements IObservable{
 		try { if(definedCells[x-1][y] != 0) return false; } catch(Exception e) {}
 		try { if(definedCells[x][y-1] != 0) return false; } catch(Exception e) {}
 		
+		try { if(definedCells[x+1][y+1] != 0) return false; } catch(Exception e) {}
+		try { if(definedCells[x-1][y+1] != 0) return false; } catch(Exception e) {}
+		try { if(definedCells[x+1][y-1] != 0) return false; } catch(Exception e) {}
+		try { if(definedCells[x-1][y-1] != 0) return false; } catch(Exception e) {}
+		
 		if(selectedShip.orientation == ORIENTATION.TOP) {
 			try { if(definedCells[x-1+1][y-1] != 0) return false; } catch(Exception e) {}
 			try { if(definedCells[x-1][y-1+1] != 0) return false; } catch(Exception e) {}
 			try { if(definedCells[x-1-1][y-1] != 0) return false; } catch(Exception e) {}
 			try { if(definedCells[x-1][y-1-1] != 0) return false; } catch(Exception e) {}
-				
+			
+			try { if(definedCells[x-1+1][y-1+1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x-1-1][y-1+1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x-1+1][y-1-1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x-1-1][y-1-1] != 0) return false; } catch(Exception e) {}
+			
 			try { if(definedCells[x+1][y-2] != 0) return false; } catch(Exception e) {}
 			try { if(definedCells[x][y-2+1] != 0) return false; } catch(Exception e) {}
 			try { if(definedCells[x-1][y-2] != 0) return false; } catch(Exception e) {}
 			try { if(definedCells[x][y-2-1] != 0) return false; } catch(Exception e) {}
+			
+			try { if(definedCells[x+1][y-2+1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x-1][y-2+1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x+1][y-2-1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x-1][y-2-1] != 0) return false; } catch(Exception e) {}
+
 		}
 		else if(selectedShip.orientation == ORIENTATION.RIGHT) {
 			try { if(definedCells[x+1+1][y-1] != 0) return false; } catch(Exception e) {}
@@ -368,10 +428,20 @@ public class CtrlRules implements IObservable{
 			try { if(definedCells[x+1-1][y-1] != 0) return false; } catch(Exception e) {}
 			try { if(definedCells[x+1][y-1-1] != 0) return false; } catch(Exception e) {}
 			
+			try { if(definedCells[x+1+1][y-1+1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x+1-1][y-1+1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x+1+1][y-1-1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x+1-1][y-1-1] != 0) return false; } catch(Exception e) {}
+			
 			try { if(definedCells[x+2+1][y] != 0) return false; } catch(Exception e) {}
 			try { if(definedCells[x+2][y+1] != 0) return false; } catch(Exception e) {}
 			try { if(definedCells[x+2-1][y] != 0) return false; } catch(Exception e) {}
 			try { if(definedCells[x+2][y-1] != 0) return false; } catch(Exception e) {}
+			
+			try { if(definedCells[x+2+1][y+1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x+2-1][y+1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x+2+1][y-1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x+2-1][y-1] != 0) return false; } catch(Exception e) {}
 		}
 		else if(selectedShip.orientation == ORIENTATION.DOWN) {
 			try { if(definedCells[x+1+1][y+1] != 0) return false; } catch(Exception e) {}
@@ -379,10 +449,20 @@ public class CtrlRules implements IObservable{
 			try { if(definedCells[x+1-1][y+1] != 0) return false; } catch(Exception e) {}
 			try { if(definedCells[x+1][y+1-1] != 0) return false; } catch(Exception e) {}
 			
+			try { if(definedCells[x+1+1][y+1+1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x+1+1][y+1-1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x+1-1][y+1+1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x+1-1][y+1-1] != 0) return false; } catch(Exception e) {}
+			
 			try { if(definedCells[x+1][y+2] != 0) return false; } catch(Exception e) {}
 			try { if(definedCells[x][y+2+1] != 0) return false; } catch(Exception e) {}
 			try { if(definedCells[x-1][y+2] != 0) return false; } catch(Exception e) {}
 			try { if(definedCells[x][y+2-1] != 0) return false; } catch(Exception e) {}
+			
+			try { if(definedCells[x+1][y+2+1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x-1][y+2+1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x+1][y+2-1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x-1][y+2-1] != 0) return false; } catch(Exception e) {}
 		}
 		else if(selectedShip.orientation == ORIENTATION.LEFT) {
 			try { if(definedCells[x-1+1][y+1] != 0) return false; } catch(Exception e) {}
@@ -390,10 +470,20 @@ public class CtrlRules implements IObservable{
 			try { if(definedCells[x-1-1][y+1] != 0) return false; } catch(Exception e) {}
 			try { if(definedCells[x-1][y+1-1] != 0) return false; } catch(Exception e) {}
 			
+			try { if(definedCells[x-1+1][y+1+1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x-1-1][y+1+1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x-1+1][y+1-1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x-1-1][y+1-1] != 0) return false; } catch(Exception e) {}
+			
 			try { if(definedCells[x-2+1][y] != 0) return false; } catch(Exception e) {}
 			try { if(definedCells[x-2][y+1] != 0) return false; } catch(Exception e) {}
 			try { if(definedCells[x-2-1][y] != 0) return false; } catch(Exception e) {}
 			try { if(definedCells[x-2][y-1] != 0) return false; } catch(Exception e) {}
+			
+			try { if(definedCells[x-2+1][y+1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x-2-1][y+1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x-2+1][y-1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x-2-1][y-1] != 0) return false; } catch(Exception e) {}
 		}
 		
 		return true;
@@ -427,9 +517,6 @@ public class CtrlRules implements IObservable{
 		cellsToPaint = K.createEmptyGrid();
 		refreshBoard();
     }
-	public void setCurrentPlayer(int playerNum) {
-		currentPlayer = playerNum;
-	}
 	public int getCurrentPlayer() {
 		return currentPlayer;
 	}
@@ -454,14 +541,14 @@ public class CtrlRules implements IObservable{
 		}
 		return null;
 	}
-	public String getCurrentPlayerName() {
-		switch(currentPlayer) {
+	public String getPlayerName(int playerNum) {
+		switch(playerNum) {
 			case 1: return player1;
 			case 2: return player2;
 		}
 		return null;
 	}
-	public void setPlayer(int playerNumber, String playerName) {
+	public void setPlayerName(int playerNumber, String playerName) {
 		switch(playerNumber) {
 		case 1: player1 = playerName;
 		case 2: player2 = playerName;
@@ -502,4 +589,22 @@ public class CtrlRules implements IObservable{
 			o.notify(this);
 	}
 
+	/* PLAYERS DE SOM */
+	
+	public static synchronized void playSound(final String url) {
+		  new Thread(new Runnable() {
+		  // The wrapper thread is unnecessary, unless it blocks on the
+		  // Clip finishing; see comments.
+		    public void run() {
+		      try {
+		        Clip clip = AudioSystem.getClip();
+		        AudioInputStream inputStream = AudioSystem.getAudioInputStream(Launcher.class.getResourceAsStream("/" + url));
+		        clip.open(inputStream);
+		        clip.start(); 
+		      } catch (Exception e) {
+		        System.err.println(e.getMessage());
+		      }
+		    }
+		  }).start();
+		}
 }

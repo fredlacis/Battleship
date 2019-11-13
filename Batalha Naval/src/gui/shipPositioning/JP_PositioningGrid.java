@@ -1,7 +1,9 @@
-package gui.board;
+package gui.shipPositioning;
 
 import java.awt.Color;
 
+import gui.board.Cell;
+import gui.board.JP_Grid;
 import main.K;
 import rules.designPatterns.IObservable;
 import rules.designPatterns.IObserver;
@@ -24,7 +26,7 @@ public class JP_PositioningGrid extends JP_Grid implements IObserver{
     }
 	
 	private JP_PositioningGrid() {
-		super();
+		super(0);
 		RulesFacade.getRules().register(this);
 		cellsToPaint = K.createEmptyGrid();
 	}

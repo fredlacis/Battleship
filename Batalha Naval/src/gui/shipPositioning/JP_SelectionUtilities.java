@@ -1,4 +1,4 @@
-package gui.shipSelection;
+package gui.shipPositioning;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -117,20 +117,19 @@ public class JP_SelectionUtilities extends JPanel implements IObserver{
 				buttonDisable();
 				
 				RulesFacade.getRules().unsetSelectedShip();
-				RulesFacade.getRules().setTabuleiro(RulesFacade.getRules().getJogadorAtual());
+				RulesFacade.getRules().setTabuleiro(RulesFacade.getRules().getCurrentPlayer());
 				
-				if( RulesFacade.getRules().getJogadorAtual() == 2 ) {
+				if( RulesFacade.getRules().getCurrentPlayer() == 2 ) {
 					(new JF_Attack()).setVisible(true);
 					JF_ShipSelection.getShipSelection().setVisible(false);
 				}
 				else {
 					RulesFacade.getRules().resetGrid();
-					RulesFacade.getRules().setCurrentPlayer(2);
-					JF_ShipSelection.getShipSelection().setTitle("Ship Selection - " + RulesFacade.getRules().getCurrentPlayer());
 				}
 				
-			} 
-		} );
+				RulesFacade.getRules().nextPlayer();
+			}
+		});
 		
 		buttonsPanel.add(next);
 		

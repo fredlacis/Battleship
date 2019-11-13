@@ -42,41 +42,37 @@ public class RulesFacade {
     public void resetGrid() {
 		ctrl.resetGrid();
 	}
-    
-    public void startGame() {
-    	ctrl.startGame();
-    }
       
     public PHASE getPhase() {
     	return ctrl.getPhase();
     }
     
-    public void setCurrentPlayer(int jogador) {
-    	ctrl.setCurrentPlayer(jogador);
+    public void nextPlayer() {
+    	ctrl.nextPlayer();
     }
     
-	public String getCurrentPlayer() {
-		return ctrl.getCurrentPlayerName();
+	public String getPlayerName(int playerNum) {
+		return ctrl.getPlayerName(playerNum);
 	}
 	
-	public void setPlayer(int playerNumber, String playerName) {
-		ctrl.setPlayer(playerNumber, playerName);
+	public void setPlayerName(int playerNumber, String playerName) {
+		ctrl.setPlayerName(playerNumber, playerName);
+	}
+	
+	public int getCurrentPlayer() {
+		return ctrl.getCurrentPlayer();
 	}
 	
 	public int getNextPlayer() {
 		return ctrl.getNextPlayer();
 	}
-    
-	public int getJogadorAtual() {
-		return ctrl.getCurrentPlayer();
+	
+	public void setTabuleiro(int player) {
+		ctrl.setBoard(player);
 	}
 	
-	public void setTabuleiro(int jogador) {
-		ctrl.setBoard(jogador);
-	}
-	
-	public int[][] getTabuleiro(int jogador) {
-		return ctrl.getBoard(jogador);
+	public int[][] getTabuleiro(int player) {
+		return ctrl.getBoard(player);
 	}
 	
 	public void addMessage(String message) {
@@ -86,23 +82,15 @@ public class RulesFacade {
 	public void shipRotate() {
 		ctrl.shipRotate();
 	}
-//    
-//    public void novoJogo() {
-//        ctrl.novoJogo();
-//    }
-//        
-//    public int getVez() {
-//        return ctrl.getVez();
-//    }
-//    
-//    public void celulaClicked(int i,int j) {
-//        ctrl.celulaClicked(i,j);
-//    }
-//    
-//    public int testaResultado() {
-//        return ctrl.testaResultado();
-//    }
-//    
+	
+	public void startGame() {
+    	ctrl.startGame();
+    }
+	   
+	public void attack(int x, int y) {
+		ctrl.attack(x, y);
+	}
+	
     public void register(IObserver o) {
         ctrl.addObserver(o);
     }

@@ -1,4 +1,4 @@
-package gui.shipSelection;
+package gui.shipPositioning;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -10,13 +10,15 @@ import javax.swing.JFrame;
 
 import gui.JP_Title;
 import main.K;
+import rules.designPatterns.IObservable;
+import rules.designPatterns.IObserver;
 import rules.designPatterns.RulesFacade;
 
 @SuppressWarnings("serial")
-public class JF_ShipSelection extends JFrame implements KeyListener{
+public class JF_ShipSelection extends JFrame implements KeyListener, IObserver{
 	
 	JP_Title titlePanel = new JP_Title("");
-	
+		
 	static JF_ShipSelection shipSelection;
     
     public static JF_ShipSelection getShipSelection() {
@@ -28,6 +30,8 @@ public class JF_ShipSelection extends JFrame implements KeyListener{
     }
 	
 	private JF_ShipSelection() {
+		RulesFacade.getRules().register(this);
+		
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		Dimension screenSize = tk.getScreenSize();
 		int sl = screenSize.width;
@@ -42,11 +46,13 @@ public class JF_ShipSelection extends JFrame implements KeyListener{
 			
 		setFocusable(true);
 		
-		setTitle("Ship Selection - " + RulesFacade.getRules().getCurrentPlayer());
 		getContentPane().add(titlePanel);
 		getContentPane().add(JP_ShipOptions.getShipOptions());
 		getContentPane().add(new JP_ShipPlacement());
 		getContentPane().add(JP_SelectionUtilities.getSelectionUtilites());
+		
+		int currentPlayerNum = RulesFacade.getRules().getCurrentPlayer();
+		setTitle("Ship Selection - " + RulesFacade.getRules().getPlayerName(currentPlayerNum));
 		
 		addKeyListener(this);
 	}
@@ -76,6 +82,16 @@ public class JF_ShipSelection extends JFrame implements KeyListener{
 		if(k.getKeyChar() == 'r') {
 			RulesFacade.getRules().resetGrid();
 		}		
+	}
+
+	@Override
+	public void notify(IObservable o) {
+		// TODO Auto-generated method stub
+		Object lob[] = (Object []) o.get();
+		
+		int currentPlayerNum = (Integer) lob[K.objectValues.CURRENT_PLAYER.getValue()];
+		
+		setTitle("Ship Selection - " + RulesFacade.getRules().getPlayerName(currentPlayerNum));
 	}
 
 }

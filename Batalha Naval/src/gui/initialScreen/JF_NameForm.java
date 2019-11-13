@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-import gui.shipSelection.JF_ShipSelection;
+import gui.shipPositioning.JF_ShipSelection;
 import rules.designPatterns.RulesFacade;
 
 @SuppressWarnings("serial")
@@ -135,17 +135,14 @@ public class JF_NameForm extends JFrame{
 		startBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-               //m.setNewPanel(new JP_MouseBoard());
             	
             	if(player1Txt.getText().equals("Player 1 name") || player2Txt.getText().equals("Player 2 name")) {
             		JOptionPane.showMessageDialog(null, "Insira os dois nomes!");
-            		
             	}
             	else {
             		
-            		RulesFacade.getRules().setPlayer(1, player1Txt.getText());
-            		RulesFacade.getRules().setPlayer(2, player2Txt.getText());
+            		RulesFacade.getRules().setPlayerName(1, player1Txt.getText());
+            		RulesFacade.getRules().setPlayerName(2, player2Txt.getText());
             		
                 	(JF_ShipSelection.getShipSelection()).setVisible(true);
                 	

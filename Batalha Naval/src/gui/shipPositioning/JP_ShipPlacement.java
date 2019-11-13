@@ -1,8 +1,7 @@
-package gui.shipSelection;
+package gui.shipPositioning;
 
 import javax.swing.JPanel;
 
-import gui.board.JP_SelectionBoard;
 import main.K;
 
 @SuppressWarnings("serial")
