@@ -67,11 +67,6 @@ public class JP_BattleBoard extends JP_Board implements IObserver{
 		boolean result = (boolean) lob[K.objectValues.RESULT.getValue()];
 		int currentPlayer = (int) lob[K.objectValues.CURRENT_PLAYER.getValue()];
 		
-		if(result) {
-			System.out.println("\n\n\n\n\nVITORIA\n\n\n\n");
-			return;
-		}
-		
 		if(player == 1) {
 			hiddenCells = (int[][]) lob[K.objectValues.BOARD_1.getValue()];
 		}
@@ -84,6 +79,11 @@ public class JP_BattleBoard extends JP_Board implements IObserver{
 		}
 		else {
 			hideHiddenCells();
+		}
+		
+		if(result) {
+			System.out.println("\n\n\n\n\nVITORIA\n\n\n\n");
+			return;
 		}
 		
 	}	

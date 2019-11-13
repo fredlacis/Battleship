@@ -88,7 +88,8 @@ public class CtrlRules implements IObservable{
 		checkResult();
 		
 		if(result) {
-			endGame();
+			System.out.printf("Player %d wins!\n", currentPlayer);
+			refreshBoard();
 			return;
 		}
 		
@@ -106,7 +107,6 @@ public class CtrlRules implements IObservable{
 		}
 		
 		nextPlayer();
-		refreshBoard();
 	}
 	public void checkResult() {
 		
@@ -121,16 +121,13 @@ public class CtrlRules implements IObservable{
 				break;
 		}
 				
-		if(currentPlayerPoints > 50) {
-			System.out.printf("Player %d wins!\n", currentPlayer);
+		if(currentPlayerPoints == 38) {
 			result = true;
 		}
 		
 		refreshBoard();
 	}
-	public void endGame() {
-		//TODO
-	}
+
 	
 	/* FUNCOES PRIVADAS PARA FASE DE ATAQUES */
 	
@@ -138,105 +135,9 @@ public class CtrlRules implements IObservable{
 		int[][] currentBoard = getOppositeBoard(currentPlayer);
 		int currentPlayerPoints = 0;
 		
-		if(currentBoard[x][y] == 3) {
-			destroySeaplane(x,y);
-			return;
-		}
-		
-		int originalX = x, originalY = y;
-				
-		try { 
-			//LEFT-RIGHT -> Reach left end and delete
-			if(currentBoard[x+1][y] != 0) {
-				try {
-					while(currentBoard[x][y] != 0) {
-						x--;
-					}
-				} catch(Exception e) {}
-				
-				//Reached end => sum 1 to x to get back to ship
-				x += 1;
-				
-				//Beginning left to right removal
-				try {
-					while(currentBoard[x][y] != 0) {
-						currentPlayerPoints += currentBoard[x][y];
-						currentBoard[x][y] = -currentBoard[x][y];
-						x++;
-					}
-				} catch(Exception e) {}
-			}; 
-		} catch(Exception e) {}
-		try { 
-			//LEFT-RIGHT -> Reach left end and delete
-			if(currentBoard[x-1][y] != 0) {
-				try {
-					while(currentBoard[x][y] != 0) {
-						x--;
-					}
-				} catch(Exception e) {}
-				
-				//Reached end => sum 1 to x to get back to ship
-				x += 1;
-				
-				//Beginning left to right removal
-				try {
-					while(currentBoard[x][y] != 0) {
-						currentPlayerPoints += currentBoard[x][y];
-						currentBoard[x][y] = -currentBoard[x][y];
-						x++;
-					}
-				} catch(Exception e) {}
-			}; 
-		} catch(Exception e) {}
-		try { 
-			//BOTTOM-TOP -> Reach bottom end and delete
-			if(currentBoard[x][y+1] != 0) {
-				try {
-					while(currentBoard[x][y] != 0) {
-						y--;
-					}
-				} catch(Exception e) {}
-				
-				//Reached end => sum 1 to y to get back to ship
-				y += 1;
-				
-				//Beginning bottom to top removal
-				try {
-					while(currentBoard[x][y] != 0) {
-						currentPlayerPoints += currentBoard[x][y];
-						currentBoard[x][y] = -currentBoard[x][y];
-						y++;
-					}
-				} catch(Exception e) {}
-			}; 
-		} catch(Exception e) {}	
-		try { 
-			//BOTTOM-TOP -> Reach bottom end and delete
-			if(currentBoard[x][y-1] != 0) {
-				try {
-					while(currentBoard[x][y] != 0) {
-						y--;
-					}
-				} catch(Exception e) {}
-				
-				//Reached end => sum 1 to y to get back to ship
-				y += 1;
-				
-				//Beginning bottom to top removal
-				try {
-					while(currentBoard[x][y] != 0) {
-						currentPlayerPoints += currentBoard[x][y];
-						currentBoard[x][y] = -currentBoard[x][y];
-						y++;
-					}
-				} catch(Exception e) {}
-			}; 
-		} catch(Exception e) {}	
-		
-		if(currentBoard[originalX][originalY] > 0) {
+		if(currentBoard[x][y] > 0) {
 			currentPlayerPoints += 1;
-			currentBoard[originalX][originalY] = -currentBoard[originalX][originalY];
+			currentBoard[x][y] = -currentBoard[x][y];
 		}
 		
 		switch(currentPlayer) {
