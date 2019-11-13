@@ -60,6 +60,10 @@ public class CtrlRules implements IObservable{
 	List<IObserver> lob = new ArrayList<IObserver>();
 	List<String> messages = new ArrayList<String>();
 	
+	private int pointsPlayer1 = 0;
+	private int pointsPlayer2 = 0;
+	private boolean result = false;
+	
 	
 	/* CONSTRUTOR */
 
@@ -81,6 +85,13 @@ public class CtrlRules implements IObservable{
 		phase = PHASE.ATTACK;
 	}
 	public void nextPlayer() {
+		checkResult();
+		
+		if(result) {
+			endGame();
+			return;
+		}
+		
 		currentPlayer = getNextPlayer();
 		refreshBoard();
 	}
@@ -94,17 +105,28 @@ public class CtrlRules implements IObservable{
 			destroyShip(x, y);
 		}
 		
-		if(checkResult()) {
-			endGame();
-			return;
-		}
-		
 		nextPlayer();
 		refreshBoard();
 	}
-	public boolean checkResult() {
-		//TODO
-		return false;
+	public void checkResult() {
+		
+		int currentPlayerPoints = 0;
+		
+		switch(currentPlayer) {
+			case 1: 
+				currentPlayerPoints = pointsPlayer1;
+				break;
+			case 2: 
+				currentPlayerPoints = pointsPlayer2;
+				break;
+		}
+				
+		if(currentPlayerPoints > 50) {
+			System.out.printf("Player %d wins!\n", currentPlayer);
+			result = true;
+		}
+		
+		refreshBoard();
 	}
 	public void endGame() {
 		//TODO
@@ -114,15 +136,18 @@ public class CtrlRules implements IObservable{
 	
 	private void destroyShip(int x, int y) {
 		int[][] currentBoard = getOppositeBoard(currentPlayer);
+		int currentPlayerPoints = 0;
 		
 		if(currentBoard[x][y] == 3) {
 			destroySeaplane(x,y);
 			return;
 		}
+		
+		int originalX = x, originalY = y;
 				
 		try { 
 			//LEFT-RIGHT -> Reach left end and delete
-			if(currentBoard[x+1][y] != 0 || currentBoard[x-1][y] != 0) {
+			if(currentBoard[x+1][y] != 0) {
 				try {
 					while(currentBoard[x][y] != 0) {
 						x--;
@@ -135,6 +160,29 @@ public class CtrlRules implements IObservable{
 				//Beginning left to right removal
 				try {
 					while(currentBoard[x][y] != 0) {
+						currentPlayerPoints += currentBoard[x][y];
+						currentBoard[x][y] = -currentBoard[x][y];
+						x++;
+					}
+				} catch(Exception e) {}
+			}; 
+		} catch(Exception e) {}
+		try { 
+			//LEFT-RIGHT -> Reach left end and delete
+			if(currentBoard[x-1][y] != 0) {
+				try {
+					while(currentBoard[x][y] != 0) {
+						x--;
+					}
+				} catch(Exception e) {}
+				
+				//Reached end => sum 1 to x to get back to ship
+				x += 1;
+				
+				//Beginning left to right removal
+				try {
+					while(currentBoard[x][y] != 0) {
+						currentPlayerPoints += currentBoard[x][y];
 						currentBoard[x][y] = -currentBoard[x][y];
 						x++;
 					}
@@ -143,7 +191,7 @@ public class CtrlRules implements IObservable{
 		} catch(Exception e) {}
 		try { 
 			//BOTTOM-TOP -> Reach bottom end and delete
-			if(currentBoard[x][y+1] != 0 || currentBoard[x][y-1] != 0) {
+			if(currentBoard[x][y+1] != 0) {
 				try {
 					while(currentBoard[x][y] != 0) {
 						y--;
@@ -156,6 +204,29 @@ public class CtrlRules implements IObservable{
 				//Beginning bottom to top removal
 				try {
 					while(currentBoard[x][y] != 0) {
+						currentPlayerPoints += currentBoard[x][y];
+						currentBoard[x][y] = -currentBoard[x][y];
+						y++;
+					}
+				} catch(Exception e) {}
+			}; 
+		} catch(Exception e) {}	
+		try { 
+			//BOTTOM-TOP -> Reach bottom end and delete
+			if(currentBoard[x][y-1] != 0) {
+				try {
+					while(currentBoard[x][y] != 0) {
+						y--;
+					}
+				} catch(Exception e) {}
+				
+				//Reached end => sum 1 to y to get back to ship
+				y += 1;
+				
+				//Beginning bottom to top removal
+				try {
+					while(currentBoard[x][y] != 0) {
+						currentPlayerPoints += currentBoard[x][y];
 						currentBoard[x][y] = -currentBoard[x][y];
 						y++;
 					}
@@ -163,9 +234,23 @@ public class CtrlRules implements IObservable{
 			}; 
 		} catch(Exception e) {}	
 		
-		K.printGrid(currentBoard);
+		if(currentBoard[originalX][originalY] > 0) {
+			currentPlayerPoints += 1;
+			currentBoard[originalX][originalY] = -currentBoard[originalX][originalY];
+		}
+		
+		switch(currentPlayer) {
+			case 1: 
+				pointsPlayer1 += currentPlayerPoints;
+				System.out.printf("Player %d Points: %d\n", currentPlayer, pointsPlayer1);
+				break;
+			case 2: 
+				pointsPlayer2 += currentPlayerPoints;
+				System.out.printf("Player %d Points: %d\n", currentPlayer, pointsPlayer2);
+				break;
+		}
+		
 	}
-	
 	private void destroySeaplane(int x, int y) {
 		//TODO
 	}
@@ -607,8 +692,8 @@ public class CtrlRules implements IObservable{
 		}
 		return null;
 	}
-	public void setPlayerName(int playerNumber, String playerName) {
-		switch(playerNumber) {
+	public void setPlayerName(int playerNum, String playerName) {
+		switch(playerNum) {
 		case 1: player1 = playerName;
 		case 2: player2 = playerName;
 		}
@@ -616,7 +701,7 @@ public class CtrlRules implements IObservable{
 	public Ship getSelectedShip() {
 		return selectedShip;
 	}
-	
+
 	
 	/* FUNCOES DO OBSERVER */
 	
@@ -636,7 +721,7 @@ public class CtrlRules implements IObservable{
 		dados[ K.objectValues.BOARD_1.getValue() ] 			= board1;
 		dados[ K.objectValues.BOARD_2.getValue() ] 			= board2;
 		dados[ K.objectValues.CURRENT_PLAYER.getValue() ] 	= currentPlayer;
-		dados[ K.objectValues.RESULT.getValue() ] 			= checkResult();
+		dados[ K.objectValues.RESULT.getValue() ] 			= result;
 		dados[ K.objectValues.MESSAGES.getValue() ] 		= messages;
 		dados[ K.objectValues.IS_VALID.getValue() ] 		= isValid;
 		dados[ K.objectValues.CELLS_TO_PAINT.getValue() ] 	= cellsToPaint;
