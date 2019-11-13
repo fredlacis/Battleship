@@ -12,7 +12,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import gui.shipPositioning.JP_PositioningGrid;
-import gui.ships.Ship;
 import main.K;
 import main.K.PHASE;
 import rules.designPatterns.RulesFacade;
@@ -77,6 +76,12 @@ public class Cell extends JPanel implements MouseListener{
 	}
 	
 	public void setShipColor(Color color) {
+		if(color == null) {
+			shipColor = null;
+			cellColor = getOriginalColor();
+			repaint();
+			return;
+		}
 		cellColor = color;
 		shipColor = color;
 		repaint();

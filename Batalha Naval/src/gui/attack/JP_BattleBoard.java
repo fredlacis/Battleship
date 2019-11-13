@@ -1,7 +1,5 @@
 package gui.attack;
 
-import java.awt.Color;
-
 import gui.board.JP_Board;
 import gui.board.JP_Grid;
 import main.K;
@@ -43,11 +41,11 @@ public class JP_BattleBoard extends JP_Board implements IObserver{
 	
 	private void hideHiddenCells() {
 		getShownCells();
-		battleGrid.paintCells(shownCells);
+		battleGrid.repaintCells(shownCells);
 	}
 	
 	private void showHiddenCells(){
-		battleGrid.paintCells(hiddenCells);
+		battleGrid.repaintCells(hiddenCells);
 	}
 	
 	private void getShownCells() {

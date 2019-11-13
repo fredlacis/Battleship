@@ -87,8 +87,8 @@ public class CtrlRules implements IObservable{
 	public void attack(int x, int y) {
 		System.out.printf("Attack from player %s in position X:%d Y:%d\n", getPlayerName(currentPlayer), x, y);
 		
-		if(getBoard(currentPlayer)[x][y] > 0) {
-			System.out.printf("HIT! Player %s destroying Ship : %d!\n", currentPlayer, getBoard(currentPlayer)[x][y]);
+		if(getOppositeBoard(currentPlayer)[x][y] > 0) {
+			System.out.printf("HIT! Player %s destroying Ship : %d!\n", currentPlayer, getOppositeBoard(currentPlayer)[x][y]);
 			//playSound("explosion.wav");
 			
 			destroyShip(x, y);
@@ -113,9 +113,61 @@ public class CtrlRules implements IObservable{
 	/* FUNCOES PRIVADAS PARA FASE DE ATAQUES */
 	
 	private void destroyShip(int x, int y) {
-		int[][] currentBoard = getBoard(currentPlayer);
+		int[][] currentBoard = getOppositeBoard(currentPlayer);
 		
-		currentBoard[x][y] = -currentBoard[x][y];
+		if(currentBoard[x][y] == 3) {
+			destroySeaplane(x,y);
+			return;
+		}
+				
+		try { 
+			//LEFT-RIGHT -> Reach left end and delete
+			if(currentBoard[x+1][y] != 0 || currentBoard[x-1][y] != 0) {
+				try {
+					while(currentBoard[x][y] != 0) {
+						x--;
+					}
+				} catch(Exception e) {}
+				
+				//Reached end => sum 1 to x to get back to ship
+				x += 1;
+				
+				//Beginning left to right removal
+				try {
+					while(currentBoard[x][y] != 0) {
+						currentBoard[x][y] = -currentBoard[x][y];
+						x++;
+					}
+				} catch(Exception e) {}
+			}; 
+		} catch(Exception e) {}
+		try { 
+			//BOTTOM-TOP -> Reach bottom end and delete
+			if(currentBoard[x][y+1] != 0 || currentBoard[x][y-1] != 0) {
+				try {
+					while(currentBoard[x][y] != 0) {
+						y--;
+					}
+				} catch(Exception e) {}
+				
+				//Reached end => sum 1 to y to get back to ship
+				y += 1;
+				
+				//Beginning bottom to top removal
+				try {
+					while(currentBoard[x][y] != 0) {
+						currentBoard[x][y] = -currentBoard[x][y];
+						y++;
+					}
+				} catch(Exception e) {}
+			}; 
+		} catch(Exception e) {}	
+		
+		K.printGrid(currentBoard);
+	}
+	
+	private void destroySeaplane(int x, int y) {
+		//TODO
 	}
 	
 	
@@ -538,6 +590,13 @@ public class CtrlRules implements IObservable{
 		switch(playerNum) {
 			case 1: return board1;
 			case 2: return board2;
+		}
+		return null;
+	}
+	public int[][] getOppositeBoard(int playerNum) {
+		switch(playerNum) {
+			case 1: return board2;
+			case 2: return board1;
 		}
 		return null;
 	}

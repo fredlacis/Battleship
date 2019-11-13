@@ -5,7 +5,6 @@ import java.awt.Color;
 import javax.swing.JPanel;
 
 import main.K;
-import rules.designPatterns.RulesFacade;
 
 @SuppressWarnings("serial")
 public class JP_Grid extends JPanel{
@@ -66,6 +65,35 @@ public class JP_Grid extends JPanel{
 					cell.setShipColor(shipColor);
 					cell.repaint();
 				}
+			}
+		}
+	}
+	
+	public void repaintCells(int cellsToPaint[][]) {
+		
+		Cell cell;
+		
+		for(int i = 0; i < K.SQUARE_COUNT; i++)
+		{
+			for(int j = 0; j < K.SQUARE_COUNT; j++)
+			{
+				definedCellsToPaint[j][i] = cellsToPaint[j][i];
+				cell = grid[j][i];
+				
+				if(cellsToPaint[j][i] == 0) {
+					cell.setShipColor(null);	
+					cell.repaint();
+					continue;
+				}
+				
+				if(cellsToPaint[j][i] < 0) {
+					cell.setShipColor(Color.BLACK);
+				}
+				else {
+					cell.setShipColor(K.getShipColorBySize(cellsToPaint[j][i]));
+				}
+				
+				cell.repaint();
 			}
 		}
 	}
