@@ -40,11 +40,15 @@ public class JP_BattleBoard extends JP_Board implements IObserver{
 	}
 	
 	private void hideHiddenCells() {
+		System.out.println("ShownCells");
+		K.printGrid(shownCells);
 		getShownCells();
 		battleGrid.repaintCells(shownCells);
 	}
 	
 	private void showHiddenCells(){
+		System.out.println("HiddenCells");
+		K.printGrid(hiddenCells);
 		battleGrid.repaintCells(hiddenCells);
 	}
 	
@@ -82,7 +86,7 @@ public class JP_BattleBoard extends JP_Board implements IObserver{
 		}
 		
 		if(result) {
-			System.out.println("\n\n\n\n\nVITORIA\n\n\n\n");
+			System.out.println("\n**********\nVITORIA\n**********\n");
 			return;
 		}
 		
