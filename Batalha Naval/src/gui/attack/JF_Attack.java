@@ -35,11 +35,12 @@ public class JF_Attack extends JFrame implements IObserver{
 		getContentPane().setBackground(new Color(250, 250, 250));
 		
 		JP_BattleBoard board1 = new JP_BattleBoard(1);
-		board1.setBounds(8, 100, board1.BOARD_SIZE, board1.BOARD_SIZE);
+		board1.setBounds(8, 60, board1.BOARD_SIZE, board1.BOARD_SIZE);
 		
 		JP_BattleBoard board2 = new JP_BattleBoard(2);
-		board2.setBounds(8 + board2.BOARD_SIZE + 8, 100, board2.BOARD_SIZE, board2.BOARD_SIZE);
+		board2.setBounds(8 + board2.BOARD_SIZE + 8, 60, board2.BOARD_SIZE, board2.BOARD_SIZE);
 		
+		getContentPane().add(JP_AttackUtilities.getAttackUtilites());
 		getContentPane().add(titlePanel);
 		getContentPane().add(board1);
 		getContentPane().add(board2);
@@ -53,11 +54,13 @@ public class JF_Attack extends JFrame implements IObserver{
 		Object lob[] = (Object []) o.get();
 		
 		int currentPlayer = (int) lob[K.objectValues.CURRENT_PLAYER.getValue()];
-		currentPlayerName = RulesFacade.getRules().getPlayerName(currentPlayer);
+//		currentPlayerName = RulesFacade.getRules().getPlayerName(currentPlayer);
+		if(currentPlayer == 1)
+			currentPlayerName = (String) lob[ K.objectValues.PLAYER_1_NAME.getValue() ];
+		else
+			currentPlayerName = (String) lob[ K.objectValues.PLAYER_2_NAME.getValue() ];
 		
-		getContentPane().remove(titlePanel);
 		titlePanel.setText("ATTACKING PLAYER - " + currentPlayerName);
-		getContentPane().add(titlePanel);
 	}
 	
 }

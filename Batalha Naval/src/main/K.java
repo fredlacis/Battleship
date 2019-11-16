@@ -38,7 +38,9 @@ public class K {
 		RESULT(3),
 		MESSAGES(4),
 		IS_VALID(5),
-		CELLS_TO_PAINT(6);
+		CELLS_TO_PAINT(6),
+		PLAYER_1_NAME(7),
+		PLAYER_2_NAME(8);
 		
 		private final int value;
 

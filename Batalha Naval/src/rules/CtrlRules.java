@@ -62,6 +62,7 @@ public class CtrlRules implements IObservable{
 	
 	private int pointsPlayer1 = 0;
 	private int pointsPlayer2 = 0;
+	private int currentAttackCount = 1;
 	private boolean result = false;
 	
 	
@@ -105,8 +106,21 @@ public class CtrlRules implements IObservable{
 			
 			destroyShip(x, y);
 		}
+		else if(getOppositeBoard(currentPlayer)[x][y] == 0) {
+			System.out.println("WATER!");
+			destroyShip(x, y);
+		}
 		
-		nextPlayer();
+		if(currentAttackCount == 3 ) {	
+			
+			currentAttackCount = 1;
+			nextPlayer();
+		}
+		else {
+			currentAttackCount++;
+			refreshBoard();
+		}
+	
 	}
 	public void checkResult() {
 		
@@ -135,10 +149,14 @@ public class CtrlRules implements IObservable{
 		int[][] currentBoard = getOppositeBoard(currentPlayer);
 		int currentPlayerPoints = 0;
 		
+		if(currentBoard[x][y] == 0) {
+			currentBoard[x][y] = -9;
+		}
 		if(currentBoard[x][y] > 0) {
 			currentPlayerPoints += 1;
 			currentBoard[x][y] = -currentBoard[x][y];
 		}
+		
 		
 		switch(currentPlayer) {
 			case 1: 
@@ -626,6 +644,8 @@ public class CtrlRules implements IObservable{
 		dados[ K.objectValues.MESSAGES.getValue() ] 		= messages;
 		dados[ K.objectValues.IS_VALID.getValue() ] 		= isValid;
 		dados[ K.objectValues.CELLS_TO_PAINT.getValue() ] 	= cellsToPaint;
+		dados[ K.objectValues.PLAYER_1_NAME.getValue() ] 	= player1;
+		dados[ K.objectValues.PLAYER_2_NAME.getValue() ] 	= player2;
 		
 		return dados;
 	}

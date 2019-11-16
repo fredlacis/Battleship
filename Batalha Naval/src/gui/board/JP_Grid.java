@@ -86,7 +86,10 @@ public class JP_Grid extends JPanel{
 					continue;
 				}
 				
-				if(cellsToPaint[j][i] < 0) {
+				if(cellsToPaint[j][i] == -9) {
+					cell.setShipColor(Color.WHITE);
+				}
+				else if(cellsToPaint[j][i] < 0) {
 					cell.setShipColor(Color.BLACK);
 				}
 				else {
