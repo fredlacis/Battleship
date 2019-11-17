@@ -79,6 +79,10 @@ public class RulesFacade {
 		ctrl.addMessage(message);
 	}
 
+	public void emptyMessagesList() {
+		ctrl.emptyMessagesList();
+	}
+	
 	public void shipRotate() {
 		ctrl.shipRotate();
 	}

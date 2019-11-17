@@ -98,21 +98,24 @@ public class CtrlRules implements IObservable{
 		refreshBoard();
 	}
 	public void attack(int x, int y) {
-		System.out.printf("Attack from player %s in position X:%d Y:%d\n", getPlayerName(currentPlayer), x, y);
+//		System.out.printf("Attack from player %s in position X:%d Y:%d\n", getPlayerName(currentPlayer), x, y);
 		
 		if(getOppositeBoard(currentPlayer)[x][y] > 0) {
-			System.out.printf("HIT! Player %s destroying Ship : %d!\n", currentPlayer, getOppositeBoard(currentPlayer)[x][y]);
+//			System.out.printf("HIT! Player %s destroying %s!\n", currentPlayer, K.getShipNameBySize(getOppositeBoard(currentPlayer)[x][y]));
+			addMessage(getPlayerName(currentPlayer) + " hitted a " + K.getShipNameBySize(getOppositeBoard(currentPlayer)[x][y]) + "!");
 			//playSound("explosion.wav");
 			
 			destroyShip(x, y);
 		}
 		else if(getOppositeBoard(currentPlayer)[x][y] == 0) {
-			System.out.println("WATER!");
+//			System.out.println("WATER!");
+			
+			addMessage(getPlayerName(currentPlayer) + " missed!");
+			
 			destroyShip(x, y);
 		}
 		
 		if(currentAttackCount == 3 ) {	
-			
 			currentAttackCount = 1;
 			nextPlayer();
 		}
@@ -152,7 +155,7 @@ public class CtrlRules implements IObservable{
 		if(currentBoard[x][y] == 0) {
 			currentBoard[x][y] = -9;
 		}
-		if(currentBoard[x][y] > 0) {
+		else if(currentBoard[x][y] > 0) {
 			currentPlayerPoints += 1;
 			currentBoard[x][y] = -currentBoard[x][y];
 		}
@@ -161,19 +164,16 @@ public class CtrlRules implements IObservable{
 		switch(currentPlayer) {
 			case 1: 
 				pointsPlayer1 += currentPlayerPoints;
-				System.out.printf("Player %d Points: %d\n", currentPlayer, pointsPlayer1);
+//				System.out.printf("Player %d Points: %d\n", currentPlayer, pointsPlayer1);
 				break;
 			case 2: 
 				pointsPlayer2 += currentPlayerPoints;
-				System.out.printf("Player %d Points: %d\n", currentPlayer, pointsPlayer2);
+//				System.out.printf("Player %d Points: %d\n", currentPlayer, pointsPlayer2);
 				break;
 		}
 		
 	}
-	private void destroySeaplane(int x, int y) {
-		//TODO
-	}
-	
+
 	
 	/* FUNCOES PUBLICAS PARA POSICIONAMENTO DO TABULEIRO */
 	
@@ -552,7 +552,9 @@ public class CtrlRules implements IObservable{
 		messages.add(message);
 		refreshBoard();
 	}
-		
+	public void emptyMessagesList() {
+		messages.clear();
+	}
 	
 	/* METODOS GET E SET */
 	

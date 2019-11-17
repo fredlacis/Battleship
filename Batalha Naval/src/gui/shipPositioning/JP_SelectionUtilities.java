@@ -120,7 +120,7 @@ public class JP_SelectionUtilities extends JPanel implements IObserver{
 				RulesFacade.getRules().setTabuleiro(RulesFacade.getRules().getCurrentPlayer());
 				
 				if( RulesFacade.getRules().getCurrentPlayer() == 2 ) {
-					(new JF_Attack()).setVisible(true);
+					JF_Attack.getAttackFrame().setVisible(true);
 					JF_ShipSelection.getShipSelection().setVisible(false);
 				}
 				else {

@@ -11,6 +11,7 @@ import java.awt.geom.Rectangle2D;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import gui.attack.JF_Attack;
 import gui.shipPositioning.JP_PositioningGrid;
 import main.K;
 import main.K.PHASE;
@@ -110,6 +111,11 @@ public class Cell extends JPanel implements MouseListener{
 		if(RulesFacade.getRules().getPhase() == PHASE.POSITION) {
 			RulesFacade.getRules().positionShip(x/K.SQUARE_SIZE, y/K.SQUARE_SIZE, 
 				JP_PositioningGrid.getGrid().getFinalGrid());
+			return;
+		}
+		
+		if(JF_Attack.getAttackFrame().blockCells) {
+			System.out.println("Cells blocked, click the button!");
 			return;
 		}
 		

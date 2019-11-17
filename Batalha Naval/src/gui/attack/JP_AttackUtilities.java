@@ -25,6 +25,7 @@ import rules.designPatterns.RulesFacade;
 public class JP_AttackUtilities extends JPanel implements IObserver{
 
 	public final int UTILITIES_HEIGHT = 150;
+	private int turn = 1;
 	
 	JLabel message1 = new JLabel("");
 	JLabel message2 = new JLabel("");
@@ -56,9 +57,9 @@ public class JP_AttackUtilities extends JPanel implements IObserver{
 		
 		/* MIDDLE */
 		
-		JPanel leftPanel = new JPanel();
-		leftPanel.setBounds(K.LARG_DEFAULT/3, 0, K.LARG_DEFAULT/3, UTILITIES_HEIGHT);
-		leftPanel.setLayout(new GridBagLayout());
+		JPanel middlePanel = new JPanel();
+		middlePanel.setBounds(K.LARG_DEFAULT/2, 0, K.LARG_DEFAULT/4, UTILITIES_HEIGHT);
+		middlePanel.setLayout(new GridBagLayout());
 		
 		JPanel nextContainer = new JPanel();
 			
@@ -68,22 +69,28 @@ public class JP_AttackUtilities extends JPanel implements IObserver{
 		
 		nextContainer.add(nextBtn);
 		
-		nextBtn.setText("Next");
+		nextBtn.setText("Start");
 		nextBtn.setBackground(new Color(0, 218, 60));
 		nextBtn.setForeground(new Color(0, 218, 60).darker());
 		nextBtn.setFont(new Font("SansSerif", Font.BOLD, 16));
+		nextBtn.setEnabled(false);
+		nextBtn.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				    JF_Attack.getAttackFrame().showBoard(turn);
+			  } 
+			} );
 		
-		leftPanel.add(nextContainer);
+		middlePanel.add(nextContainer);
 		
 		/* RIGHT */
 		
 		JPanel rightPanel = new JPanel();
 		rightPanel.setLayout(null);
-		rightPanel.setBounds(2 * (K.LARG_DEFAULT/3), 0, K.LARG_DEFAULT/3, UTILITIES_HEIGHT);
+		rightPanel.setBounds(3 * (K.LARG_DEFAULT/4), 0, K.LARG_DEFAULT/4, UTILITIES_HEIGHT);
 		
 		JPanel buttonsContainer = new JPanel();
 		buttonsContainer.setLayout(new BoxLayout(buttonsContainer, BoxLayout.Y_AXIS));
-		buttonsContainer.setBounds((K.LARG_DEFAULT/3)-150-10, 10, 150, 305);
+		buttonsContainer.setBounds((K.LARG_DEFAULT/4)-150-10, 10, 150, 305);
 		
 		exitBtn.setBackground(new Color(223, 21, 26));
 		exitBtn.setForeground(new Color(100, 5, 9));
@@ -111,9 +118,9 @@ public class JP_AttackUtilities extends JPanel implements IObserver{
 			  } 
 			} );
 		
-		buttonsContainer.add(exitBtn);
-		buttonsContainer.add(Box.createRigidArea(new Dimension(0, 5)));
 		buttonsContainer.add(saveBtn);
+		buttonsContainer.add(Box.createRigidArea(new Dimension(0, 5)));
+		buttonsContainer.add(exitBtn);		
 		
 		rightPanel.add(buttonsContainer);
 		
@@ -121,21 +128,21 @@ public class JP_AttackUtilities extends JPanel implements IObserver{
 		
 		JPanel messagesPanel = new JPanel();
 		messagesPanel.setLayout(null);
-		messagesPanel.setBounds(0, 0, K.LARG_DEFAULT/3, UTILITIES_HEIGHT);
+		messagesPanel.setBounds(0, 0, K.LARG_DEFAULT/2, UTILITIES_HEIGHT);
 		
-		message1.setBounds(0, 60, K.LARG_DEFAULT/3, 40);
-		message1.setFont(new Font("SansSerif", Font.BOLD, 20));
-		message1.setForeground(Color.BLACK);
+		message1.setBounds(0, 60, K.LARG_DEFAULT/2, 40);
+		message1.setFont(new Font("SansSerif", Font.BOLD, 18));
+		message1.setForeground(new Color(0, 203, 231));
 		message1.setHorizontalAlignment(SwingConstants.CENTER);
 		message1.setVerticalAlignment(SwingConstants.CENTER);
 		
-		message2.setBounds(0, 40, K.LARG_DEFAULT/3, 30);
+		message2.setBounds(0, 40, K.LARG_DEFAULT/2, 30);
 		message2.setFont(new Font("SansSerif", Font.BOLD, 15));
 		message2.setForeground(Color.GRAY);
 		message2.setHorizontalAlignment(SwingConstants.CENTER);
 		message2.setVerticalAlignment(SwingConstants.CENTER);
 		
-		message3.setBounds(0, 20, K.LARG_DEFAULT/3, 30);
+		message3.setBounds(0, 20, K.LARG_DEFAULT/2, 30);
 		message3.setFont(new Font("SansSerif", Font.BOLD, 10));
 		message3.setForeground(Color.LIGHT_GRAY);
 		message3.setHorizontalAlignment(SwingConstants.CENTER);
@@ -145,37 +152,28 @@ public class JP_AttackUtilities extends JPanel implements IObserver{
 		messagesPanel.add(message2);
 		messagesPanel.add(message3);
 		
-		add(leftPanel);
+		add(middlePanel);
 		add(messagesPanel);
 		add(rightPanel);
 		
 	}
 	
-//	public void buttonEnable() {
-//		next.setBackground(new Color(0, 218, 60));
-//		next.setEnabled(true);
-//		this.repaint();
-//	}
-//	
-//	public void buttonDisable() {
-//		next.setBackground(Color.LIGHT_GRAY.darker());
-//		next.setEnabled(false);
-//		this.repaint();
-//	}
+	public void buttonEnable() {
+		nextBtn.setForeground(new Color(0, 218, 60).darker());
+		nextBtn.setEnabled(true);
+		this.repaint();
+	}
+	
+	public void buttonDisable() {
+		nextBtn.setText("Next");
+		nextBtn.setForeground(Color.GRAY);
+		nextBtn.setEnabled(false);
+		this.repaint();
+	}
 	
 	public void setMessages(List<String> messages, boolean validation) {
 		
 		try {
-			if( this.message1.getText() != messages.get( messages.size() - 1 ) ) {
-				if( validation ) {
-					message1.setForeground(Color.GREEN.darker().darker());
-				}
-				else {
-					message1.setForeground(Color.RED);
-				}
-			}
-		
-		
 			message1.setText( messages.get( messages.size() - 1 ) );
 			message2.setText( messages.get( messages.size() - 2 ) );
 			message3.setText( messages.get( messages.size() - 3 ) );
@@ -195,6 +193,16 @@ public class JP_AttackUtilities extends JPanel implements IObserver{
 		
 		List<String> newMessages = (List<String>) lob[K.objectValues.MESSAGES.getValue()];
 		boolean validation = (boolean) lob[ K.objectValues.IS_VALID.getValue() ];
+		int currentPlayer = (int) lob[K.objectValues.CURRENT_PLAYER.getValue()];
+
+		if(currentPlayer != turn) {
+			buttonEnable();
+			JF_Attack.getAttackFrame().blockCells = true;
+			turn = currentPlayer;
+		}
+		else {
+			buttonDisable();
+		}
 		
 		setMessages(newMessages, validation);
 		

@@ -39,16 +39,16 @@ public class JP_BattleBoard extends JP_Board implements IObserver{
 		}
 	}
 	
-	private void hideHiddenCells() {
-		System.out.println("ShownCells");
-		K.printGrid(shownCells);
+	public void hideHiddenCells() {
+//		System.out.println("ShownCells");
+//		K.printGrid(shownCells);
 		getShownCells();
 		battleGrid.repaintCells(shownCells);
 	}
 	
-	private void showHiddenCells(){
-		System.out.println("HiddenCells");
-		K.printGrid(hiddenCells);
+	public void showHiddenCells(){
+//		System.out.println("HiddenCells");
+//		K.printGrid(hiddenCells);
 		battleGrid.repaintCells(hiddenCells);
 	}
 	
@@ -64,6 +64,7 @@ public class JP_BattleBoard extends JP_Board implements IObserver{
 		}
 	}
 	
+	
 	@Override
 	public void notify(IObservable o) {
 		Object lob[] = (Object []) o.get();
@@ -78,10 +79,14 @@ public class JP_BattleBoard extends JP_Board implements IObserver{
 			hiddenCells = (int[][]) lob[K.objectValues.BOARD_2.getValue()];
 		}
 		
-		if(player == currentPlayer) {
-			showHiddenCells();
-		}
-		else {
+//		if(player == currentPlayer) {
+//			showHiddenCells();
+//		}
+//		else {
+//			hideHiddenCells();
+//		}
+		
+		if(player != currentPlayer) {
 			hideHiddenCells();
 		}
 		

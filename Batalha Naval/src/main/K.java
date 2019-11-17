@@ -92,4 +92,15 @@ public class K {
 		}
 		return Color.BLACK;
 	}
+	
+	public static String getShipNameBySize(int size) {
+		switch(size) {
+		case 1: return "Submarine"; //Cyan
+		case 2: return "Destroyer"; //Green
+		case 3: return "Seaplane"; //Yellow
+		case 4: return "Cruiser"; //DarkBlue
+		case 5: return "Battleship"; //Pink
+	}
+	return "";
+	}
 }

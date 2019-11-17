@@ -19,8 +19,23 @@ public class JF_Attack extends JFrame implements IObserver{
 	
 	JP_Title titlePanel = new JP_Title("");
 	
-	public JF_Attack() {
+	JP_BattleBoard board1;
+	JP_BattleBoard board2;
+	
+	public boolean blockCells = true;
+	
+	static JF_Attack attackFrame;
+    
+    public static JF_Attack getAttackFrame() {
+        if(attackFrame == null)
+        	attackFrame = new JF_Attack();
+        
+        return attackFrame;    
+    }
+	
+	private JF_Attack() {
 		RulesFacade.getRules().register(this);
+		RulesFacade.getRules().emptyMessagesList();
 		
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		Dimension screenSize = tk.getScreenSize();
@@ -34,10 +49,10 @@ public class JF_Attack extends JFrame implements IObserver{
 		setLayout(null);
 		getContentPane().setBackground(new Color(250, 250, 250));
 		
-		JP_BattleBoard board1 = new JP_BattleBoard(1);
+		board1 = new JP_BattleBoard(1);
 		board1.setBounds(8, 60, board1.BOARD_SIZE, board1.BOARD_SIZE);
 		
-		JP_BattleBoard board2 = new JP_BattleBoard(2);
+		board2 = new JP_BattleBoard(2);
 		board2.setBounds(8 + board2.BOARD_SIZE + 8, 60, board2.BOARD_SIZE, board2.BOARD_SIZE);
 		
 		getContentPane().add(JP_AttackUtilities.getAttackUtilites());
@@ -47,18 +62,31 @@ public class JF_Attack extends JFrame implements IObserver{
 		
 		RulesFacade.getRules().startGame();
 	}
+	
+	public void showBoard(int player) {
+		System.out.println("[DEBUG] SHOWING BOARD " + Integer.toString(player));
+		
+		if(player == 1)
+			board1.showHiddenCells();
+		else 
+			board2.showHiddenCells();
+		
+		JP_AttackUtilities.getAttackUtilites().buttonDisable();
+		blockCells = false;
+	}
 
 	@Override
 	public void notify(IObservable o) {
-		// TODO Auto-generated method stub
 		Object lob[] = (Object []) o.get();
 		
 		int currentPlayer = (int) lob[K.objectValues.CURRENT_PLAYER.getValue()];
-//		currentPlayerName = RulesFacade.getRules().getPlayerName(currentPlayer);
+
 		if(currentPlayer == 1)
 			currentPlayerName = (String) lob[ K.objectValues.PLAYER_1_NAME.getValue() ];
 		else
 			currentPlayerName = (String) lob[ K.objectValues.PLAYER_2_NAME.getValue() ];
+		
+//		showBoard(currentPlayer);
 		
 		titlePanel.setText("ATTACKING PLAYER - " + currentPlayerName);
 	}
