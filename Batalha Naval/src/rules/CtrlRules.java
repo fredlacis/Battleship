@@ -2,17 +2,12 @@ package rules;
 
 import java.util.*;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-
 import gui.shipPositioning.JP_PositioningGrid;
 import gui.shipPositioning.JP_ShipOptions;
 import gui.ships.Ship;
 import main.K;
 import main.K.ORIENTATION;
 import main.K.PHASE;
-import main.Launcher;
 import rules.designPatterns.IObservable;
 import rules.designPatterns.IObserver;
 
@@ -870,22 +865,4 @@ public class CtrlRules implements IObservable{
 			o.notify(this);
 	}
 
-	/* PLAYERS DE SOM */
-	
-	public static synchronized void playSound(final String url) {
-		  new Thread(new Runnable() {
-		  // The wrapper thread is unnecessary, unless it blocks on the
-		  // Clip finishing; see comments.
-		    public void run() {
-		      try {
-		        Clip clip = AudioSystem.getClip();
-		        AudioInputStream inputStream = AudioSystem.getAudioInputStream(Launcher.class.getResourceAsStream("/" + url));
-		        clip.open(inputStream);
-		        clip.start(); 
-		      } catch (Exception e) {
-		        System.err.println(e.getMessage());
-		      }
-		    }
-		  }).start();
-		}
 }
