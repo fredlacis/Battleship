@@ -287,10 +287,18 @@ public class CtrlRules implements IObservable{
 	private void destroyShip(int x, int y) {
 		int[][] currentBoard = getOppositeBoard(currentPlayer);
 
-		if(currentBoard[x][y] == 3) {
+		addMessage(getPlayerName(currentPlayer) + " destroyed a " + K.getShipNameBySize(getOppositeBoard(currentPlayer)[x][y]) + "!");
+		
+		if(currentBoard[x][y] == Ships.D_SUBMARINE.getValue()) {
+			currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+			return;
+		}
+		if(currentBoard[x][y] == Ships.D_SEAPLANE.getValue()) {
 			destroySeaplane(x,y);
 			return;
 		}
+		
+		
 
 		try { 
 			//LEFT-RIGHT -> Reach left end and delete

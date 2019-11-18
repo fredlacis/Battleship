@@ -96,6 +96,8 @@ public class K {
 	}
 	
 	public static String getShipNameBySize(int size) {
+		if(size < 0) size = -size;
+		
 		switch(size) {
 		case 1: return "Submarine"; //Cyan
 		case 2: return "Destroyer"; //Green

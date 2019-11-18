@@ -71,6 +71,9 @@ public class JP_Grid extends JPanel{
 	
 	public void repaintCells(int cellsToPaint[][]) {
 		
+		System.out.println("REPAINT CELLS");
+		K.printGrid(cellsToPaint);
+		
 		Cell cell;
 		
 		for(int i = 0; i < K.SQUARE_COUNT; i++)
@@ -89,11 +92,11 @@ public class JP_Grid extends JPanel{
 				if(cellsToPaint[j][i] == 10) {
 					cell.setShipColor(Color.WHITE);
 				}
-				else if(cellsToPaint[j][i] < 0) {
-					cell.setShipColor(Color.BLACK);
-				}
 				else if(cellsToPaint[j][i] < -K.DESTROYED_SHIP_LIMIT) {
 					cell.setShipColor(Color.RED);
+				}
+				else if(cellsToPaint[j][i] < 0) {
+					cell.setShipColor(Color.BLACK);
 				}
 				else {
 					cell.setShipColor(K.getShipColorBySize(cellsToPaint[j][i]));

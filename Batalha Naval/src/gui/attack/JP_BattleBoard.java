@@ -53,7 +53,7 @@ public class JP_BattleBoard extends JP_Board implements IObserver{
 		{
 			for(int j = 0; j < K.SQUARE_COUNT; j++)
 			{
-				if(hiddenCells[j][i] < 0) {
+				if(hiddenCells[j][i] < 0 || hiddenCells[j][i] == 10) {
 					shownCells[j][i] = hiddenCells[j][i];
 				}
 			}
@@ -74,9 +74,7 @@ public class JP_BattleBoard extends JP_Board implements IObserver{
 		else {
 			hiddenCells = (int[][]) lob[K.objectValues.BOARD_2.getValue()];
 		}
-		
-		K.printGrid(hiddenCells);
-		
+			
 		if(player != currentPlayer) {
 			hideHiddenCells();
 		}	
