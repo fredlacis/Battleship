@@ -17,6 +17,8 @@ public class K {
 	
 	public static final int JPANEL_BORDER = 20;
 	
+	public static final int DESTROYED_SHIP_LIMIT = 10;
+	
 	public static enum ORIENTATION { 
 	    TOP, RIGHT, DOWN, LEFT;
 	    private static ORIENTATION[] vals = values();
