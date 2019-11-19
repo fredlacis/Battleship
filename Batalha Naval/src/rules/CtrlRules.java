@@ -96,7 +96,11 @@ public class CtrlRules implements IObservable{
 	}
 	public void attack(int x, int y) {
 		
-		if(getOppositeBoard(currentPlayer)[x][y] > 0 && getOppositeBoard(currentPlayer)[x][y] < Ships.D_WATER.getValue()) {
+		if(getOppositeBoard(currentPlayer)[x][y] == Ships.D_WATER.getValue() || getOppositeBoard(currentPlayer)[x][y] < 0) {
+			addMessage("This cell was already clicked!");
+			return;
+		}
+		else if(getOppositeBoard(currentPlayer)[x][y] > 0 && getOppositeBoard(currentPlayer)[x][y] < Ships.D_WATER.getValue()) {
 			addMessage(getPlayerName(currentPlayer) + " hit a " + K.getShipNameBySize(getOppositeBoard(currentPlayer)[x][y]) + "!");
 			attackShip(x, y);
 		}
@@ -110,6 +114,7 @@ public class CtrlRules implements IObservable{
 			nextPlayer();
 		}
 		else {
+			checkResult();
 			currentAttackCount++;
 			refreshBoard();
 		}
