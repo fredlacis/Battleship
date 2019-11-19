@@ -161,6 +161,7 @@ public class JP_AttackUtilities extends JPanel implements IObserver{
 	public void buttonEnable() {
 		nextBtn.setForeground(new Color(0, 218, 60).darker());
 		nextBtn.setEnabled(true);
+		JF_Attack.getAttackFrame().changeTitle("ATTACK PHASE");
 		this.repaint();
 	}
 	

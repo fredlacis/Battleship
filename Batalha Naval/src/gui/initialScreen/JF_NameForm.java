@@ -42,7 +42,7 @@ public class JF_NameForm extends JFrame{
 	private JPanel containerPnl = new JPanel();
 	
 	
-	public JF_NameForm(JF_InitialFrame m) {
+	public JF_NameForm() {
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		Dimension screenSize = tk.getScreenSize();
 		int sl = screenSize.width;
@@ -143,10 +143,10 @@ public class JF_NameForm extends JFrame{
             		
             		RulesFacade.getRules().setPlayerName(1, player1Txt.getText());
             		RulesFacade.getRules().setPlayerName(2, player2Txt.getText());
+
             		
                 	(JF_ShipSelection.getShipSelection()).setVisible(true);
-                	
-                	m.setVisible(false);
+                	(JF_InitialFrame.getInitialFrame()).setVisible(false);
                     
                     setVisible(false);
             	}

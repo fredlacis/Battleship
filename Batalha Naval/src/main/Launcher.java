@@ -2,6 +2,7 @@ package main;
 import javax.swing.UIManager;
 
 import gui.initialScreen.JF_InitialFrame;
+import gui.victory.JF_Victory;
 
 public class Launcher {
 
@@ -11,7 +12,8 @@ public class Launcher {
 	        UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel"); 
 	    } catch(Exception ignored){}
 		
-		JF_InitialFrame mainFrame = new JF_InitialFrame();
+//		JF_InitialFrame mainFrame = JF_InitialFrame.getInitialFrame();
+		JF_Victory mainFrame = JF_Victory.getVictoryFrame("Fred", "David");
 		mainFrame.setVisible(true);
 
 	}
