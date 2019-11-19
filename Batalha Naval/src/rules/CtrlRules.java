@@ -150,7 +150,9 @@ public class CtrlRules implements IObservable{
 			currentBoard[x][y] = -currentBoard[x][y];
 			
 			if(currentBoard[x][y] == Ships.D_SEAPLANE.getValue()) {
-				checkAndDestroySeaplane(x, y);
+				if(checkAndDestroySeaplane(x, y)) {
+					addMessage(getPlayerName(currentPlayer) + " sinked a Seaplane !");
+				}
 			}
 			else if(checkIfShipDestroyed(x, y)) {
 				destroyShip(x, y);
@@ -278,7 +280,7 @@ public class CtrlRules implements IObservable{
 	private void destroyShip(int x, int y) {
 		int[][] currentBoard = getOppositeBoard(currentPlayer);
 
-		addMessage(getPlayerName(currentPlayer) + " destroyed a " + K.getShipNameBySize(getOppositeBoard(currentPlayer)[x][y]) + "!");
+		addMessage(getPlayerName(currentPlayer) + " sinked a " + K.getShipNameBySize(getOppositeBoard(currentPlayer)[x][y]) + "!");
 		
 		if(currentBoard[x][y] == Ships.D_SUBMARINE.getValue()) {
 			currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
@@ -370,7 +372,7 @@ public class CtrlRules implements IObservable{
 			}; 
 		} catch(Exception e) {}
 	}
-	private void checkAndDestroySeaplane(int x, int y) {
+	private boolean checkAndDestroySeaplane(int x, int y) {
 		int[][] currentBoard = getOppositeBoard(currentPlayer);
 		
 		try {
@@ -381,7 +383,7 @@ public class CtrlRules implements IObservable{
 						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
 						currentBoard[x+1][y+1] -= K.DESTROYED_SHIP_LIMIT;
 						currentBoard[x+1][y-1] -= K.DESTROYED_SHIP_LIMIT;
-						return;
+						return true;
 					}
 				}catch(Exception e) {}
 				//Check if block on end of Seaplane
@@ -390,7 +392,7 @@ public class CtrlRules implements IObservable{
 						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
 						currentBoard[x+1][y+1] -= K.DESTROYED_SHIP_LIMIT;
 						currentBoard[x][y+2] -= K.DESTROYED_SHIP_LIMIT;
-						return;
+						return true;
 					}
 				}catch(Exception e) {}
 				try {
@@ -398,7 +400,7 @@ public class CtrlRules implements IObservable{
 						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
 						currentBoard[x+1][y+1] -= K.DESTROYED_SHIP_LIMIT;
 						currentBoard[x+2][y] -= K.DESTROYED_SHIP_LIMIT;
-						return;
+						return true;
 					}
 				}catch(Exception e) {}
 			}
@@ -412,7 +414,7 @@ public class CtrlRules implements IObservable{
 						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
 						currentBoard[x+1][y-1] -= K.DESTROYED_SHIP_LIMIT;
 						currentBoard[x-1][y-1] -= K.DESTROYED_SHIP_LIMIT;
-						return;
+						return true;
 					}
 				}catch(Exception e) {}
 				//Check if block on end of Seaplane
@@ -421,7 +423,7 @@ public class CtrlRules implements IObservable{
 						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
 						currentBoard[x+1][y-1] -= K.DESTROYED_SHIP_LIMIT;
 						currentBoard[x+2][y] -= K.DESTROYED_SHIP_LIMIT;
-						return;
+						return true;
 					}
 				}catch(Exception e) {}
 				try {
@@ -429,7 +431,7 @@ public class CtrlRules implements IObservable{
 						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
 						currentBoard[x+1][y-1] -= K.DESTROYED_SHIP_LIMIT;
 						currentBoard[x][y-2] -= K.DESTROYED_SHIP_LIMIT;
-						return;
+						return true;
 					}
 				}catch(Exception e) {}
 			}
@@ -442,7 +444,7 @@ public class CtrlRules implements IObservable{
 						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
 						currentBoard[x-1][y-1] -= K.DESTROYED_SHIP_LIMIT;
 						currentBoard[x-1][y+1] -= K.DESTROYED_SHIP_LIMIT;
-						return;
+						return true;
 					}
 				}catch(Exception e) {}
 				//Check if block on end of Seaplane
@@ -451,7 +453,7 @@ public class CtrlRules implements IObservable{
 						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
 						currentBoard[x-1][y-1] -= K.DESTROYED_SHIP_LIMIT;
 						currentBoard[x][y-2] -= K.DESTROYED_SHIP_LIMIT;
-						return;
+						return true;
 					}
 				}catch(Exception e) {}
 				try {
@@ -459,7 +461,7 @@ public class CtrlRules implements IObservable{
 						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
 						currentBoard[x-1][y-1] -= K.DESTROYED_SHIP_LIMIT;
 						currentBoard[x-2][y] -= K.DESTROYED_SHIP_LIMIT;
-						return;
+						return true;
 					}
 				}catch(Exception e) {}
 			}
@@ -472,7 +474,7 @@ public class CtrlRules implements IObservable{
 						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
 						currentBoard[x-1][y+1] -= K.DESTROYED_SHIP_LIMIT;
 						currentBoard[x+1][y+1] -= K.DESTROYED_SHIP_LIMIT;
-						return;
+						return true;
 					}
 				}catch(Exception e) {}
 				//Check if block on end of Seaplane
@@ -481,7 +483,7 @@ public class CtrlRules implements IObservable{
 						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
 						currentBoard[x-1][y+1] -= K.DESTROYED_SHIP_LIMIT;
 						currentBoard[x-2][y] -= K.DESTROYED_SHIP_LIMIT;
-						return;
+						return true;
 					}
 				}catch(Exception e) {}
 				
@@ -490,13 +492,16 @@ public class CtrlRules implements IObservable{
 						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
 						currentBoard[x-1][y+1] -= K.DESTROYED_SHIP_LIMIT;
 						currentBoard[x][y+2] -= K.DESTROYED_SHIP_LIMIT;
-						return;
+						return true;
 					}
 				}catch(Exception e) {}
 			}
 		}catch(Exception e) {}
 		
+		return false;
+		
 	}
+	
 	
 	/* FUNCOES PUBLICAS PARA POSICIONAMENTO DO TABULEIRO */
 	
@@ -877,6 +882,7 @@ public class CtrlRules implements IObservable{
 	public void emptyMessagesList() {
 		messages.clear();
 	}
+	
 	
 	/* METODOS GET E SET */
 	
