@@ -98,4 +98,9 @@ public class RulesFacade {
     public void register(IObserver o) {
         ctrl.addObserver(o);
     }
+    
+    // Only for save/load
+    public CtrlRules getCtrl() {
+    	return ctrl;
+    }
 }

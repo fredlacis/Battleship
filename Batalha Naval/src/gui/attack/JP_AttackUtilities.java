@@ -20,6 +20,7 @@ import main.K;
 import rules.designPatterns.IObservable;
 import rules.designPatterns.IObserver;
 import rules.designPatterns.RulesFacade;
+import saveload.SaveLoadManager;
 
 @SuppressWarnings("serial")
 public class JP_AttackUtilities extends JPanel implements IObserver{
@@ -114,7 +115,7 @@ public class JP_AttackUtilities extends JPanel implements IObserver{
 		saveBtn.setAlignmentX( Component.CENTER_ALIGNMENT );
 		saveBtn.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
-				    
+				SaveLoadManager.get().Save();    
 			  } 
 			} );
 		

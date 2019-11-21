@@ -1,5 +1,6 @@
 package rules;
 
+import java.io.Serializable;
 import java.util.*;
 
 import javax.sound.sampled.AudioInputStream;
@@ -16,8 +17,13 @@ import main.Launcher;
 import rules.designPatterns.IObservable;
 import rules.designPatterns.IObserver;
 
-public class CtrlRules implements IObservable{
+public class CtrlRules implements IObservable, Serializable{
 		
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	enum Ships{
 		//NAME    -> Alive cell of ship
 		//D_NAME  -> Destroyed cell of ship
