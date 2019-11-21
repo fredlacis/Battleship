@@ -60,6 +60,8 @@ public class JF_Attack extends JFrame implements IObserver{
 		getContentPane().add(board1);
 		getContentPane().add(board2);
 		
+		changeTitle("ATTACKING PHASE");
+		
 		RulesFacade.getRules().startGame();
 	}
 	
@@ -71,8 +73,13 @@ public class JF_Attack extends JFrame implements IObserver{
 		else 
 			board2.showHiddenCells();
 		
+		changeTitle("ATTACKING PLAYER - " + currentPlayerName);
 		JP_AttackUtilities.getAttackUtilites().buttonDisable();
 		blockCells = false;
+	}
+	
+	public void changeTitle(String title) {
+		titlePanel.setText(title);
 	}
 
 	@Override
@@ -86,9 +93,6 @@ public class JF_Attack extends JFrame implements IObserver{
 		else
 			currentPlayerName = (String) lob[ K.objectValues.PLAYER_2_NAME.getValue() ];
 		
-//		showBoard(currentPlayer);
-		
-		titlePanel.setText("ATTACKING PLAYER - " + currentPlayerName);
 	}
 	
 }

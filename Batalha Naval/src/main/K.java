@@ -17,6 +17,8 @@ public class K {
 	
 	public static final int JPANEL_BORDER = 20;
 	
+	public static final int DESTROYED_SHIP_LIMIT = 10;
+	
 	public static enum ORIENTATION { 
 	    TOP, RIGHT, DOWN, LEFT;
 	    private static ORIENTATION[] vals = values();
@@ -94,6 +96,8 @@ public class K {
 	}
 	
 	public static String getShipNameBySize(int size) {
+		if(size < 0) size = -size;
+		
 		switch(size) {
 		case 1: return "Submarine"; //Cyan
 		case 2: return "Destroyer"; //Green

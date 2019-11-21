@@ -3,17 +3,12 @@ package rules;
 import java.io.Serializable;
 import java.util.*;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-
 import gui.shipPositioning.JP_PositioningGrid;
 import gui.shipPositioning.JP_ShipOptions;
 import gui.ships.Ship;
 import main.K;
 import main.K.ORIENTATION;
 import main.K.PHASE;
-import main.Launcher;
 import rules.designPatterns.IObservable;
 import rules.designPatterns.IObserver;
 
@@ -36,7 +31,9 @@ public class CtrlRules implements IObservable, Serializable{
 		SUBMARINE(1),
 		D_SUBMARINE(-1),
 		SEAPLANE(3),
-		D_SEAPLANE(-3);
+		D_SEAPLANE(-3),
+		WATER(0),
+		D_WATER(10);
 		
 		private final int value;
 
@@ -104,21 +101,18 @@ public class CtrlRules implements IObservable, Serializable{
 		refreshBoard();
 	}
 	public void attack(int x, int y) {
-//		System.out.printf("Attack from player %s in position X:%d Y:%d\n", getPlayerName(currentPlayer), x, y);
 		
-		if(getOppositeBoard(currentPlayer)[x][y] > 0) {
-//			System.out.printf("HIT! Player %s destroying %s!\n", currentPlayer, K.getShipNameBySize(getOppositeBoard(currentPlayer)[x][y]));
-			addMessage(getPlayerName(currentPlayer) + " hitted a " + K.getShipNameBySize(getOppositeBoard(currentPlayer)[x][y]) + "!");
-			//playSound("explosion.wav");
-			
-			destroyShip(x, y);
+		if(getOppositeBoard(currentPlayer)[x][y] == Ships.D_WATER.getValue() || getOppositeBoard(currentPlayer)[x][y] < 0) {
+			addMessage("This cell was already clicked!");
+			return;
 		}
-		else if(getOppositeBoard(currentPlayer)[x][y] == 0) {
-//			System.out.println("WATER!");
-			
+		else if(getOppositeBoard(currentPlayer)[x][y] > 0 && getOppositeBoard(currentPlayer)[x][y] < Ships.D_WATER.getValue()) {
+			addMessage(getPlayerName(currentPlayer) + " hit a " + K.getShipNameBySize(getOppositeBoard(currentPlayer)[x][y]) + "!");
+			attackShip(x, y);
+		}
+		else if(getOppositeBoard(currentPlayer)[x][y] == 0) {			
 			addMessage(getPlayerName(currentPlayer) + " missed!");
-			
-			destroyShip(x, y);
+			attackShip(x, y);
 		}
 		
 		if(currentAttackCount == 3 ) {	
@@ -126,6 +120,7 @@ public class CtrlRules implements IObservable, Serializable{
 			nextPlayer();
 		}
 		else {
+			checkResult();
 			currentAttackCount++;
 			refreshBoard();
 		}
@@ -154,32 +149,370 @@ public class CtrlRules implements IObservable, Serializable{
 	
 	/* FUNCOES PRIVADAS PARA FASE DE ATAQUES */
 	
-	private void destroyShip(int x, int y) {
+	private void attackShip(int x, int y) {
 		int[][] currentBoard = getOppositeBoard(currentPlayer);
 		int currentPlayerPoints = 0;
 		
 		if(currentBoard[x][y] == 0) {
-			currentBoard[x][y] = -9;
+			currentBoard[x][y] = Ships.D_WATER.getValue();
 		}
 		else if(currentBoard[x][y] > 0) {
 			currentPlayerPoints += 1;
 			currentBoard[x][y] = -currentBoard[x][y];
+			
+			if(currentBoard[x][y] == Ships.D_SEAPLANE.getValue()) {
+				if(checkAndDestroySeaplane(x, y)) {
+					addMessage(getPlayerName(currentPlayer) + " sinked a Seaplane !");
+				}
+			}
+			else if(checkIfShipDestroyed(x, y)) {
+				destroyShip(x, y);
+			}
 		}
-		
 		
 		switch(currentPlayer) {
 			case 1: 
 				pointsPlayer1 += currentPlayerPoints;
-//				System.out.printf("Player %d Points: %d\n", currentPlayer, pointsPlayer1);
 				break;
 			case 2: 
 				pointsPlayer2 += currentPlayerPoints;
-//				System.out.printf("Player %d Points: %d\n", currentPlayer, pointsPlayer2);
 				break;
 		}
+	}
+	private boolean checkIfShipDestroyed(int x, int y) {
+		
+		int[][] currentBoard = getOppositeBoard(currentPlayer);
+		int destroyedCellsNum = 0;
+		
+		if(currentBoard[x][y] == Ships.D_SUBMARINE.getValue()) {
+			return true;
+		}
+
+		int originalX = x, originalY = y;
+
+		try { 
+			//LEFT-RIGHT -> Reach left end and go to right end
+			if(currentBoard[x+1][y] != 0) {
+				try {
+					while(currentBoard[x][y] != 0) {
+						x--;
+					}
+				} catch(Exception e) {}
+
+				//Reached end => sum 1 to x to get back to ship
+				x += 1;
+
+				//Beginning left to right check
+				try {
+					while(currentBoard[x][y] != 0) {
+						if(currentBoard[x][y] < 0) {
+							destroyedCellsNum++;
+						}
+						x++;
+					}
+				} catch(Exception e) {}
+			}; 
+		} catch(Exception e) {}
+		try { 
+			//LEFT-RIGHT -> Reach left end and go to right end
+			if(currentBoard[x-1][y] != 0) {
+				try {
+					while(currentBoard[x][y] != 0) {
+						x--;
+					}
+				} catch(Exception e) {}
+
+				//Reached end => sum 1 to x to get back to ship
+				x += 1;
+
+				//Beginning left to right check
+				try {
+					while(currentBoard[x][y] != 0) {
+						if(currentBoard[x][y] < 0) {
+							destroyedCellsNum++;
+						}
+						x++;
+					}
+				} catch(Exception e) {}
+			}; 
+		} catch(Exception e) {}
+		try { 
+			//BOTTOM-TOP -> Reach bottom and go to top end
+			if(currentBoard[x][y+1] != 0) {
+				try {
+					while(currentBoard[x][y] != 0) {
+						y--;
+					}
+				} catch(Exception e) {}
+
+				//Reached end => sum 1 to y to get back to ship
+				y += 1;
+
+				//Beginning bottom to top check
+				try {
+					while(currentBoard[x][y] != 0) {
+						if(currentBoard[x][y] < 0) {
+							destroyedCellsNum++;
+						}
+						y++;
+					}
+				} catch(Exception e) {}
+			}; 
+		} catch(Exception e) {}	
+		try { 
+			//BOTTOM-TOP -> Reach bottom and go to top end
+			if(currentBoard[x][y-1] != 0) {
+				try {
+					while(currentBoard[x][y] != 0) {
+						y--;
+					}
+				} catch(Exception e) {}
+
+				//Reached end => sum 1 to y to get back to ship
+				y += 1;
+
+				//Beginning bottom to top check
+				try {
+					while(currentBoard[x][y] != 0) {
+						if(currentBoard[x][y] < 0) {
+							destroyedCellsNum++;
+						}
+						y++;
+					}
+				} catch(Exception e) {}
+			};
+		} catch(Exception e) {}
+		
+		return checkDamage(-currentBoard[originalX][originalY], destroyedCellsNum);
+	}
+	private boolean checkDamage(int shipSize, int destroyedCellsNum) {
+		return shipSize == destroyedCellsNum;
+	}
+	private void destroyShip(int x, int y) {
+		int[][] currentBoard = getOppositeBoard(currentPlayer);
+
+		addMessage(getPlayerName(currentPlayer) + " sinked a " + K.getShipNameBySize(getOppositeBoard(currentPlayer)[x][y]) + "!");
+		
+		if(currentBoard[x][y] == Ships.D_SUBMARINE.getValue()) {
+			currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+			return;
+		}	
+
+		try { 
+			//LEFT-RIGHT -> Reach left end and delete
+			if(currentBoard[x+1][y] != 0) {
+				try {
+					while(currentBoard[x][y] != 0) {
+						x--;
+					}
+				} catch(Exception e) {}
+
+				//Reached end => sum 1 to x to get back to ship
+				x += 1;
+
+				//Beginning left to right removal
+				try {
+					while(currentBoard[x][y] != 0) {
+						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+						x++;
+					}
+				} catch(Exception e) {}
+			}; 
+		} catch(Exception e) {}
+		try { 
+			//LEFT-RIGHT -> Reach left end and delete
+			if(currentBoard[x-1][y] != 0) {
+				try {
+					while(currentBoard[x][y] != 0) {
+						x--;
+					}
+				} catch(Exception e) {}
+
+				//Reached end => sum 1 to x to get back to ship
+				x += 1;
+
+				//Beginning left to right removal
+				try {
+					while(currentBoard[x][y] != 0) {
+						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+						x++;
+					}
+				} catch(Exception e) {}
+			}; 
+		} catch(Exception e) {}
+		try { 
+			//BOTTOM-TOP -> Reach bottom end and delete
+			if(currentBoard[x][y+1] != 0) {
+				try {
+					while(currentBoard[x][y] != 0) {
+						y--;
+					}
+				} catch(Exception e) {}
+
+				//Reached end => sum 1 to y to get back to ship
+				y += 1;
+
+				//Beginning bottom to top removal
+				try {
+					while(currentBoard[x][y] != 0) {
+						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+						y++;
+					}
+				} catch(Exception e) {}
+			}; 
+		} catch(Exception e) {}	
+		try { 
+			//BOTTOM-TOP -> Reach bottom end and delete
+			if(currentBoard[x][y-1] != 0) {
+				try {
+					while(currentBoard[x][y] != 0) {
+						y--;
+					}
+				} catch(Exception e) {}
+
+				//Reached end => sum 1 to y to get back to ship
+				y += 1;
+
+				//Beginning bottom to top removal
+				try {
+					while(currentBoard[x][y] != 0) {
+						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+						y++;
+					}
+				} catch(Exception e) {}
+			}; 
+		} catch(Exception e) {}
+	}
+	private boolean checkAndDestroySeaplane(int x, int y) {
+		int[][] currentBoard = getOppositeBoard(currentPlayer);
+		
+		try {
+			if(currentBoard[x+1][y+1] == Ships.D_SEAPLANE.getValue()) {
+				//Check if block on middle of Seaplane
+				try {
+					if(currentBoard[x+1][y-1] == Ships.D_SEAPLANE.getValue()) {
+						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x+1][y+1] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x+1][y-1] -= K.DESTROYED_SHIP_LIMIT;
+						return true;
+					}
+				}catch(Exception e) {}
+				//Check if block on end of Seaplane
+				try {
+					if(currentBoard[x][y+2] == Ships.D_SEAPLANE.getValue()) {
+						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x+1][y+1] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x][y+2] -= K.DESTROYED_SHIP_LIMIT;
+						return true;
+					}
+				}catch(Exception e) {}
+				try {
+					if(currentBoard[x+2][y] == Ships.D_SEAPLANE.getValue()) {
+						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x+1][y+1] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x+2][y] -= K.DESTROYED_SHIP_LIMIT;
+						return true;
+					}
+				}catch(Exception e) {}
+			}
+		}catch(Exception e) {}
+		
+		try {
+			if(currentBoard[x+1][y-1] == Ships.D_SEAPLANE.getValue()) {
+				//Check if block on middle of Seaplane
+				try {
+					if(currentBoard[x-1][y-1] == Ships.D_SEAPLANE.getValue()) {
+						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x+1][y-1] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x-1][y-1] -= K.DESTROYED_SHIP_LIMIT;
+						return true;
+					}
+				}catch(Exception e) {}
+				//Check if block on end of Seaplane
+				try {
+					if(currentBoard[x+2][y] == Ships.D_SEAPLANE.getValue()) {
+						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x+1][y-1] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x+2][y] -= K.DESTROYED_SHIP_LIMIT;
+						return true;
+					}
+				}catch(Exception e) {}
+				try {
+					if(currentBoard[x][y-2] == Ships.D_SEAPLANE.getValue()) {
+						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x+1][y-1] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x][y-2] -= K.DESTROYED_SHIP_LIMIT;
+						return true;
+					}
+				}catch(Exception e) {}
+			}
+		}catch(Exception e) {}
+		try {
+			if(currentBoard[x-1][y-1] == Ships.D_SEAPLANE.getValue()) {
+				//Check if block on middle of Seaplane
+				try {
+					if(currentBoard[x-1][y+1] == Ships.D_SEAPLANE.getValue()) {
+						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x-1][y-1] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x-1][y+1] -= K.DESTROYED_SHIP_LIMIT;
+						return true;
+					}
+				}catch(Exception e) {}
+				//Check if block on end of Seaplane
+				try {
+					if(currentBoard[x][y-2] == Ships.D_SEAPLANE.getValue()) {
+						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x-1][y-1] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x][y-2] -= K.DESTROYED_SHIP_LIMIT;
+						return true;
+					}
+				}catch(Exception e) {}
+				try {
+					if(currentBoard[x-2][y] == Ships.D_SEAPLANE.getValue()) {
+						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x-1][y-1] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x-2][y] -= K.DESTROYED_SHIP_LIMIT;
+						return true;
+					}
+				}catch(Exception e) {}
+			}
+		}catch(Exception e) {}
+		try {
+			if(currentBoard[x-1][y+1] == Ships.D_SEAPLANE.getValue()) {
+				//Check if block on middle of Seaplane
+				try {
+					if(currentBoard[x+1][y+1] == Ships.D_SEAPLANE.getValue()) {
+						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x-1][y+1] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x+1][y+1] -= K.DESTROYED_SHIP_LIMIT;
+						return true;
+					}
+				}catch(Exception e) {}
+				//Check if block on end of Seaplane
+				try {
+					if(currentBoard[x-2][y] == Ships.D_SEAPLANE.getValue()) {
+						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x-1][y+1] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x-2][y] -= K.DESTROYED_SHIP_LIMIT;
+						return true;
+					}
+				}catch(Exception e) {}
+				
+				try {
+					if(currentBoard[x][y+2] == Ships.D_SEAPLANE.getValue()) {
+						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x-1][y+1] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x][y+2] -= K.DESTROYED_SHIP_LIMIT;
+						return true;
+					}
+				}catch(Exception e) {}
+			}
+		}catch(Exception e) {}
+		
+		return false;
 		
 	}
-
+	
 	
 	/* FUNCOES PUBLICAS PARA POSICIONAMENTO DO TABULEIRO */
 	
@@ -218,7 +551,6 @@ public class CtrlRules implements IObservable, Serializable{
 		
 	}
 	public void resetGrid() {
-		//System.out.println("Limpando Grid");
 		setIsValid(true);
 		
 		addMessage("Reseting Grid");
@@ -562,6 +894,7 @@ public class CtrlRules implements IObservable, Serializable{
 		messages.clear();
 	}
 	
+	
 	/* METODOS GET E SET */
 	
 	public PHASE getPhase() {
@@ -662,22 +995,4 @@ public class CtrlRules implements IObservable, Serializable{
 			o.notify(this);
 	}
 
-	/* PLAYERS DE SOM */
-	
-	public static synchronized void playSound(final String url) {
-		  new Thread(new Runnable() {
-		  // The wrapper thread is unnecessary, unless it blocks on the
-		  // Clip finishing; see comments.
-		    public void run() {
-		      try {
-		        Clip clip = AudioSystem.getClip();
-		        AudioInputStream inputStream = AudioSystem.getAudioInputStream(Launcher.class.getResourceAsStream("/" + url));
-		        clip.open(inputStream);
-		        clip.start(); 
-		      } catch (Exception e) {
-		        System.err.println(e.getMessage());
-		      }
-		    }
-		  }).start();
-		}
 }

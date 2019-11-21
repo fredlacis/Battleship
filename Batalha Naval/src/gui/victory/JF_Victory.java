@@ -1,4 +1,4 @@
-package gui.initialScreen;
+package gui.victory;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -9,20 +9,19 @@ import javax.swing.JFrame;
 import main.K;
 
 @SuppressWarnings("serial")
-public class JF_InitialFrame extends JFrame{
-
+public class JF_Victory extends JFrame{
 	
-	static JF_InitialFrame initialFrame;
+	static JF_Victory victoryFrame;
     
-    public static JF_InitialFrame getInitialFrame() {
-        if(initialFrame == null)
-        	initialFrame = new JF_InitialFrame();
+    public static JF_Victory getVictoryFrame(String winner, String looser) {
+        if(victoryFrame == null)
+        	victoryFrame = new JF_Victory(winner, looser);
         
-        return initialFrame;
+        return victoryFrame;
         
     }
-	
-	private JF_InitialFrame() {
+
+	private JF_Victory(String winner, String looser) {
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		Dimension screenSize = tk.getScreenSize();
 		int sl = screenSize.width;
@@ -35,9 +34,9 @@ public class JF_InitialFrame extends JFrame{
 		setLayout(null);
 		getContentPane().setBackground(new Color(250, 250, 250));
 		
-		getContentPane().add(new JP_InitialScreen());
+		getContentPane().add(new JP_Victory(winner, looser));
 		
-		setTitle("Batalha Naval");
+		setTitle("VICTORY!");
 	}
 
 }

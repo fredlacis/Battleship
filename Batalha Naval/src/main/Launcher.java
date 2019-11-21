@@ -11,7 +11,7 @@ public class Launcher {
 	        UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel"); 
 	    } catch(Exception ignored){}
 		
-		JF_InitialFrame mainFrame = new JF_InitialFrame();
+		JF_InitialFrame mainFrame = JF_InitialFrame.getInitialFrame();
 		mainFrame.setVisible(true);
 
 	}

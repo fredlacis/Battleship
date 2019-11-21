@@ -2,6 +2,7 @@ package gui.attack;
 
 import gui.board.JP_Board;
 import gui.board.JP_Grid;
+import gui.victory.JF_Victory;
 import main.K;
 import rules.designPatterns.IObservable;
 import rules.designPatterns.IObserver;
@@ -40,15 +41,11 @@ public class JP_BattleBoard extends JP_Board implements IObserver{
 	}
 	
 	public void hideHiddenCells() {
-//		System.out.println("ShownCells");
-//		K.printGrid(shownCells);
 		getShownCells();
 		battleGrid.repaintCells(shownCells);
 	}
 	
 	public void showHiddenCells(){
-//		System.out.println("HiddenCells");
-//		K.printGrid(hiddenCells);
 		battleGrid.repaintCells(hiddenCells);
 	}
 	
@@ -57,7 +54,7 @@ public class JP_BattleBoard extends JP_Board implements IObserver{
 		{
 			for(int j = 0; j < K.SQUARE_COUNT; j++)
 			{
-				if(hiddenCells[j][i] < 0) {
+				if(hiddenCells[j][i] < 0 || hiddenCells[j][i] == 10) {
 					shownCells[j][i] = hiddenCells[j][i];
 				}
 			}
@@ -69,29 +66,31 @@ public class JP_BattleBoard extends JP_Board implements IObserver{
 	public void notify(IObservable o) {
 		Object lob[] = (Object []) o.get();
 		
+		String player1Name = "";
+		String player2Name = "";
+		
 		boolean result = (boolean) lob[K.objectValues.RESULT.getValue()];
 		int currentPlayer = (int) lob[K.objectValues.CURRENT_PLAYER.getValue()];
 		
 		if(player == 1) {
 			hiddenCells = (int[][]) lob[K.objectValues.BOARD_1.getValue()];
+			player1Name = (String) lob[K.objectValues.PLAYER_1_NAME.getValue()];
+			player2Name = (String) lob[K.objectValues.PLAYER_2_NAME.getValue()];
 		}
 		else {
 			hiddenCells = (int[][]) lob[K.objectValues.BOARD_2.getValue()];
+			player1Name = (String) lob[K.objectValues.PLAYER_2_NAME.getValue()];
+			player2Name = (String) lob[K.objectValues.PLAYER_1_NAME.getValue()];
 		}
-		
-//		if(player == currentPlayer) {
-//			showHiddenCells();
-//		}
-//		else {
-//			hideHiddenCells();
-//		}
-		
+			
 		if(player != currentPlayer) {
 			hideHiddenCells();
-		}
+		}	
 		
-		if(result) {
+		if(result && currentPlayer == player) {
 			System.out.println("\n**********\nVITORIA\n**********\n");
+			(JF_Victory.getVictoryFrame(player1Name, player2Name)).setVisible(true);
+			(JF_Attack.getAttackFrame()).setVisible(false);
 			return;
 		}
 		

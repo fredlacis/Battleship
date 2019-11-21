@@ -30,6 +30,8 @@ public class Cell extends JPanel implements MouseListener{
 	private Color cellColor;
 	private Color borderColor;
 	private Color shipColor;
+	
+	private boolean unclickable = false;
 		
 	public Cell(int x, int y, int owner) {
 			
@@ -91,13 +93,14 @@ public class Cell extends JPanel implements MouseListener{
 	private void paintSelectedCells() {
 		RulesFacade.getRules().checkPos(x/K.SQUARE_SIZE, y/K.SQUARE_SIZE, JP_PositioningGrid.getGrid().getFinalGrid());
 	}
+	
+	public void setUnclickable(boolean clickable){
+		unclickable = clickable;
+	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-	}
-	@Override
 	public void mousePressed(MouseEvent e) {
+		
 		if(SwingUtilities.isMiddleMouseButton(e)) {
 			return;
 		}
@@ -127,12 +130,11 @@ public class Cell extends JPanel implements MouseListener{
 		RulesFacade.getRules().attack(x/K.SQUARE_SIZE, y/K.SQUARE_SIZE);
 		
 	}
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-	}
+
 	@Override
 	public void mouseEntered(MouseEvent e) {
+		if(unclickable) return;
+		
 		if(RulesFacade.getRules().getPhase() == PHASE.POSITION 
 				&& RulesFacade.getRules().getSelectedShip() != null) {
 			paintSelectedCells();
@@ -148,6 +150,8 @@ public class Cell extends JPanel implements MouseListener{
 	}
 	@Override
 	public void mouseExited(MouseEvent e) {	
+		if(unclickable) return;
+		
 		if(RulesFacade.getRules().getPhase() == PHASE.POSITION) {
 			JP_PositioningGrid.getGrid().unpaintTemporaryCells();
 		}
@@ -155,5 +159,10 @@ public class Cell extends JPanel implements MouseListener{
 		setColor(getOriginalColor());
 		repaint();
 	}
+	
+	@Override
+	public void mouseClicked(MouseEvent e) {}
+	@Override
+	public void mouseReleased(MouseEvent e) {}
 
 }
