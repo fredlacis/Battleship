@@ -70,10 +70,7 @@ public class JP_Grid extends JPanel{
 	}
 	
 	public void repaintCells(int cellsToPaint[][]) {
-		
-		System.out.println("REPAINT CELLS");
-		K.printGrid(cellsToPaint);
-		
+				
 		Cell cell;
 		
 		for(int i = 0; i < K.SQUARE_COUNT; i++)
