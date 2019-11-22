@@ -9,64 +9,39 @@ import gui.ships.Ship;
 import main.K;
 import main.K.ORIENTATION;
 import main.K.PHASE;
+import main.K.SHIPS;
 import rules.designPatterns.IObservable;
 import rules.designPatterns.IObserver;
 
 public class CtrlRules implements IObservable, Serializable{
-		
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
-
-	enum Ships{
-		//NAME    -> Alive cell of ship
-		//D_NAME  -> Destroyed cell of ship
-		BATTLESHIP(5),
-		D_BATTLESHIP(-5),
-		CRUISER(4),
-		D_CRUISER(-4),
-		DESTROYER(2),
-		D_DESTROYER(-2),
-		SUBMARINE(1),
-		D_SUBMARINE(-1),
-		SEAPLANE(3),
-		D_SEAPLANE(-3),
-		WATER(0),
-		D_WATER(10);
-		
-		private final int value;
-
-        Ships(final int newValue) {
-            value = newValue;
-        }
-
-        public int getValue() { return value; }
-	}
 	
-	private int currentPlayer;	
+	/* ATRIBUTOS OBSERVABLE */
 	
-	private PHASE phase;
-	
-	private String player1;
-	private String player2;
-
 	private int board1[][];
 	private int board2[][];
-
+	private int currentPlayer;
+	private boolean result = false;
 	private boolean isValid;
-
-	private Ship selectedShip;
-	
 	private int cellsToPaint[][];
-
-	List<IObserver> lob = new ArrayList<IObserver>();
+	private String player1;
+	private String player2;
 	List<String> messages = new ArrayList<String>();
 	
+	
+	/* LISTA DE OBSERVERS */
+	
+	List<IObserver> lob = new ArrayList<IObserver>();
+	
+	
+	/* ATRIBUTOS NÃO OBSERVABLE */
+	
+	private PHASE phase;
+	private Ship selectedShip;
 	private int pointsPlayer1 = 0;
 	private int pointsPlayer2 = 0;
 	private int currentAttackCount = 1;
-	private boolean result = false;
 	
 	
 	/* CONSTRUTOR */
@@ -80,437 +55,6 @@ public class CtrlRules implements IObservable, Serializable{
 		board2 = K.createEmptyGrid();
 		currentPlayer = 1;
 		refreshBoard();
-	}
-	
-	
-	/* FUNCOES PUBLICAS PARA FASE DE ATAQUES */
-	
-	public void startGame() {
-		phase = PHASE.ATTACK;
-	}
-	public void nextPlayer() {
-		checkResult();
-		
-		if(result) {
-			System.out.printf("Player %d wins!\n", currentPlayer);
-			refreshBoard();
-			return;
-		}
-		
-		currentPlayer = getNextPlayer();
-		refreshBoard();
-	}
-	public void attack(int x, int y) {
-		
-		if(getOppositeBoard(currentPlayer)[x][y] == Ships.D_WATER.getValue() || getOppositeBoard(currentPlayer)[x][y] < 0) {
-			addMessage("This cell was already clicked!");
-			return;
-		}
-		else if(getOppositeBoard(currentPlayer)[x][y] > 0 && getOppositeBoard(currentPlayer)[x][y] < Ships.D_WATER.getValue()) {
-			addMessage(getPlayerName(currentPlayer) + " hit a " + K.getShipNameBySize(getOppositeBoard(currentPlayer)[x][y]) + "!");
-			attackShip(x, y);
-		}
-		else if(getOppositeBoard(currentPlayer)[x][y] == 0) {			
-			addMessage(getPlayerName(currentPlayer) + " missed!");
-			attackShip(x, y);
-		}
-		
-		if(currentAttackCount == 3 ) {	
-			currentAttackCount = 1;
-			nextPlayer();
-		}
-		else {
-			checkResult();
-			currentAttackCount++;
-			refreshBoard();
-		}
-	
-	}
-	public void checkResult() {
-		
-		int currentPlayerPoints = 0;
-		
-		switch(currentPlayer) {
-			case 1: 
-				currentPlayerPoints = pointsPlayer1;
-				break;
-			case 2: 
-				currentPlayerPoints = pointsPlayer2;
-				break;
-		}
-				
-		if(currentPlayerPoints == 38) {
-			result = true;
-		}
-		
-		refreshBoard();
-	}
-
-	
-	/* FUNCOES PRIVADAS PARA FASE DE ATAQUES */
-	
-	private void attackShip(int x, int y) {
-		int[][] currentBoard = getOppositeBoard(currentPlayer);
-		int currentPlayerPoints = 0;
-		
-		if(currentBoard[x][y] == 0) {
-			currentBoard[x][y] = Ships.D_WATER.getValue();
-		}
-		else if(currentBoard[x][y] > 0) {
-			currentPlayerPoints += 1;
-			currentBoard[x][y] = -currentBoard[x][y];
-			
-			if(currentBoard[x][y] == Ships.D_SEAPLANE.getValue()) {
-				if(checkAndDestroySeaplane(x, y)) {
-					addMessage(getPlayerName(currentPlayer) + " sinked a Seaplane !");
-				}
-			}
-			else if(checkIfShipDestroyed(x, y)) {
-				destroyShip(x, y);
-			}
-		}
-		
-		switch(currentPlayer) {
-			case 1: 
-				pointsPlayer1 += currentPlayerPoints;
-				break;
-			case 2: 
-				pointsPlayer2 += currentPlayerPoints;
-				break;
-		}
-	}
-	private boolean checkIfShipDestroyed(int x, int y) {
-		
-		int[][] currentBoard = getOppositeBoard(currentPlayer);
-		int destroyedCellsNum = 0;
-		
-		if(currentBoard[x][y] == Ships.D_SUBMARINE.getValue()) {
-			return true;
-		}
-
-		int originalX = x, originalY = y;
-
-		try { 
-			//LEFT-RIGHT -> Reach left end and go to right end
-			if(currentBoard[x+1][y] < 0) {
-				try {
-					while(currentBoard[x][y] != 0 && currentBoard[x][y] != Ships.D_WATER.getValue()) {
-						x--;
-					}
-				} catch(Exception e) { System.out.println(e.getMessage()); }
-
-				//Reached end => sum 1 to x to get back to ship
-				x += 1;
-
-				//Beginning left to right check
-				try {
-					while(currentBoard[x][y] != 0 && currentBoard[x][y] != Ships.D_WATER.getValue()) {
-						if(currentBoard[x][y] < 0) {
-							destroyedCellsNum++;
-						}
-						x++;
-					}
-				} catch(Exception e) {System.out.println(e.getMessage());}
-			}; 
-		} catch(Exception e) {System.out.println(e.getMessage());}
-		try { 
-			//LEFT-RIGHT -> Reach left end and go to right end
-			if(currentBoard[x-1][y] < 0) {
-				try {
-					while(currentBoard[x][y] != 0 && currentBoard[x][y] != Ships.D_WATER.getValue()) {
-						x--;
-					}
-				} catch(Exception e) {System.out.println(e.getMessage());}
-
-				//Reached end => sum 1 to x to get back to ship
-				x += 1;
-
-				//Beginning left to right check
-				try {
-					while(currentBoard[x][y] != 0 && currentBoard[x][y] != Ships.D_WATER.getValue()) {
-						if(currentBoard[x][y] < 0) {
-							destroyedCellsNum++;
-						}
-						x++;
-					}
-				} catch(Exception e) {System.out.println(e.getMessage());}
-			}; 
-		} catch(Exception e) {System.out.println(e.getMessage());}
-		try { 
-			//BOTTOM-TOP -> Reach bottom and go to top end
-			if(currentBoard[x][y+1] < 0) {
-				try {
-					while(currentBoard[x][y] != 0 && currentBoard[x][y] != Ships.D_WATER.getValue()) {
-						y--;
-					}
-				} catch(Exception e) {System.out.println(e.getMessage());}
-
-				//Reached end => sum 1 to y to get back to ship
-				y += 1;
-
-				//Beginning bottom to top check
-				try {
-					while(currentBoard[x][y] != 0 && currentBoard[x][y] != Ships.D_WATER.getValue()) {
-						if(currentBoard[x][y] < 0) {
-							destroyedCellsNum++;
-						}
-						y++;
-					}
-				} catch(Exception e) {System.out.println(e.getMessage());}
-			}; 
-		} catch(Exception e) {System.out.println(e.getMessage());}	
-		try { 
-			//BOTTOM-TOP -> Reach bottom and go to top end
-			if(currentBoard[x][y-1] < 0) {
-				try {
-					while(currentBoard[x][y] != 0 && currentBoard[x][y] != Ships.D_WATER.getValue()) {
-						y--;
-					}
-				} catch(Exception e) {System.out.println(e.getMessage());}
-
-				//Reached end => sum 1 to y to get back to ship
-				y += 1;
-
-				//Beginning bottom to top check
-				try {
-					while(currentBoard[x][y] != 0 && currentBoard[x][y] != Ships.D_WATER.getValue()) {
-						if(currentBoard[x][y] < 0) {
-							destroyedCellsNum++;
-						}
-						y++;
-					}
-				} catch(Exception e) {System.out.println(e.getMessage());}
-			};
-		} catch(Exception e) {System.out.println(e.getMessage());}
-		
-		return checkDamage(-currentBoard[originalX][originalY], destroyedCellsNum);
-	}
-	private boolean checkDamage(int shipSize, int destroyedCellsNum) {
-		return shipSize == destroyedCellsNum;
-	}
-	private void destroyShip(int x, int y) {
-		int[][] currentBoard = getOppositeBoard(currentPlayer);
-
-		addMessage(getPlayerName(currentPlayer) + " sinked a " + K.getShipNameBySize(getOppositeBoard(currentPlayer)[x][y]) + "!");
-		
-		if(currentBoard[x][y] == Ships.D_SUBMARINE.getValue()) {
-			currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
-			return;
-		}	
-
-		try { 
-			//LEFT-RIGHT -> Reach left end and delete
-			if(currentBoard[x+1][y] != 0 && currentBoard[x+1][y] != Ships.D_WATER.getValue()) {
-				try {
-					while(currentBoard[x][y] != 0 && currentBoard[x][y] != Ships.D_WATER.getValue()) {
-						x--;
-					}
-				} catch(Exception e) {}
-
-				//Reached end => sum 1 to x to get back to ship
-				x += 1;
-
-				//Beginning left to right removal
-				try {
-					while(currentBoard[x][y] != 0 && currentBoard[x][y] != Ships.D_WATER.getValue()) {
-						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
-						x++;
-					}
-				} catch(Exception e) {}
-			}; 
-		} catch(Exception e) {}
-		try { 
-			//LEFT-RIGHT -> Reach left end and delete
-			if(currentBoard[x-1][y] != 0 && currentBoard[x-1][y] != Ships.D_WATER.getValue()) {
-				try {
-					while(currentBoard[x][y] != 0 && currentBoard[x][y] != Ships.D_WATER.getValue()) {
-						x--;
-					}
-				} catch(Exception e) {}
-
-				//Reached end => sum 1 to x to get back to ship
-				x += 1;
-
-				//Beginning left to right removal
-				try {
-					while(currentBoard[x][y] != 0 && currentBoard[x][y] != Ships.D_WATER.getValue()) {
-						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
-						x++;
-					}
-				} catch(Exception e) {}
-			}; 
-		} catch(Exception e) {}
-		try { 
-			//BOTTOM-TOP -> Reach bottom end and delete
-			if(currentBoard[x][y+1] != 0 && currentBoard[x][y+1] != Ships.D_WATER.getValue()) {
-				try {
-					while(currentBoard[x][y] != 0 && currentBoard[x][y] != Ships.D_WATER.getValue()) {
-						y--;
-					}
-				} catch(Exception e) {}
-
-				//Reached end => sum 1 to y to get back to ship
-				y += 1;
-
-				//Beginning bottom to top removal
-				try {
-					while(currentBoard[x][y] != 0 && currentBoard[x][y] != Ships.D_WATER.getValue()) {
-						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
-						y++;
-					}
-				} catch(Exception e) {}
-			}; 
-		} catch(Exception e) {}	
-		try { 
-			//BOTTOM-TOP -> Reach bottom end and delete
-			if(currentBoard[x][y-1] != 0 && currentBoard[x][y-1] != Ships.D_WATER.getValue()) {
-				try {
-					while(currentBoard[x][y] != 0 && currentBoard[x][y] != Ships.D_WATER.getValue()) {
-						y--;
-					}
-				} catch(Exception e) {}
-
-				//Reached end => sum 1 to y to get back to ship
-				y += 1;
-
-				//Beginning bottom to top removal
-				try {
-					while(currentBoard[x][y] != 0 && currentBoard[x][y] != Ships.D_WATER.getValue()) {
-						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
-						y++;
-					}
-				} catch(Exception e) {}
-			}; 
-		} catch(Exception e) {}
-	}
-	private boolean checkAndDestroySeaplane(int x, int y) {
-		int[][] currentBoard = getOppositeBoard(currentPlayer);
-		
-		try {
-			if(currentBoard[x+1][y+1] == Ships.D_SEAPLANE.getValue()) {
-				//Check if block on middle of Seaplane
-				try {
-					if(currentBoard[x+1][y-1] == Ships.D_SEAPLANE.getValue()) {
-						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
-						currentBoard[x+1][y+1] -= K.DESTROYED_SHIP_LIMIT;
-						currentBoard[x+1][y-1] -= K.DESTROYED_SHIP_LIMIT;
-						return true;
-					}
-				}catch(Exception e) {}
-				//Check if block on end of Seaplane
-				try {
-					if(currentBoard[x][y+2] == Ships.D_SEAPLANE.getValue()) {
-						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
-						currentBoard[x+1][y+1] -= K.DESTROYED_SHIP_LIMIT;
-						currentBoard[x][y+2] -= K.DESTROYED_SHIP_LIMIT;
-						return true;
-					}
-				}catch(Exception e) {}
-				try {
-					if(currentBoard[x+2][y] == Ships.D_SEAPLANE.getValue()) {
-						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
-						currentBoard[x+1][y+1] -= K.DESTROYED_SHIP_LIMIT;
-						currentBoard[x+2][y] -= K.DESTROYED_SHIP_LIMIT;
-						return true;
-					}
-				}catch(Exception e) {}
-			}
-		}catch(Exception e) {}
-		
-		try {
-			if(currentBoard[x+1][y-1] == Ships.D_SEAPLANE.getValue()) {
-				//Check if block on middle of Seaplane
-				try {
-					if(currentBoard[x-1][y-1] == Ships.D_SEAPLANE.getValue()) {
-						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
-						currentBoard[x+1][y-1] -= K.DESTROYED_SHIP_LIMIT;
-						currentBoard[x-1][y-1] -= K.DESTROYED_SHIP_LIMIT;
-						return true;
-					}
-				}catch(Exception e) {}
-				//Check if block on end of Seaplane
-				try {
-					if(currentBoard[x+2][y] == Ships.D_SEAPLANE.getValue()) {
-						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
-						currentBoard[x+1][y-1] -= K.DESTROYED_SHIP_LIMIT;
-						currentBoard[x+2][y] -= K.DESTROYED_SHIP_LIMIT;
-						return true;
-					}
-				}catch(Exception e) {}
-				try {
-					if(currentBoard[x][y-2] == Ships.D_SEAPLANE.getValue()) {
-						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
-						currentBoard[x+1][y-1] -= K.DESTROYED_SHIP_LIMIT;
-						currentBoard[x][y-2] -= K.DESTROYED_SHIP_LIMIT;
-						return true;
-					}
-				}catch(Exception e) {}
-			}
-		}catch(Exception e) {}
-		try {
-			if(currentBoard[x-1][y-1] == Ships.D_SEAPLANE.getValue()) {
-				//Check if block on middle of Seaplane
-				try {
-					if(currentBoard[x-1][y+1] == Ships.D_SEAPLANE.getValue()) {
-						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
-						currentBoard[x-1][y-1] -= K.DESTROYED_SHIP_LIMIT;
-						currentBoard[x-1][y+1] -= K.DESTROYED_SHIP_LIMIT;
-						return true;
-					}
-				}catch(Exception e) {}
-				//Check if block on end of Seaplane
-				try {
-					if(currentBoard[x][y-2] == Ships.D_SEAPLANE.getValue()) {
-						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
-						currentBoard[x-1][y-1] -= K.DESTROYED_SHIP_LIMIT;
-						currentBoard[x][y-2] -= K.DESTROYED_SHIP_LIMIT;
-						return true;
-					}
-				}catch(Exception e) {}
-				try {
-					if(currentBoard[x-2][y] == Ships.D_SEAPLANE.getValue()) {
-						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
-						currentBoard[x-1][y-1] -= K.DESTROYED_SHIP_LIMIT;
-						currentBoard[x-2][y] -= K.DESTROYED_SHIP_LIMIT;
-						return true;
-					}
-				}catch(Exception e) {}
-			}
-		}catch(Exception e) {}
-		try {
-			if(currentBoard[x-1][y+1] == Ships.D_SEAPLANE.getValue()) {
-				//Check if block on middle of Seaplane
-				try {
-					if(currentBoard[x+1][y+1] == Ships.D_SEAPLANE.getValue()) {
-						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
-						currentBoard[x-1][y+1] -= K.DESTROYED_SHIP_LIMIT;
-						currentBoard[x+1][y+1] -= K.DESTROYED_SHIP_LIMIT;
-						return true;
-					}
-				}catch(Exception e) {}
-				//Check if block on end of Seaplane
-				try {
-					if(currentBoard[x-2][y] == Ships.D_SEAPLANE.getValue()) {
-						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
-						currentBoard[x-1][y+1] -= K.DESTROYED_SHIP_LIMIT;
-						currentBoard[x-2][y] -= K.DESTROYED_SHIP_LIMIT;
-						return true;
-					}
-				}catch(Exception e) {}
-				
-				try {
-					if(currentBoard[x][y+2] == Ships.D_SEAPLANE.getValue()) {
-						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
-						currentBoard[x-1][y+1] -= K.DESTROYED_SHIP_LIMIT;
-						currentBoard[x][y+2] -= K.DESTROYED_SHIP_LIMIT;
-						return true;
-					}
-				}catch(Exception e) {}
-			}
-		}catch(Exception e) {}
-		
-		return false;
-		
 	}
 	
 	
@@ -884,6 +428,437 @@ public class CtrlRules implements IObservable, Serializable{
 	}
 	
 	
+	/* FUNCOES PUBLICAS PARA FASE DE ATAQUES */
+	
+	public void startGame() {
+		phase = PHASE.ATTACK;
+	}
+	public void nextPlayer() {
+		checkResult();
+		
+		if(result) {
+			System.out.printf("Player %d wins!\n", currentPlayer);
+			refreshBoard();
+			return;
+		}
+		
+		currentPlayer = getNextPlayer();
+		refreshBoard();
+	}
+	public void attack(int x, int y) {
+		
+		if(getOppositeBoard(currentPlayer)[x][y] == SHIPS.D_WATER.getValue() || getOppositeBoard(currentPlayer)[x][y] < 0) {
+			addMessage("This cell was already clicked!");
+			return;
+		}
+		else if(getOppositeBoard(currentPlayer)[x][y] > 0 && getOppositeBoard(currentPlayer)[x][y] < SHIPS.D_WATER.getValue()) {
+			addMessage(getPlayerName(currentPlayer) + " hit a " + K.getShipNameBySize(getOppositeBoard(currentPlayer)[x][y]) + "!");
+			attackShip(x, y);
+		}
+		else if(getOppositeBoard(currentPlayer)[x][y] == 0) {			
+			addMessage(getPlayerName(currentPlayer) + " missed!");
+			attackShip(x, y);
+		}
+		
+		if(currentAttackCount == 3 ) {	
+			currentAttackCount = 1;
+			nextPlayer();
+		}
+		else {
+			checkResult();
+			currentAttackCount++;
+			refreshBoard();
+		}
+	
+	}
+	public void checkResult() {
+		
+		int currentPlayerPoints = 0;
+		
+		switch(currentPlayer) {
+			case 1: 
+				currentPlayerPoints = pointsPlayer1;
+				break;
+			case 2: 
+				currentPlayerPoints = pointsPlayer2;
+				break;
+		}
+				
+		if(currentPlayerPoints == 38) {
+			result = true;
+		}
+		
+		refreshBoard();
+	}
+
+	
+	/* FUNCOES PRIVADAS PARA FASE DE ATAQUES */
+	
+	private void attackShip(int x, int y) {
+		int[][] currentBoard = getOppositeBoard(currentPlayer);
+		int currentPlayerPoints = 0;
+		
+		if(currentBoard[x][y] == 0) {
+			currentBoard[x][y] = SHIPS.D_WATER.getValue();
+		}
+		else if(currentBoard[x][y] > 0) {
+			currentPlayerPoints += 1;
+			currentBoard[x][y] = -currentBoard[x][y];
+			
+			if(currentBoard[x][y] == SHIPS.D_SEAPLANE.getValue()) {
+				if(checkAndDestroySeaplane(x, y)) {
+					addMessage(getPlayerName(currentPlayer) + " sinked a Seaplane !");
+				}
+			}
+			else if(checkIfShipDestroyed(x, y)) {
+				destroyShip(x, y);
+			}
+		}
+		
+		switch(currentPlayer) {
+			case 1: 
+				pointsPlayer1 += currentPlayerPoints;
+				break;
+			case 2: 
+				pointsPlayer2 += currentPlayerPoints;
+				break;
+		}
+	}
+	private boolean checkIfShipDestroyed(int x, int y) {
+		
+		int[][] currentBoard = getOppositeBoard(currentPlayer);
+		int destroyedCellsNum = 0;
+		
+		if(currentBoard[x][y] == SHIPS.D_SUBMARINE.getValue()) {
+			return true;
+		}
+
+		int originalX = x, originalY = y;
+
+		try { 
+			//LEFT-RIGHT -> Reach left end and go to right end
+			if(currentBoard[x+1][y] < 0) {
+				try {
+					while(currentBoard[x][y] != 0 && currentBoard[x][y] != SHIPS.D_WATER.getValue()) {
+						x--;
+					}
+				} catch(Exception e) { System.out.println(e.getMessage()); }
+
+				//Reached end => sum 1 to x to get back to ship
+				x += 1;
+
+				//Beginning left to right check
+				try {
+					while(currentBoard[x][y] != 0 && currentBoard[x][y] != SHIPS.D_WATER.getValue()) {
+						if(currentBoard[x][y] < 0) {
+							destroyedCellsNum++;
+						}
+						x++;
+					}
+				} catch(Exception e) {System.out.println(e.getMessage());}
+			}; 
+		} catch(Exception e) {System.out.println(e.getMessage());}
+		try { 
+			//LEFT-RIGHT -> Reach left end and go to right end
+			if(currentBoard[x-1][y] < 0) {
+				try {
+					while(currentBoard[x][y] != 0 && currentBoard[x][y] != SHIPS.D_WATER.getValue()) {
+						x--;
+					}
+				} catch(Exception e) {System.out.println(e.getMessage());}
+
+				//Reached end => sum 1 to x to get back to ship
+				x += 1;
+
+				//Beginning left to right check
+				try {
+					while(currentBoard[x][y] != 0 && currentBoard[x][y] != SHIPS.D_WATER.getValue()) {
+						if(currentBoard[x][y] < 0) {
+							destroyedCellsNum++;
+						}
+						x++;
+					}
+				} catch(Exception e) {System.out.println(e.getMessage());}
+			}; 
+		} catch(Exception e) {System.out.println(e.getMessage());}
+		try { 
+			//BOTTOM-TOP -> Reach bottom and go to top end
+			if(currentBoard[x][y+1] < 0) {
+				try {
+					while(currentBoard[x][y] != 0 && currentBoard[x][y] != SHIPS.D_WATER.getValue()) {
+						y--;
+					}
+				} catch(Exception e) {System.out.println(e.getMessage());}
+
+				//Reached end => sum 1 to y to get back to ship
+				y += 1;
+
+				//Beginning bottom to top check
+				try {
+					while(currentBoard[x][y] != 0 && currentBoard[x][y] != SHIPS.D_WATER.getValue()) {
+						if(currentBoard[x][y] < 0) {
+							destroyedCellsNum++;
+						}
+						y++;
+					}
+				} catch(Exception e) {System.out.println(e.getMessage());}
+			}; 
+		} catch(Exception e) {System.out.println(e.getMessage());}	
+		try { 
+			//BOTTOM-TOP -> Reach bottom and go to top end
+			if(currentBoard[x][y-1] < 0) {
+				try {
+					while(currentBoard[x][y] != 0 && currentBoard[x][y] != SHIPS.D_WATER.getValue()) {
+						y--;
+					}
+				} catch(Exception e) {System.out.println(e.getMessage());}
+
+				//Reached end => sum 1 to y to get back to ship
+				y += 1;
+
+				//Beginning bottom to top check
+				try {
+					while(currentBoard[x][y] != 0 && currentBoard[x][y] != SHIPS.D_WATER.getValue()) {
+						if(currentBoard[x][y] < 0) {
+							destroyedCellsNum++;
+						}
+						y++;
+					}
+				} catch(Exception e) {System.out.println(e.getMessage());}
+			};
+		} catch(Exception e) {System.out.println(e.getMessage());}
+		
+		return checkDamage(-currentBoard[originalX][originalY], destroyedCellsNum);
+	}
+	private boolean checkDamage(int shipSize, int destroyedCellsNum) {
+		return shipSize == destroyedCellsNum;
+	}
+	private void destroyShip(int x, int y) {
+		int[][] currentBoard = getOppositeBoard(currentPlayer);
+
+		addMessage(getPlayerName(currentPlayer) + " sinked a " + K.getShipNameBySize(getOppositeBoard(currentPlayer)[x][y]) + "!");
+		
+		if(currentBoard[x][y] == SHIPS.D_SUBMARINE.getValue()) {
+			currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+			return;
+		}	
+
+		try { 
+			//LEFT-RIGHT -> Reach left end and delete
+			if(currentBoard[x+1][y] != 0 && currentBoard[x+1][y] != SHIPS.D_WATER.getValue()) {
+				try {
+					while(currentBoard[x][y] != 0 && currentBoard[x][y] != SHIPS.D_WATER.getValue()) {
+						x--;
+					}
+				} catch(Exception e) {}
+
+				//Reached end => sum 1 to x to get back to ship
+				x += 1;
+
+				//Beginning left to right removal
+				try {
+					while(currentBoard[x][y] != 0 && currentBoard[x][y] != SHIPS.D_WATER.getValue()) {
+						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+						x++;
+					}
+				} catch(Exception e) {}
+			}; 
+		} catch(Exception e) {}
+		try { 
+			//LEFT-RIGHT -> Reach left end and delete
+			if(currentBoard[x-1][y] != 0 && currentBoard[x-1][y] != SHIPS.D_WATER.getValue()) {
+				try {
+					while(currentBoard[x][y] != 0 && currentBoard[x][y] != SHIPS.D_WATER.getValue()) {
+						x--;
+					}
+				} catch(Exception e) {}
+
+				//Reached end => sum 1 to x to get back to ship
+				x += 1;
+
+				//Beginning left to right removal
+				try {
+					while(currentBoard[x][y] != 0 && currentBoard[x][y] != SHIPS.D_WATER.getValue()) {
+						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+						x++;
+					}
+				} catch(Exception e) {}
+			}; 
+		} catch(Exception e) {}
+		try { 
+			//BOTTOM-TOP -> Reach bottom end and delete
+			if(currentBoard[x][y+1] != 0 && currentBoard[x][y+1] != SHIPS.D_WATER.getValue()) {
+				try {
+					while(currentBoard[x][y] != 0 && currentBoard[x][y] != SHIPS.D_WATER.getValue()) {
+						y--;
+					}
+				} catch(Exception e) {}
+
+				//Reached end => sum 1 to y to get back to ship
+				y += 1;
+
+				//Beginning bottom to top removal
+				try {
+					while(currentBoard[x][y] != 0 && currentBoard[x][y] != SHIPS.D_WATER.getValue()) {
+						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+						y++;
+					}
+				} catch(Exception e) {}
+			}; 
+		} catch(Exception e) {}	
+		try { 
+			//BOTTOM-TOP -> Reach bottom end and delete
+			if(currentBoard[x][y-1] != 0 && currentBoard[x][y-1] != SHIPS.D_WATER.getValue()) {
+				try {
+					while(currentBoard[x][y] != 0 && currentBoard[x][y] != SHIPS.D_WATER.getValue()) {
+						y--;
+					}
+				} catch(Exception e) {}
+
+				//Reached end => sum 1 to y to get back to ship
+				y += 1;
+
+				//Beginning bottom to top removal
+				try {
+					while(currentBoard[x][y] != 0 && currentBoard[x][y] != SHIPS.D_WATER.getValue()) {
+						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+						y++;
+					}
+				} catch(Exception e) {}
+			}; 
+		} catch(Exception e) {}
+	}
+	private boolean checkAndDestroySeaplane(int x, int y) {
+		int[][] currentBoard = getOppositeBoard(currentPlayer);
+		
+		try {
+			if(currentBoard[x+1][y+1] == SHIPS.D_SEAPLANE.getValue()) {
+				//Check if block on middle of Seaplane
+				try {
+					if(currentBoard[x+1][y-1] == SHIPS.D_SEAPLANE.getValue()) {
+						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x+1][y+1] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x+1][y-1] -= K.DESTROYED_SHIP_LIMIT;
+						return true;
+					}
+				}catch(Exception e) {}
+				//Check if block on end of Seaplane
+				try {
+					if(currentBoard[x][y+2] == SHIPS.D_SEAPLANE.getValue()) {
+						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x+1][y+1] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x][y+2] -= K.DESTROYED_SHIP_LIMIT;
+						return true;
+					}
+				}catch(Exception e) {}
+				try {
+					if(currentBoard[x+2][y] == SHIPS.D_SEAPLANE.getValue()) {
+						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x+1][y+1] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x+2][y] -= K.DESTROYED_SHIP_LIMIT;
+						return true;
+					}
+				}catch(Exception e) {}
+			}
+		}catch(Exception e) {}
+		
+		try {
+			if(currentBoard[x+1][y-1] == SHIPS.D_SEAPLANE.getValue()) {
+				//Check if block on middle of Seaplane
+				try {
+					if(currentBoard[x-1][y-1] == SHIPS.D_SEAPLANE.getValue()) {
+						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x+1][y-1] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x-1][y-1] -= K.DESTROYED_SHIP_LIMIT;
+						return true;
+					}
+				}catch(Exception e) {}
+				//Check if block on end of Seaplane
+				try {
+					if(currentBoard[x+2][y] == SHIPS.D_SEAPLANE.getValue()) {
+						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x+1][y-1] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x+2][y] -= K.DESTROYED_SHIP_LIMIT;
+						return true;
+					}
+				}catch(Exception e) {}
+				try {
+					if(currentBoard[x][y-2] == SHIPS.D_SEAPLANE.getValue()) {
+						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x+1][y-1] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x][y-2] -= K.DESTROYED_SHIP_LIMIT;
+						return true;
+					}
+				}catch(Exception e) {}
+			}
+		}catch(Exception e) {}
+		try {
+			if(currentBoard[x-1][y-1] == SHIPS.D_SEAPLANE.getValue()) {
+				//Check if block on middle of Seaplane
+				try {
+					if(currentBoard[x-1][y+1] == SHIPS.D_SEAPLANE.getValue()) {
+						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x-1][y-1] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x-1][y+1] -= K.DESTROYED_SHIP_LIMIT;
+						return true;
+					}
+				}catch(Exception e) {}
+				//Check if block on end of Seaplane
+				try {
+					if(currentBoard[x][y-2] == SHIPS.D_SEAPLANE.getValue()) {
+						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x-1][y-1] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x][y-2] -= K.DESTROYED_SHIP_LIMIT;
+						return true;
+					}
+				}catch(Exception e) {}
+				try {
+					if(currentBoard[x-2][y] == SHIPS.D_SEAPLANE.getValue()) {
+						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x-1][y-1] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x-2][y] -= K.DESTROYED_SHIP_LIMIT;
+						return true;
+					}
+				}catch(Exception e) {}
+			}
+		}catch(Exception e) {}
+		try {
+			if(currentBoard[x-1][y+1] == SHIPS.D_SEAPLANE.getValue()) {
+				//Check if block on middle of Seaplane
+				try {
+					if(currentBoard[x+1][y+1] == SHIPS.D_SEAPLANE.getValue()) {
+						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x-1][y+1] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x+1][y+1] -= K.DESTROYED_SHIP_LIMIT;
+						return true;
+					}
+				}catch(Exception e) {}
+				//Check if block on end of Seaplane
+				try {
+					if(currentBoard[x-2][y] == SHIPS.D_SEAPLANE.getValue()) {
+						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x-1][y+1] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x-2][y] -= K.DESTROYED_SHIP_LIMIT;
+						return true;
+					}
+				}catch(Exception e) {}
+				
+				try {
+					if(currentBoard[x][y+2] == SHIPS.D_SEAPLANE.getValue()) {
+						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x-1][y+1] -= K.DESTROYED_SHIP_LIMIT;
+						currentBoard[x][y+2] -= K.DESTROYED_SHIP_LIMIT;
+						return true;
+					}
+				}catch(Exception e) {}
+			}
+		}catch(Exception e) {}
+		
+		return false;
+		
+	}
+	
+	
 	/* LISTA DE MENSAGENS */
 
 	public void addMessage(String message) {
@@ -982,11 +957,11 @@ public class CtrlRules implements IObservable, Serializable{
 		dados[ K.objectValues.BOARD_2.getValue() ] 			= board2;
 		dados[ K.objectValues.CURRENT_PLAYER.getValue() ] 	= currentPlayer;
 		dados[ K.objectValues.RESULT.getValue() ] 			= result;
-		dados[ K.objectValues.MESSAGES.getValue() ] 		= messages;
 		dados[ K.objectValues.IS_VALID.getValue() ] 		= isValid;
 		dados[ K.objectValues.CELLS_TO_PAINT.getValue() ] 	= cellsToPaint;
 		dados[ K.objectValues.PLAYER_1_NAME.getValue() ] 	= player1;
 		dados[ K.objectValues.PLAYER_2_NAME.getValue() ] 	= player2;
+		dados[ K.objectValues.MESSAGES.getValue() ] 		= messages;
 		
 		return dados;
 	}

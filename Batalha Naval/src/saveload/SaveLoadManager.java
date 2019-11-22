@@ -30,7 +30,6 @@ public class SaveLoadManager {
     	CtrlRules ctrl = RulesFacade.getRules().getCtrl();
     	
 		try {
-			
 			JF_Attack attackFrame = JF_Attack.getAttackFrame();
 			
 			FileDialog fd = new FileDialog(attackFrame, "Choose a file", FileDialog.SAVE);

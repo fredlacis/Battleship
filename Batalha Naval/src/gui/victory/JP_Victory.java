@@ -1,8 +1,6 @@
 package gui.victory;
 
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
@@ -10,9 +8,7 @@ import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
-
 import javax.swing.Timer;
-
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -37,7 +33,6 @@ public class JP_Victory extends JPanel{
 	public JP_Victory(String winner, String looser) {
 		setLayout(null);
 		setBounds(0,0,1024,768);
-//		setBackground(new Color(250, 250, 250));
 		
 		JPanel containerPnl = new JPanel();
 		containerPnl.setBounds(0, K.ALT_DEFAULT/2 - 300, K.LARG_DEFAULT, 120);

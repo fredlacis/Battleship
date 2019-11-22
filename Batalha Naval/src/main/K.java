@@ -19,6 +19,31 @@ public class K {
 	
 	public static final int DESTROYED_SHIP_LIMIT = 10;
 	
+	public static enum SHIPS{
+		//NAME    -> Alive cell of ship
+		//D_NAME  -> Destroyed cell of ship
+		BATTLESHIP(5),
+		D_BATTLESHIP(-5),
+		CRUISER(4),
+		D_CRUISER(-4),
+		DESTROYER(2),
+		D_DESTROYER(-2),
+		SUBMARINE(1),
+		D_SUBMARINE(-1),
+		SEAPLANE(3),
+		D_SEAPLANE(-3),
+		WATER(0),
+		D_WATER(10);
+		
+		private final int value;
+
+        SHIPS(final int newValue) {
+            value = newValue;
+        }
+
+        public int getValue() { return value; }
+	}
+	
 	public static enum ORIENTATION { 
 	    TOP, RIGHT, DOWN, LEFT;
 	    private static ORIENTATION[] vals = values();
