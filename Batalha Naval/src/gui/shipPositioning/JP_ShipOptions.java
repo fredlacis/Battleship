@@ -186,6 +186,35 @@ public class JP_ShipOptions extends JPanel{
 		
 	}
 	
+	public void increaseShipCount(Ship ship) {
+		String shipName = ship.getClass().getName();
+		
+		if(!ship.getAvailability()) {
+			return;
+		}
+		
+		if(shipName == "gui.ships.Battleship") {
+			battleship_count++;
+		}
+		else if(shipName == "gui.ships.Cruiser") {
+			cruiser_count++;
+		}
+		else if(shipName == "gui.ships.Destroyer") {
+			destroyer_count++;
+		}
+		else if(shipName == "gui.ships.Submarine") {
+			submarine_count++;
+		}
+		else if(shipName == "gui.ships.Seaplane") {
+			seaplane_count++;
+		}
+		
+		ship_count++;	
+		repaintLabels();
+		
+	}
+	
+	
 	public void resetShipCount() {
 		battleship_count = 1;
 		cruiser_count = 2;

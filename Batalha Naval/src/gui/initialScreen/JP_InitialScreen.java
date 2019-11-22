@@ -13,6 +13,8 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import saveload.SaveLoadManager;
+
 @SuppressWarnings("serial")
 public class JP_InitialScreen extends JPanel{
 	
@@ -59,7 +61,7 @@ public class JP_InitialScreen extends JPanel{
 		loadBtn.setToolTipText("Carregar um arquivo de jogo salvo.");
 		loadBtn.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
-				    
+				  SaveLoadManager.get().Load();
 			  } 
 			} );
 		

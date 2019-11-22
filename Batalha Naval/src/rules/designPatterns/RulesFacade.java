@@ -11,7 +11,6 @@ public class RulesFacade {
     private RulesFacade() {
         ctrl=new CtrlRules();
     }
-    
     public static RulesFacade getRules() {
         if(f==null)
             f=new RulesFacade();
@@ -19,87 +18,97 @@ public class RulesFacade {
         return f;    
     }
     
-    public void setSelectedShip(Ship ship) {
-    	ctrl.setSelectedShip(ship);
+    public void overrideCtrl(CtrlRules newCtrl) {
+        if(newCtrl==null) {
+        	return;
+        }
+           
+        ctrl = newCtrl;
     }
     
-    public void unsetSelectedShip() {
-    	ctrl.unsetSelectedShip();
-    }
     
+    /* POSICIONAMENTO DO TABULEIRO */
+    
+    public void shipRotate() {
+		ctrl.shipRotate();
+	}
     public void positionShip(int x, int y, int[][] definedCells) {
 		ctrl.positionShip(x, y, definedCells);
 	}
-    
-    public Ship getSelectedShip() {
-    	return ctrl.getSelectedShip();
+    public void repositionShip(int x, int y, int[][] definedCells) {
+    	ctrl.repositionShip(x, y, definedCells);
     }
-    
+    public void resetGrid() {
+		ctrl.resetGrid();
+	}
     public void checkPos(int x, int y, int[][] definedCells) {
 		ctrl.checkPos(x, y, definedCells);
 	}
     
-    public void resetGrid() {
-		ctrl.resetGrid();
-	}
-      
-    public PHASE getPhase() {
-    	return ctrl.getPhase();
-    }
     
+    /* FASE DE ATAQUES */
+    
+    public void startGame() {
+    	ctrl.startGame();
+    }
     public void nextPlayer() {
     	ctrl.nextPlayer();
     }
+    public void attack(int x, int y) {
+		ctrl.attack(x, y);
+	}
+	
     
+    /* GET E SET */
+    
+    public PHASE getPhase() {
+    	return ctrl.getPhase();
+    }
+    public void setSelectedShip(Ship ship) {
+    	ctrl.setSelectedShip(ship);
+    }
+    public void unsetSelectedShip() {
+    	ctrl.unsetSelectedShip();
+    }
+    public int getCurrentPlayer() {
+		return ctrl.getCurrentPlayer();
+	}
+    public int getNextPlayer() {
+		return ctrl.getNextPlayer();
+	}
+	public void setBoard(int player) {
+		ctrl.setBoard(player);
+	}
 	public String getPlayerName(int playerNum) {
 		return ctrl.getPlayerName(playerNum);
 	}
-	
-	public void setPlayerName(int playerNumber, String playerName) {
+    public void setPlayerName(int playerNumber, String playerName) {
 		ctrl.setPlayerName(playerNumber, playerName);
 	}
+    public Ship getSelectedShip() {
+    	return ctrl.getSelectedShip();
+    }
 	
-	public int getCurrentPlayer() {
-		return ctrl.getCurrentPlayer();
-	}
-	
-	public int getNextPlayer() {
-		return ctrl.getNextPlayer();
-	}
-	
-	public void setTabuleiro(int player) {
-		ctrl.setBoard(player);
-	}
-	
-	public int[][] getTabuleiro(int player) {
-		return ctrl.getBoard(player);
-	}
-	
+    
+    /* LISTA DE MENSAGENS */
+    
 	public void addMessage(String message) {
 		ctrl.addMessage(message);
 	}
-
 	public void emptyMessagesList() {
 		ctrl.emptyMessagesList();
 	}
 	
-	public void shipRotate() {
-		ctrl.shipRotate();
-	}
 	
-	public void startGame() {
-    	ctrl.startGame();
-    }
-	   
-	public void attack(int x, int y) {
-		ctrl.attack(x, y);
-	}
+	/* FUNCOES OBSERVER */
 	
     public void register(IObserver o) {
         ctrl.addObserver(o);
     }
     
-    // Only for save/load
+    
+    /* SAVE/LOAD */
+    
     public CtrlRules getCtrl() {
     	return ctrl;
     }

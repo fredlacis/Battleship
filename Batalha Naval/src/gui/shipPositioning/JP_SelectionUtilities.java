@@ -117,7 +117,7 @@ public class JP_SelectionUtilities extends JPanel implements IObserver{
 				buttonDisable();
 				
 				RulesFacade.getRules().unsetSelectedShip();
-				RulesFacade.getRules().setTabuleiro(RulesFacade.getRules().getCurrentPlayer());
+				RulesFacade.getRules().setBoard(RulesFacade.getRules().getCurrentPlayer());
 				
 				if( RulesFacade.getRules().getCurrentPlayer() == 2 ) {
 					JF_Attack.getAttackFrame().setVisible(true);

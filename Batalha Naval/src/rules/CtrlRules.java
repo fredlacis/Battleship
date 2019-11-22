@@ -73,12 +73,6 @@ public class CtrlRules implements IObservable, Serializable{
 		}
 				
 		checkPos(x, y, definedCells);
-				
-		if(!selectedShip.getAvailability()) {
-			addMessage("No more ships of this type");
-			refreshBoard();
-			return;
-		}
 		
 		if(!isValid) {
 			addMessage("Invalid position");
@@ -90,7 +84,27 @@ public class CtrlRules implements IObservable, Serializable{
 		JP_PositioningGrid.getGrid().paintCells(cellsToPaint);
 		JP_ShipOptions.getShipOptions().reduceShipCount(selectedShip);
 		
+		if(!selectedShip.getAvailability()) {
+			unsetSelectedShip();
+			refreshBoard();
+			return;
+		}
+		
 		cellsToPaint = K.createEmptyGrid();
+		refreshBoard();
+		
+	}
+	public void repositionShip(int x, int y, int[][] definedCells) {
+		
+		isValid = true;
+		addMessage("Repositioning Ship");		
+		
+		//setSelectedShipBySize(definedCells[x][y]);
+		definedCells = removeShip(x, y, definedCells);
+		
+		JP_PositioningGrid.getGrid().paintCells(definedCells);
+		//JP_ShipOptions.getShipOptions().increaseShipCount(selectedShip);
+		
 		refreshBoard();
 		
 	}
@@ -124,6 +138,111 @@ public class CtrlRules implements IObservable, Serializable{
 	
 	/* FUNCOES PRIVADAS PARA POSICIONAMENTO DO TABULEIRO */
 	
+	private int[][] removeShip(int x, int y, int[][] definedCells){
+		try { 
+			//LEFT-RIGHT -> Reach left end and go to right end
+			if(definedCells[x+1][y] > 0) {
+				try {
+					while(definedCells[x][y] != 0) {
+						x--;
+					}
+				} catch(Exception e) { System.out.println(e.getMessage()); }
+
+				//Reached end => sum 1 to x to get back to ship
+				x += 1;
+
+				//Beginning left to right removal
+				try {
+					while(definedCells[x][y] != 0) {
+						definedCells[x][y] = 0;
+						x++;
+					}
+				} catch(Exception e) {System.out.println(e.getMessage());}
+			}; 
+		} catch(Exception e) {System.out.println(e.getMessage());}
+		try { 
+			//LEFT-RIGHT -> Reach left end and go to right end
+			if(definedCells[x-1][y] > 0) {
+				try {
+					while(definedCells[x][y] != 0) {
+						x--;
+					}
+				} catch(Exception e) {System.out.println(e.getMessage());}
+
+				//Reached end => sum 1 to x to get back to ship
+				x += 1;
+
+				//Beginning left to right removal
+				try {
+					while(definedCells[x][y] != 0) {
+						definedCells[x][y] = 0;
+						x++;
+					}
+				} catch(Exception e) {System.out.println(e.getMessage());}
+			}; 
+		} catch(Exception e) {System.out.println(e.getMessage());}
+		try { 
+			//BOTTOM-TOP -> Reach bottom and go to top end
+			if(definedCells[x][y+1] > 0) {
+				try {
+					while(definedCells[x][y] != 0) {
+						y--;
+					}
+				} catch(Exception e) {System.out.println(e.getMessage());}
+
+				//Reached end => sum 1 to y to get back to ship
+				y += 1;
+
+				//Beginning bottom to top removal
+				try {
+					while(definedCells[x][y] != 0) {
+						definedCells[x][y] = 0;
+						y++;
+					}
+				} catch(Exception e) {System.out.println(e.getMessage());}
+			}; 
+		} catch(Exception e) {System.out.println(e.getMessage());}	
+		try { 
+			//BOTTOM-TOP -> Reach bottom and go to top end
+			if(definedCells[x][y-1] > 0) {
+				try {
+					while(definedCells[x][y] != 0) {
+						y--;
+					}
+				} catch(Exception e) {System.out.println(e.getMessage());}
+
+				//Reached end => sum 1 to y to get back to ship
+				y += 1;
+
+				//Beginning bottom to top removal
+				try {
+					while(definedCells[x][y] != 0) {
+						definedCells[x][y] = 0;
+						y++;
+					}
+				} catch(Exception e) {System.out.println(e.getMessage());}
+			};
+		} catch(Exception e) {System.out.println(e.getMessage());}
+		
+		return definedCells;
+	}
+	private void setSelectedShipBySize(int shipSize) {
+		if(shipSize == 1) {
+			//setSelectedShip(ship);
+		}
+		else if(shipSize == 2) {
+			//setSelectedShip(ship);
+		}
+		else if(shipSize == 3) {
+			//setSelectedShip(ship);
+		}
+		else if(shipSize == 4) {
+			//setSelectedShip(ship);
+		}
+		else if(shipSize == 5) {
+			//setSelectedShip(ship);
+		}
+	}
 	private void checkPosShip(int x, int y, int[][] definedCells){
 		
 		cellsToPaint = K.createEmptyGrid();
@@ -470,25 +589,6 @@ public class CtrlRules implements IObservable, Serializable{
 			refreshBoard();
 		}
 	
-	}
-	public void checkResult() {
-		
-		int currentPlayerPoints = 0;
-		
-		switch(currentPlayer) {
-			case 1: 
-				currentPlayerPoints = pointsPlayer1;
-				break;
-			case 2: 
-				currentPlayerPoints = pointsPlayer2;
-				break;
-		}
-				
-		if(currentPlayerPoints == 38) {
-			result = true;
-		}
-		
-		refreshBoard();
 	}
 
 	
@@ -857,7 +957,25 @@ public class CtrlRules implements IObservable, Serializable{
 		return false;
 		
 	}
-	
+	private void checkResult() {
+		
+		int currentPlayerPoints = 0;
+		
+		switch(currentPlayer) {
+			case 1: 
+				currentPlayerPoints = pointsPlayer1;
+				break;
+			case 2: 
+				currentPlayerPoints = pointsPlayer2;
+				break;
+		}
+				
+		if(currentPlayerPoints == 38) {
+			result = true;
+		}
+		
+		refreshBoard();
+	}
 	
 	/* LISTA DE MENSAGENS */
 
@@ -874,9 +992,6 @@ public class CtrlRules implements IObservable, Serializable{
 	
 	public PHASE getPhase() {
 		return phase;
-	}
-	public void setIsValid(boolean validation) {
-		isValid = validation;
 	}
 	public void setSelectedShip(Ship ship) {
 		selectedShip = ship;
@@ -906,20 +1021,6 @@ public class CtrlRules implements IObservable, Serializable{
 			case 2: board2 = JP_PositioningGrid.getGrid().getFinalGrid();
 		}
 	}
-	public int[][] getBoard(int playerNum) {
-		switch(playerNum) {
-			case 1: return board1;
-			case 2: return board2;
-		}
-		return null;
-	}
-	public int[][] getOppositeBoard(int playerNum) {
-		switch(playerNum) {
-			case 1: return board2;
-			case 2: return board1;
-		}
-		return null;
-	}
 	public String getPlayerName(int playerNum) {
 		switch(playerNum) {
 			case 1: return player1;
@@ -936,7 +1037,18 @@ public class CtrlRules implements IObservable, Serializable{
 	public Ship getSelectedShip() {
 		return selectedShip;
 	}
-
+	
+	private void setIsValid(boolean validation) {
+		isValid = validation;
+	}
+	private int[][] getOppositeBoard(int playerNum) {
+		switch(playerNum) {
+			case 1: return board2;
+			case 2: return board1;
+		}
+		return null;
+	}
+	
 	
 	/* FUNCOES DO OBSERVER */
 	
@@ -965,7 +1077,7 @@ public class CtrlRules implements IObservable, Serializable{
 		
 		return dados;
 	}
-	private void refreshBoard() {
+	public void refreshBoard() {
 		for(IObserver o:lob)
 			o.notify(this);
 	}

@@ -10,6 +10,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import gui.attack.JF_Attack;
+import gui.attack.JP_AttackUtilities;
+import gui.initialScreen.JF_InitialFrame;
 import rules.CtrlRules;
 import rules.designPatterns.RulesFacade;
 
@@ -36,16 +38,16 @@ public class SaveLoadManager {
 			fd.setDirectory("./");
 			fd.setFile("save.txt");
 			fd.setVisible(true);
-			String filename = fd.getFile();
-			if (filename == null) {
+			String fileName = fd.getFile();
+			if (fileName == null) {
 				System.out.println("You cancelled the choice");
 				return;
 			}
 			else {
-				System.out.println("You chose " + filename);
+				System.out.println("You chose " + fileName);
 			}
 			
-			FileOutputStream f = new FileOutputStream(new File(filename));
+			FileOutputStream f = new FileOutputStream(new File(fileName));
 			ObjectOutputStream o = new ObjectOutputStream(f);
 
 			// Write objects to file
@@ -63,13 +65,34 @@ public class SaveLoadManager {
     
     public void Load() {
     	try {
-        	FileInputStream fi = new FileInputStream(new File("savefile.txt"));
+    		JF_InitialFrame initialFrame = JF_InitialFrame.getInitialFrame();
+    		
+    		FileDialog fd = new FileDialog(initialFrame, "Choose a file", FileDialog.LOAD);
+    		fd.setDirectory("./");
+    		fd.setVisible(true);
+    		String fileName = fd.getFile();
+			if (fileName == null) {
+				System.out.println("You cancelled the choice");
+				return;
+			}
+			else {
+				System.out.println("You chose " + fileName);
+			}
+    		
+        	FileInputStream fi = new FileInputStream(new File(fileName));
     		ObjectInputStream oi = new ObjectInputStream(fi);
 
     		// Read objects
     		CtrlRules ctrl = (CtrlRules) oi.readObject();
-
-    		System.out.println(ctrl.toString());
+    		
+    		RulesFacade.getRules().overrideCtrl(ctrl);
+    		
+    		JF_Attack.getAttackFrame().setVisible(true);
+    		initialFrame.setVisible(false);
+    		
+    		ctrl.refreshBoard();
+    		
+    		JP_AttackUtilities.getAttackUtilites().buttonEnable();
 
     		oi.close();
     		fi.close();
