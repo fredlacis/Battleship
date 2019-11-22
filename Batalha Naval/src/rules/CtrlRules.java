@@ -192,96 +192,96 @@ public class CtrlRules implements IObservable, Serializable{
 
 		try { 
 			//LEFT-RIGHT -> Reach left end and go to right end
-			if(currentBoard[x+1][y] != 0) {
+			if(currentBoard[x+1][y] < 0) {
 				try {
-					while(currentBoard[x][y] != 0) {
+					while(currentBoard[x][y] != 0 && currentBoard[x][y] != Ships.D_WATER.getValue()) {
 						x--;
 					}
-				} catch(Exception e) {}
+				} catch(Exception e) { System.out.println(e.getMessage()); }
 
 				//Reached end => sum 1 to x to get back to ship
 				x += 1;
 
 				//Beginning left to right check
 				try {
-					while(currentBoard[x][y] != 0) {
+					while(currentBoard[x][y] != 0 && currentBoard[x][y] != Ships.D_WATER.getValue()) {
 						if(currentBoard[x][y] < 0) {
 							destroyedCellsNum++;
 						}
 						x++;
 					}
-				} catch(Exception e) {}
+				} catch(Exception e) {System.out.println(e.getMessage());}
 			}; 
-		} catch(Exception e) {}
+		} catch(Exception e) {System.out.println(e.getMessage());}
 		try { 
 			//LEFT-RIGHT -> Reach left end and go to right end
-			if(currentBoard[x-1][y] != 0) {
+			if(currentBoard[x-1][y] < 0) {
 				try {
-					while(currentBoard[x][y] != 0) {
+					while(currentBoard[x][y] != 0 && currentBoard[x][y] != Ships.D_WATER.getValue()) {
 						x--;
 					}
-				} catch(Exception e) {}
+				} catch(Exception e) {System.out.println(e.getMessage());}
 
 				//Reached end => sum 1 to x to get back to ship
 				x += 1;
 
 				//Beginning left to right check
 				try {
-					while(currentBoard[x][y] != 0) {
+					while(currentBoard[x][y] != 0 && currentBoard[x][y] != Ships.D_WATER.getValue()) {
 						if(currentBoard[x][y] < 0) {
 							destroyedCellsNum++;
 						}
 						x++;
 					}
-				} catch(Exception e) {}
+				} catch(Exception e) {System.out.println(e.getMessage());}
 			}; 
-		} catch(Exception e) {}
+		} catch(Exception e) {System.out.println(e.getMessage());}
 		try { 
 			//BOTTOM-TOP -> Reach bottom and go to top end
-			if(currentBoard[x][y+1] != 0) {
+			if(currentBoard[x][y+1] < 0) {
 				try {
-					while(currentBoard[x][y] != 0) {
+					while(currentBoard[x][y] != 0 && currentBoard[x][y] != Ships.D_WATER.getValue()) {
 						y--;
 					}
-				} catch(Exception e) {}
+				} catch(Exception e) {System.out.println(e.getMessage());}
 
 				//Reached end => sum 1 to y to get back to ship
 				y += 1;
 
 				//Beginning bottom to top check
 				try {
-					while(currentBoard[x][y] != 0) {
+					while(currentBoard[x][y] != 0 && currentBoard[x][y] != Ships.D_WATER.getValue()) {
 						if(currentBoard[x][y] < 0) {
 							destroyedCellsNum++;
 						}
 						y++;
 					}
-				} catch(Exception e) {}
+				} catch(Exception e) {System.out.println(e.getMessage());}
 			}; 
-		} catch(Exception e) {}	
+		} catch(Exception e) {System.out.println(e.getMessage());}	
 		try { 
 			//BOTTOM-TOP -> Reach bottom and go to top end
-			if(currentBoard[x][y-1] != 0) {
+			if(currentBoard[x][y-1] < 0) {
 				try {
-					while(currentBoard[x][y] != 0) {
+					while(currentBoard[x][y] != 0 && currentBoard[x][y] != Ships.D_WATER.getValue()) {
 						y--;
 					}
-				} catch(Exception e) {}
+				} catch(Exception e) {System.out.println(e.getMessage());}
 
 				//Reached end => sum 1 to y to get back to ship
 				y += 1;
 
 				//Beginning bottom to top check
 				try {
-					while(currentBoard[x][y] != 0) {
+					while(currentBoard[x][y] != 0 && currentBoard[x][y] != Ships.D_WATER.getValue()) {
 						if(currentBoard[x][y] < 0) {
 							destroyedCellsNum++;
 						}
 						y++;
 					}
-				} catch(Exception e) {}
+				} catch(Exception e) {System.out.println(e.getMessage());}
 			};
-		} catch(Exception e) {}
+		} catch(Exception e) {System.out.println(e.getMessage());}
 		
 		return checkDamage(-currentBoard[originalX][originalY], destroyedCellsNum);
 	}
@@ -300,9 +300,9 @@ public class CtrlRules implements IObservable, Serializable{
 
 		try { 
 			//LEFT-RIGHT -> Reach left end and delete
-			if(currentBoard[x+1][y] != 0) {
+			if(currentBoard[x+1][y] != 0 && currentBoard[x+1][y] != Ships.D_WATER.getValue()) {
 				try {
-					while(currentBoard[x][y] != 0) {
+					while(currentBoard[x][y] != 0 && currentBoard[x][y] != Ships.D_WATER.getValue()) {
 						x--;
 					}
 				} catch(Exception e) {}
@@ -312,7 +312,7 @@ public class CtrlRules implements IObservable, Serializable{
 
 				//Beginning left to right removal
 				try {
-					while(currentBoard[x][y] != 0) {
+					while(currentBoard[x][y] != 0 && currentBoard[x][y] != Ships.D_WATER.getValue()) {
 						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
 						x++;
 					}
@@ -321,9 +321,9 @@ public class CtrlRules implements IObservable, Serializable{
 		} catch(Exception e) {}
 		try { 
 			//LEFT-RIGHT -> Reach left end and delete
-			if(currentBoard[x-1][y] != 0) {
+			if(currentBoard[x-1][y] != 0 && currentBoard[x-1][y] != Ships.D_WATER.getValue()) {
 				try {
-					while(currentBoard[x][y] != 0) {
+					while(currentBoard[x][y] != 0 && currentBoard[x][y] != Ships.D_WATER.getValue()) {
 						x--;
 					}
 				} catch(Exception e) {}
@@ -333,7 +333,7 @@ public class CtrlRules implements IObservable, Serializable{
 
 				//Beginning left to right removal
 				try {
-					while(currentBoard[x][y] != 0) {
+					while(currentBoard[x][y] != 0 && currentBoard[x][y] != Ships.D_WATER.getValue()) {
 						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
 						x++;
 					}
@@ -342,9 +342,9 @@ public class CtrlRules implements IObservable, Serializable{
 		} catch(Exception e) {}
 		try { 
 			//BOTTOM-TOP -> Reach bottom end and delete
-			if(currentBoard[x][y+1] != 0) {
+			if(currentBoard[x][y+1] != 0 && currentBoard[x][y+1] != Ships.D_WATER.getValue()) {
 				try {
-					while(currentBoard[x][y] != 0) {
+					while(currentBoard[x][y] != 0 && currentBoard[x][y] != Ships.D_WATER.getValue()) {
 						y--;
 					}
 				} catch(Exception e) {}
@@ -354,7 +354,7 @@ public class CtrlRules implements IObservable, Serializable{
 
 				//Beginning bottom to top removal
 				try {
-					while(currentBoard[x][y] != 0) {
+					while(currentBoard[x][y] != 0 && currentBoard[x][y] != Ships.D_WATER.getValue()) {
 						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
 						y++;
 					}
@@ -363,9 +363,9 @@ public class CtrlRules implements IObservable, Serializable{
 		} catch(Exception e) {}	
 		try { 
 			//BOTTOM-TOP -> Reach bottom end and delete
-			if(currentBoard[x][y-1] != 0) {
+			if(currentBoard[x][y-1] != 0 && currentBoard[x][y-1] != Ships.D_WATER.getValue()) {
 				try {
-					while(currentBoard[x][y] != 0) {
+					while(currentBoard[x][y] != 0 && currentBoard[x][y] != Ships.D_WATER.getValue()) {
 						y--;
 					}
 				} catch(Exception e) {}
@@ -375,7 +375,7 @@ public class CtrlRules implements IObservable, Serializable{
 
 				//Beginning bottom to top removal
 				try {
-					while(currentBoard[x][y] != 0) {
+					while(currentBoard[x][y] != 0 && currentBoard[x][y] != Ships.D_WATER.getValue()) {
 						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
 						y++;
 					}
