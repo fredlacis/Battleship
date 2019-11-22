@@ -44,8 +44,8 @@ public class JP_Victory extends JPanel{
 		containerPnl.setLayout(new BoxLayout(containerPnl, BoxLayout.Y_AXIS));
 		containerPnl.setOpaque(false);
 		
-		JLabel winnerTxt = new JLabel("<html><center>Congratulations! " + winner + ", you are awesome!</center></html>");
-		JLabel looserTxt= new JLabel("<html><center>Screw you! " + looser + ", you are nothing to this world!</center></html>");
+		JLabel winnerTxt = new JLabel("<html><center>Congratulations! " + winner + ", you win!</center></html>");
+		JLabel looserTxt= new JLabel("<html><center>Sorry " + looser + ", you'll get it next time!</center></html>");
 		
 		winnerTxt.setBounds(0, 0, K.LARG_DEFAULT, 70);
 		winnerTxt.setForeground(Color.WHITE);
