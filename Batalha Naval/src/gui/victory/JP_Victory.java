@@ -106,11 +106,11 @@ public class JP_Victory extends JPanel{
 				  JP_SelectionUtilities.getSelectionUtilites().selfDestroy();
 				  JP_ShipOptions.getShipOptions().selfDestroy();
 				  RulesFacade.getRules().selfDestroy();
-//				  Battleship.getBattleship().selfDestroy();
-//				  Cruiser.getCruiser().selfDestroy();
-//				  Destroyer.getDestroyer().selfDestroy();
-//				  Seaplane.getSeaPlane().selfDestroy();
-//				  Submarine.getSubmarine().selfDestroy();
+				  Battleship.getBattleship().selfDestroy();
+				  Cruiser.getCruiser().selfDestroy();
+				  Destroyer.getDestroyer().selfDestroy();
+				  Seaplane.getSeaplane().selfDestroy();
+				  Submarine.getSubmarine().selfDestroy();
 				  
 				  JF_InitialFrame.getInitialFrame().setVisible(true);
 				  JF_Victory.getVictoryFrame("", "").setVisible(false);

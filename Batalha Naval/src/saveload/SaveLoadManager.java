@@ -61,6 +61,8 @@ public class SaveLoadManager {
 		} catch (IOException e) {
     		System.out.println(e.getMessage());
     		System.out.println("Error initializing stream");
+		} catch (Exception e) {
+			System.out.println("Unknown error while saving, save file might be corrupted");
 		}
     }
     
@@ -106,6 +108,8 @@ public class SaveLoadManager {
     	} catch (ClassNotFoundException e) {
     		// TODO Auto-generated catch block
     		e.printStackTrace();
-    	}
+    	} catch (Exception e) {
+			System.out.println("Unknown error while loading, save file might be corrupted");
+		}
     }
 }

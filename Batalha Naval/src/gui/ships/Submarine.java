@@ -18,7 +18,7 @@ public class Submarine extends Ship {
 		return submarine;
 	}
 	
-	public static void selfDestroy() {
+	public void selfDestroy() {
 		submarine = null;
 	}
 

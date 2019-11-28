@@ -22,7 +22,7 @@ public class Seaplane extends Ship {
 		return seaplane;
 	}
 	
-	public static void selfDestroy() {
+	public void selfDestroy() {
 		seaplane = null;
 	}
 

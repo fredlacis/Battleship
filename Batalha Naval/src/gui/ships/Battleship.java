@@ -18,7 +18,7 @@ public class Battleship extends Ship {
 		return battleship;
 	}
 	
-	public static void selfDestroy() {
+	public void selfDestroy() {
 		battleship = null;
 	}
 

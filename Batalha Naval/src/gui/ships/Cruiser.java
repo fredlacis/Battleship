@@ -18,7 +18,7 @@ public class Cruiser extends Ship {
 		return cruiser;
 	}
 	
-	public static void selfDestroy() {
+	public void selfDestroy() {
 		cruiser = null;
 	}
 

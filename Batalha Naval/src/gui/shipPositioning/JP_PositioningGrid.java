@@ -98,7 +98,25 @@ public class JP_PositioningGrid extends JP_Grid implements IObserver{
 	public int[][] getFinalGrid() {
 		return K.cloneGrid(definedCellsToPaint);
 	}
-
+	
+	public void repositionRepaint(int [][] cellsToRemove){
+		Cell cell;
+		
+		for(int i = 0; i < K.SQUARE_COUNT; i++)
+		{
+			for(int j = 0; j < K.SQUARE_COUNT; j++)
+			{					
+				if(cellsToRemove[j][i] == 100) {
+					definedCellsToPaint[j][i] = 0;
+					
+					cell = grid[j][i];
+					cell.setShipColor(null);
+					cell.repaint();
+				}
+			}
+		}
+	}
+	
 	@Override
 	public void notify(IObservable o) {
 		

@@ -46,29 +46,25 @@ public class JP_Grid extends JPanel{
 		Cell cell;
 		Color shipColor;
 		
-		System.out.println("CellsToPaint");
-		K.printGrid(cellsToPaint);
-		System.out.println("DefinedCellsToPaint");
-		K.printGrid(definedCellsToPaint);
-		
 		for(int i = 0; i < K.SQUARE_COUNT; i++)
 		{
 			for(int j = 0; j < K.SQUARE_COUNT; j++)
-			{	
-				if(cellsToPaint[j][i] == 0 && definedCellsToPaint[j][i] == 0) {
-					shipColor = null;
+			{
+				if(cellsToPaint[j][i] != 0) {
+					
+					
+					if(cellsToPaint[j][i] < 0) {
+						shipColor = Color.GRAY;
+					}
+					else {
+						shipColor = K.getShipColorBySize(cellsToPaint[j][i]);
+					}
+					definedCellsToPaint[j][i] = cellsToPaint[j][i];
+					
+					cell = grid[j][i];
+					cell.setShipColor(shipColor);
+					cell.repaint();
 				}
-				else if(cellsToPaint[j][i] < 0) {
-					shipColor = Color.GRAY;
-				}
-				else {
-					shipColor = K.getShipColorBySize(cellsToPaint[j][i]);
-				}
-				definedCellsToPaint[j][i] = cellsToPaint[j][i];
-				
-				cell = grid[j][i];
-				cell.setShipColor(shipColor);
-				cell.repaint();
 			}
 		}
 	}

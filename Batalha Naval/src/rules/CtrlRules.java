@@ -40,7 +40,7 @@ public class CtrlRules implements IObservable, Serializable{
 	List<IObserver> lob = new ArrayList<IObserver>();
 	
 	
-	/* ATRIBUTOS N�O OBSERVABLE */
+	/* ATRIBUTOS NAO OBSERVABLE */
 	
 	private PHASE phase;
 	private Ship selectedShip;
@@ -123,16 +123,15 @@ public class CtrlRules implements IObservable, Serializable{
 	public void repositionShip(int x, int y, int[][] definedCells) {
 		
 		isValid = true;
-		addMessage("Repositioning Ship");		
+		addMessage("Repositioning Ship");
+		
+		int[][] cellsToRemove = K.createEmptyGrid();
 		
 		setSelectedShipBySize(definedCells[x][y]);
-		definedCells = removeShip(x, y, definedCells);
-		
-		JP_PositioningGrid.getGrid().paintCells(definedCells);
-		JP_ShipOptions.getShipOptions().increaseShipCount(selectedShip);
-		
-		refreshBoard();
-		
+		cellsToRemove = removeShip(x, y, definedCells);
+						
+		JP_PositioningGrid.getGrid().repositionRepaint(cellsToRemove);
+		JP_ShipOptions.getShipOptions().increaseShipCount(selectedShip);		
 	}
 	public void resetGrid() {
 		setIsValid(true);
@@ -164,12 +163,17 @@ public class CtrlRules implements IObservable, Serializable{
 	
 	/* FUNCOES PRIVADAS PARA POSICIONAMENTO DO TABULEIRO */
 	
-	private int[][] removeShip(int x, int y, int[][] definedCells){
+	private int[][] removeShip(int x, int y, int[][] cellsToRemove){
+		
+		if(cellsToRemove[x][y] == SHIPS.SEAPLANE.getValue()) {
+			return removeSeaplane(x, y, cellsToRemove);
+		}
+		
 		try { 
 			//LEFT-RIGHT -> Reach left end and go to right end
-			if(definedCells[x+1][y] > 0) {
+			if(cellsToRemove[x+1][y] > 0) {
 				try {
-					while(definedCells[x][y] != 0) {
+					while(cellsToRemove[x][y] != 0) {
 						x--;
 					}
 				} catch(Exception e) {   }
@@ -179,8 +183,8 @@ public class CtrlRules implements IObservable, Serializable{
 
 				//Beginning left to right removal
 				try {
-					while(definedCells[x][y] != 0) {
-						definedCells[x][y] = 0;
+					while(cellsToRemove[x][y] != 0) {
+						cellsToRemove[x][y] = 100;
 						x++;
 					}
 				} catch(Exception e) { }
@@ -188,9 +192,9 @@ public class CtrlRules implements IObservable, Serializable{
 		} catch(Exception e) { }
 		try { 
 			//LEFT-RIGHT -> Reach left end and go to right end
-			if(definedCells[x-1][y] > 0) {
+			if(cellsToRemove[x-1][y] > 0) {
 				try {
-					while(definedCells[x][y] != 0) {
+					while(cellsToRemove[x][y] != 0) {
 						x--;
 					}
 				} catch(Exception e) { }
@@ -200,8 +204,8 @@ public class CtrlRules implements IObservable, Serializable{
 
 				//Beginning left to right removal
 				try {
-					while(definedCells[x][y] != 0) {
-						definedCells[x][y] = 0;
+					while(cellsToRemove[x][y] != 0) {
+						cellsToRemove[x][y] = 100;
 						x++;
 					}
 				} catch(Exception e) { }
@@ -209,9 +213,9 @@ public class CtrlRules implements IObservable, Serializable{
 		} catch(Exception e) { }
 		try { 
 			//BOTTOM-TOP -> Reach bottom and go to top end
-			if(definedCells[x][y+1] > 0) {
+			if(cellsToRemove[x][y+1] > 0) {
 				try {
-					while(definedCells[x][y] != 0) {
+					while(cellsToRemove[x][y] != 0) {
 						y--;
 					}
 				} catch(Exception e) { }
@@ -221,8 +225,8 @@ public class CtrlRules implements IObservable, Serializable{
 
 				//Beginning bottom to top removal
 				try {
-					while(definedCells[x][y] != 0) {
-						definedCells[x][y] = 0;
+					while(cellsToRemove[x][y] != 0) {
+						cellsToRemove[x][y] = 100;
 						y++;
 					}
 				} catch(Exception e) { }
@@ -230,9 +234,9 @@ public class CtrlRules implements IObservable, Serializable{
 		} catch(Exception e) { }	
 		try { 
 			//BOTTOM-TOP -> Reach bottom and go to top end
-			if(definedCells[x][y-1] > 0) {
+			if(cellsToRemove[x][y-1] > 0) {
 				try {
-					while(definedCells[x][y] != 0) {
+					while(cellsToRemove[x][y] != 0) {
 						y--;
 					}
 				} catch(Exception e) { }
@@ -242,15 +246,143 @@ public class CtrlRules implements IObservable, Serializable{
 
 				//Beginning bottom to top removal
 				try {
-					while(definedCells[x][y] != 0) {
-						definedCells[x][y] = 0;
+					while(cellsToRemove[x][y] != 0) {
+						cellsToRemove[x][y] = 100;
 						y++;
 					}
 				} catch(Exception e) { }
 			};
 		} catch(Exception e) { }
 		
-		return definedCells;
+		return cellsToRemove;
+	}
+	private int[][] removeSeaplane(int x, int y, int[][] cellsToRemove) {
+		
+		try {
+			if(cellsToRemove[x+1][y+1] == SHIPS.SEAPLANE.getValue()) {
+				//Check if block on middle of Seaplane
+				try {
+					if(cellsToRemove[x+1][y-1] == SHIPS.SEAPLANE.getValue()) {
+						cellsToRemove[x][y] = 100;
+						cellsToRemove[x+1][y+1] = 100;
+						cellsToRemove[x+1][y-1] = 100;
+						return cellsToRemove;
+					}
+				}catch(Exception e) {}
+				//Check if block on end of Seaplane
+				try {
+					if(cellsToRemove[x][y+2] == SHIPS.SEAPLANE.getValue()) {
+						cellsToRemove[x][y] = 100;
+						cellsToRemove[x+1][y+1] = 100;
+						cellsToRemove[x][y+2] = 100;
+						return cellsToRemove;
+					}
+				}catch(Exception e) {}
+				try {
+					if(cellsToRemove[x+2][y] == SHIPS.SEAPLANE.getValue()) {
+						cellsToRemove[x][y] = 100;
+						cellsToRemove[x+1][y+1] = 100;
+						cellsToRemove[x+2][y] = 100;
+						return cellsToRemove;
+					}
+				}catch(Exception e) {}
+			}
+		}catch(Exception e) {}
+		
+		try {
+			if(cellsToRemove[x+1][y-1] == SHIPS.SEAPLANE.getValue()) {
+				//Check if block on middle of Seaplane
+				try {
+					if(cellsToRemove[x-1][y-1] == SHIPS.SEAPLANE.getValue()) {
+						cellsToRemove[x][y] = 100;
+						cellsToRemove[x+1][y-1] = 100;
+						cellsToRemove[x-1][y-1] = 100;
+						return cellsToRemove;
+					}
+				}catch(Exception e) {}
+				//Check if block on end of Seaplane
+				try {
+					if(cellsToRemove[x+2][y] == SHIPS.SEAPLANE.getValue()) {
+						cellsToRemove[x][y] = 100;
+						cellsToRemove[x+1][y-1] = 100;
+						cellsToRemove[x+2][y] = 100;
+						return cellsToRemove;
+					}
+				}catch(Exception e) {}
+				try {
+					if(cellsToRemove[x][y-2] == SHIPS.SEAPLANE.getValue()) {
+						cellsToRemove[x][y] = 100;
+						cellsToRemove[x+1][y-1] = 100;
+						cellsToRemove[x][y-2] = 100;
+						return cellsToRemove;
+					}
+				}catch(Exception e) {}
+			}
+		}catch(Exception e) {}
+		try {
+			if(cellsToRemove[x-1][y-1] == SHIPS.SEAPLANE.getValue()) {
+				//Check if block on middle of Seaplane
+				try {
+					if(cellsToRemove[x-1][y+1] == SHIPS.SEAPLANE.getValue()) {
+						cellsToRemove[x][y] = 100;
+						cellsToRemove[x-1][y-1] = 100;
+						cellsToRemove[x-1][y+1] = 100;
+						return cellsToRemove;
+					}
+				}catch(Exception e) {}
+				//Check if block on end of Seaplane
+				try {
+					if(cellsToRemove[x][y-2] == SHIPS.SEAPLANE.getValue()) {
+						cellsToRemove[x][y] = 100;
+						cellsToRemove[x-1][y-1] = 100;
+						cellsToRemove[x][y-2] = 100;
+						return cellsToRemove;
+					}
+				}catch(Exception e) {}
+				try {
+					if(cellsToRemove[x-2][y] == SHIPS.SEAPLANE.getValue()) {
+						cellsToRemove[x][y] = 100;
+						cellsToRemove[x-1][y-1] = 100;
+						cellsToRemove[x-2][y] = 100;
+						return cellsToRemove;
+					}
+				}catch(Exception e) {}
+			}
+		}catch(Exception e) {}
+		try {
+			if(cellsToRemove[x-1][y+1] == SHIPS.SEAPLANE.getValue()) {
+				//Check if block on middle of Seaplane
+				try {
+					if(cellsToRemove[x+1][y+1] == SHIPS.SEAPLANE.getValue()) {
+						cellsToRemove[x][y] = 100;
+						cellsToRemove[x-1][y+1] = 100;
+						cellsToRemove[x+1][y+1] = 100;
+						return cellsToRemove;
+					}
+				}catch(Exception e) {}
+				//Check if block on end of Seaplane
+				try {
+					if(cellsToRemove[x-2][y] == SHIPS.SEAPLANE.getValue()) {
+						cellsToRemove[x][y] = 100;
+						cellsToRemove[x-1][y+1] = 100;
+						cellsToRemove[x-2][y] = 100;
+						return cellsToRemove;
+					}
+				}catch(Exception e) {}
+				
+				try {
+					if(cellsToRemove[x][y+2] == SHIPS.SEAPLANE.getValue()) {
+						cellsToRemove[x][y] = 100;
+						cellsToRemove[x-1][y+1] = 100;
+						cellsToRemove[x][y+2] = 100;
+						return cellsToRemove;
+					}
+				}catch(Exception e) {}
+			}
+		}catch(Exception e) {}
+				
+		
+		return cellsToRemove;
 	}
 	private void setSelectedShipBySize(int shipSize) {
 		if(shipSize == 1) {
@@ -655,11 +787,11 @@ public class CtrlRules implements IObservable, Serializable{
 		int[][] currentBoard = getOppositeBoard(currentPlayer);
 		int destroyedCellsNum = 0;
 		
+		int shipSize = -currentBoard[x][y];
+		
 		if(currentBoard[x][y] == SHIPS.D_SUBMARINE.getValue()) {
 			return true;
 		}
-
-		int originalX = x, originalY = y;
 
 		try { 
 			//LEFT-RIGHT -> Reach left end and go to right end
@@ -754,9 +886,6 @@ public class CtrlRules implements IObservable, Serializable{
 			};
 		} catch(Exception e) { }
 		
-		return checkDamage(-currentBoard[originalX][originalY], destroyedCellsNum);
-	}
-	private boolean checkDamage(int shipSize, int destroyedCellsNum) {
 		return shipSize == destroyedCellsNum;
 	}
 	private void destroyShip(int x, int y) {
