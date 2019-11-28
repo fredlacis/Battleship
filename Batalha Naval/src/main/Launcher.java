@@ -1,4 +1,4 @@
-package rules;
+package main;
 import javax.swing.UIManager;
 
 import gui.initialScreen.JF_InitialFrame;
