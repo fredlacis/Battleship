@@ -8,9 +8,26 @@ import main.K;
 public class Seaplane extends Ship {
 
 	private final int SEAPLANE_SIZE_X = 3; 
-	private final int SEAPLANE_SIZE_Y = 2; 
+	private final int SEAPLANE_SIZE_Y = 2;
+	
+	private static final int SEAPLANE_POSITION = 1;
+	
+	private static Seaplane seaplane;
+	
+	public static Seaplane getSeaplane() {
+		if(seaplane == null) {
+			seaplane = new Seaplane(OFFSET_X, OFFSET_Y*SEAPLANE_POSITION-25);
+		}
+		
+		return seaplane;
+	}
+	
+	public static void selfDestroy() {
+		seaplane = null;
+	}
 
-	public Seaplane(int x, int y) {
+
+	private Seaplane(int x, int y) {
 
 		setBounds(x, y, K.SQUARE_SIZE*SEAPLANE_SIZE_X, K.SQUARE_SIZE*SEAPLANE_SIZE_Y);
 		setOpaque(false);

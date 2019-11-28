@@ -22,6 +22,9 @@ public abstract class Ship extends JComponent implements MouseListener {
 	private Color shipColor;
 	private Color shipBorderColor;
 	
+	protected static final int OFFSET_X = 70;
+	protected static final int OFFSET_Y = 100;
+	
 	public int shipSize;
 	public ORIENTATION orientation = ORIENTATION.RIGHT;;
 	

@@ -5,11 +5,26 @@ import main.K;
 @SuppressWarnings("serial")
 public class Battleship extends Ship {
 
-	private final int BATTLESHIP_SIZE = 5; 
+	private static final int BATTLESHIP_SIZE = 5;
+	private static final int BATTLESHIP_POSITION = 2;
+	
+	private static Battleship battleship;
+	
+	public static Battleship getBattleship() {
+		if(battleship == null) {
+			battleship = new Battleship(OFFSET_X, OFFSET_Y*BATTLESHIP_POSITION);
+		}
+		
+		return battleship;
+	}
+	
+	public static void selfDestroy() {
+		battleship = null;
+	}
 
-	public Battleship(int x, int y) {
+	private Battleship(int x, int y) {
 
-		setBounds(x, y, K.SQUARE_SIZE*BATTLESHIP_SIZE, K.SQUARE_SIZE);
+		setBounds(OFFSET_X, OFFSET_Y*BATTLESHIP_POSITION, K.SQUARE_SIZE*BATTLESHIP_SIZE, K.SQUARE_SIZE);
 		setOpaque(false);
 
 		super.paintSquares(BATTLESHIP_SIZE);

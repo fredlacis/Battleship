@@ -5,7 +5,12 @@ import java.util.*;
 
 import gui.shipPositioning.JP_PositioningGrid;
 import gui.shipPositioning.JP_ShipOptions;
+import gui.ships.Battleship;
+import gui.ships.Cruiser;
+import gui.ships.Destroyer;
+import gui.ships.Seaplane;
 import gui.ships.Ship;
+import gui.ships.Submarine;
 import main.K;
 import main.K.ORIENTATION;
 import main.K.PHASE;
@@ -35,7 +40,7 @@ public class CtrlRules implements IObservable, Serializable{
 	List<IObserver> lob = new ArrayList<IObserver>();
 	
 	
-	/* ATRIBUTOS NÃO OBSERVABLE */
+	/* ATRIBUTOS Nï¿½O OBSERVABLE */
 	
 	private PHASE phase;
 	private Ship selectedShip;
@@ -99,11 +104,14 @@ public class CtrlRules implements IObservable, Serializable{
 		isValid = true;
 		addMessage("Repositioning Ship");		
 		
-		//setSelectedShipBySize(definedCells[x][y]);
+		setSelectedShipBySize(definedCells[x][y]);
 		definedCells = removeShip(x, y, definedCells);
 		
 		JP_PositioningGrid.getGrid().paintCells(definedCells);
-		//JP_ShipOptions.getShipOptions().increaseShipCount(selectedShip);
+		JP_ShipOptions.getShipOptions().increaseShipCount(selectedShip);
+		
+		K.printGrid(board1);
+		K.printGrid(definedCells);
 		
 		refreshBoard();
 		
@@ -228,19 +236,19 @@ public class CtrlRules implements IObservable, Serializable{
 	}
 	private void setSelectedShipBySize(int shipSize) {
 		if(shipSize == 1) {
-			//setSelectedShip(ship);
+			setSelectedShip(Submarine.getSubmarine());
 		}
 		else if(shipSize == 2) {
-			//setSelectedShip(ship);
+			setSelectedShip(Destroyer.getDestroyer());
 		}
 		else if(shipSize == 3) {
-			//setSelectedShip(ship);
+			setSelectedShip(Seaplane.getSeaplane());
 		}
 		else if(shipSize == 4) {
-			//setSelectedShip(ship);
+			setSelectedShip(Cruiser.getCruiser());
 		}
 		else if(shipSize == 5) {
-			//setSelectedShip(ship);
+			setSelectedShip(Battleship.getBattleship());
 		}
 	}
 	private void checkPosShip(int x, int y, int[][] definedCells){

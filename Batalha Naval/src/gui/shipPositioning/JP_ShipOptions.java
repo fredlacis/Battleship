@@ -10,11 +10,10 @@ import gui.ships.*;
 @SuppressWarnings("serial")
 public class JP_ShipOptions extends JPanel{
 
-	private final int OFFSET_X = 70;
-	private final int OFFSET_Y = 100;
 	private final int LABEL_OFFSET_X = 250;
+	private final int LABEL_OFFSET_Y = 100;
 	
-	private final int BATTLESHIP_POSITION = 2;
+	private static final int BATTLESHIP_POSITION = 2;
 	private final int CRUISER_POSITION = 3;
 	private final int DESTROYER_POSITION = 4;
 	private final int SUBMARINE_POSITION = 5;
@@ -69,7 +68,7 @@ public class JP_ShipOptions extends JPanel{
 	private JLabel createLabel(int pos, int count) {
 		JLabel label = new JLabel( "x" + Integer.toString(count) );
 		label.setFont(new Font("SansSerif", Font.PLAIN, 13));
-		label.setBounds(LABEL_OFFSET_X, OFFSET_Y*pos+8, 30, 15);
+		label.setBounds(LABEL_OFFSET_X, LABEL_OFFSET_Y*pos+8, 30, 15);
 		
 		return label;
 	}
@@ -114,23 +113,23 @@ public class JP_ShipOptions extends JPanel{
 	}
 
 	public void addBattleships() {
-		battleship = new Battleship(OFFSET_X, OFFSET_Y*BATTLESHIP_POSITION);
+		battleship = Battleship.getBattleship();
 		add(battleship);
 	}
 	public void addCruisers() {
-		cruiser = new Cruiser(OFFSET_X, OFFSET_Y*CRUISER_POSITION);
+		cruiser = Cruiser.getCruiser();
 		add(cruiser);
 	}
 	public void addDestroyers() {
-		destroyer = new Destroyer(OFFSET_X, OFFSET_Y*DESTROYER_POSITION);
+		destroyer = Destroyer.getDestroyer();
 		add(destroyer);
 	}
 	public void addSubmarines() {
-		submarine = new Submarine(OFFSET_X, OFFSET_Y*SUBMARINE_POSITION);
+		submarine = Submarine.getSubmarine();
 		add(submarine);
 	}
 	public void addSeaplanes() {
-		seaplane= new Seaplane(OFFSET_X, OFFSET_Y*SEAPLANE_POSITION-25);
+		seaplane = Seaplane.getSeaplane();
 		add(seaplane);
 	}
 	
