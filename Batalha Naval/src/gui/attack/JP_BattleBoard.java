@@ -61,6 +61,11 @@ public class JP_BattleBoard extends JP_Board implements IObserver{
 		}
 	}
 	
+	public void resetBoard() {
+		shownCells = K.createEmptyGrid();
+		hiddenCells = K.createEmptyGrid();
+		repaint();
+	}
 	
 	@Override
 	public void notify(IObservable o) {

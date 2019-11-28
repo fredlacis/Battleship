@@ -39,6 +39,10 @@ public class JP_SelectionUtilities extends JPanel implements IObserver{
         
         return selectionUtilites;    
     }
+    
+    public void selfDestroy() {
+    	selectionUtilites = null;
+    }
 	
 	private JP_SelectionUtilities() {
 		

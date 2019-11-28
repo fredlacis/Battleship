@@ -61,7 +61,28 @@ public class CtrlRules implements IObservable, Serializable{
 		currentPlayer = 1;
 		refreshBoard();
 	}
-	
+	public void resetGame() {
+		board1 = K.createEmptyGrid();
+		board2 = K.createEmptyGrid();
+		currentPlayer = 1;
+		result = false;
+		isValid = false;
+		cellsToPaint = K.createEmptyGrid();
+		player1 = "";
+		player2 = "";
+		messages.clear();
+		lob.clear();
+		
+		phase = PHASE.POSITION;
+		selectedShip = null;
+		pointsPlayer1 = 0;
+		pointsPlayer2 = 0;
+		currentAttackCount = 1;
+		
+		resetGrid();
+		
+		refreshBoard();
+	}
 	
 	/* FUNCOES PUBLICAS PARA POSICIONAMENTO DO TABULEIRO */
 	
@@ -154,7 +175,7 @@ public class CtrlRules implements IObservable, Serializable{
 					while(definedCells[x][y] != 0) {
 						x--;
 					}
-				} catch(Exception e) { System.out.println(e.getMessage()); }
+				} catch(Exception e) {   }
 
 				//Reached end => sum 1 to x to get back to ship
 				x += 1;
@@ -165,9 +186,9 @@ public class CtrlRules implements IObservable, Serializable{
 						definedCells[x][y] = 0;
 						x++;
 					}
-				} catch(Exception e) {System.out.println(e.getMessage());}
+				} catch(Exception e) { }
 			}; 
-		} catch(Exception e) {System.out.println(e.getMessage());}
+		} catch(Exception e) { }
 		try { 
 			//LEFT-RIGHT -> Reach left end and go to right end
 			if(definedCells[x-1][y] > 0) {
@@ -175,7 +196,7 @@ public class CtrlRules implements IObservable, Serializable{
 					while(definedCells[x][y] != 0) {
 						x--;
 					}
-				} catch(Exception e) {System.out.println(e.getMessage());}
+				} catch(Exception e) { }
 
 				//Reached end => sum 1 to x to get back to ship
 				x += 1;
@@ -186,9 +207,9 @@ public class CtrlRules implements IObservable, Serializable{
 						definedCells[x][y] = 0;
 						x++;
 					}
-				} catch(Exception e) {System.out.println(e.getMessage());}
+				} catch(Exception e) { }
 			}; 
-		} catch(Exception e) {System.out.println(e.getMessage());}
+		} catch(Exception e) { }
 		try { 
 			//BOTTOM-TOP -> Reach bottom and go to top end
 			if(definedCells[x][y+1] > 0) {
@@ -196,7 +217,7 @@ public class CtrlRules implements IObservable, Serializable{
 					while(definedCells[x][y] != 0) {
 						y--;
 					}
-				} catch(Exception e) {System.out.println(e.getMessage());}
+				} catch(Exception e) { }
 
 				//Reached end => sum 1 to y to get back to ship
 				y += 1;
@@ -207,9 +228,9 @@ public class CtrlRules implements IObservable, Serializable{
 						definedCells[x][y] = 0;
 						y++;
 					}
-				} catch(Exception e) {System.out.println(e.getMessage());}
+				} catch(Exception e) { }
 			}; 
-		} catch(Exception e) {System.out.println(e.getMessage());}	
+		} catch(Exception e) { }	
 		try { 
 			//BOTTOM-TOP -> Reach bottom and go to top end
 			if(definedCells[x][y-1] > 0) {
@@ -217,7 +238,7 @@ public class CtrlRules implements IObservable, Serializable{
 					while(definedCells[x][y] != 0) {
 						y--;
 					}
-				} catch(Exception e) {System.out.println(e.getMessage());}
+				} catch(Exception e) { }
 
 				//Reached end => sum 1 to y to get back to ship
 				y += 1;
@@ -228,9 +249,9 @@ public class CtrlRules implements IObservable, Serializable{
 						definedCells[x][y] = 0;
 						y++;
 					}
-				} catch(Exception e) {System.out.println(e.getMessage());}
+				} catch(Exception e) { }
 			};
-		} catch(Exception e) {System.out.println(e.getMessage());}
+		} catch(Exception e) { }
 		
 		return definedCells;
 	}
@@ -650,7 +671,7 @@ public class CtrlRules implements IObservable, Serializable{
 					while(currentBoard[x][y] != 0 && currentBoard[x][y] != SHIPS.D_WATER.getValue()) {
 						x--;
 					}
-				} catch(Exception e) { System.out.println(e.getMessage()); }
+				} catch(Exception e) {   }
 
 				//Reached end => sum 1 to x to get back to ship
 				x += 1;
@@ -663,9 +684,9 @@ public class CtrlRules implements IObservable, Serializable{
 						}
 						x++;
 					}
-				} catch(Exception e) {System.out.println(e.getMessage());}
+				} catch(Exception e) { }
 			}; 
-		} catch(Exception e) {System.out.println(e.getMessage());}
+		} catch(Exception e) { }
 		try { 
 			//LEFT-RIGHT -> Reach left end and go to right end
 			if(currentBoard[x-1][y] < 0) {
@@ -673,7 +694,7 @@ public class CtrlRules implements IObservable, Serializable{
 					while(currentBoard[x][y] != 0 && currentBoard[x][y] != SHIPS.D_WATER.getValue()) {
 						x--;
 					}
-				} catch(Exception e) {System.out.println(e.getMessage());}
+				} catch(Exception e) { }
 
 				//Reached end => sum 1 to x to get back to ship
 				x += 1;
@@ -686,9 +707,9 @@ public class CtrlRules implements IObservable, Serializable{
 						}
 						x++;
 					}
-				} catch(Exception e) {System.out.println(e.getMessage());}
+				} catch(Exception e) { }
 			}; 
-		} catch(Exception e) {System.out.println(e.getMessage());}
+		} catch(Exception e) { }
 		try { 
 			//BOTTOM-TOP -> Reach bottom and go to top end
 			if(currentBoard[x][y+1] < 0) {
@@ -696,7 +717,7 @@ public class CtrlRules implements IObservable, Serializable{
 					while(currentBoard[x][y] != 0 && currentBoard[x][y] != SHIPS.D_WATER.getValue()) {
 						y--;
 					}
-				} catch(Exception e) {System.out.println(e.getMessage());}
+				} catch(Exception e) { }
 
 				//Reached end => sum 1 to y to get back to ship
 				y += 1;
@@ -709,9 +730,9 @@ public class CtrlRules implements IObservable, Serializable{
 						}
 						y++;
 					}
-				} catch(Exception e) {System.out.println(e.getMessage());}
+				} catch(Exception e) { }
 			}; 
-		} catch(Exception e) {System.out.println(e.getMessage());}	
+		} catch(Exception e) { }	
 		try { 
 			//BOTTOM-TOP -> Reach bottom and go to top end
 			if(currentBoard[x][y-1] < 0) {
@@ -719,7 +740,7 @@ public class CtrlRules implements IObservable, Serializable{
 					while(currentBoard[x][y] != 0 && currentBoard[x][y] != SHIPS.D_WATER.getValue()) {
 						y--;
 					}
-				} catch(Exception e) {System.out.println(e.getMessage());}
+				} catch(Exception e) { }
 
 				//Reached end => sum 1 to y to get back to ship
 				y += 1;
@@ -732,9 +753,9 @@ public class CtrlRules implements IObservable, Serializable{
 						}
 						y++;
 					}
-				} catch(Exception e) {System.out.println(e.getMessage());}
+				} catch(Exception e) { }
 			};
-		} catch(Exception e) {System.out.println(e.getMessage());}
+		} catch(Exception e) { }
 		
 		return checkDamage(-currentBoard[originalX][originalY], destroyedCellsNum);
 	}
@@ -1062,6 +1083,10 @@ public class CtrlRules implements IObservable, Serializable{
 	
 	@Override
 	public void addObserver(IObserver o) {
+		for(IObserver ob:lob)
+			if(o == ob)
+				return;
+				
 		lob.add(o);
 	}
 	@Override

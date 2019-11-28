@@ -6,16 +6,20 @@ import rules.CtrlRules;
 
 public class RulesFacade {
     CtrlRules ctrl;
-    static RulesFacade f=null;
+    static RulesFacade rulesFacade=null;
     
     private RulesFacade() {
         ctrl=new CtrlRules();
     }
     public static RulesFacade getRules() {
-        if(f==null)
-            f=new RulesFacade();
+        if(rulesFacade==null)
+            rulesFacade=new RulesFacade();
         
-        return f;    
+        return rulesFacade;    
+    }
+    
+    public void selfDestroy() {
+    	rulesFacade = null;
     }
     
     public void overrideCtrl(CtrlRules newCtrl) {
@@ -26,6 +30,9 @@ public class RulesFacade {
         ctrl = newCtrl;
     }
     
+	public void resetGame() {
+		ctrl.resetGame();
+	}
     
     /* POSICIONAMENTO DO TABULEIRO */
     
@@ -112,4 +119,5 @@ public class RulesFacade {
     public CtrlRules getCtrl() {
     	return ctrl;
     }
+
 }

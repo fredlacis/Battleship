@@ -82,6 +82,10 @@ public class JF_Attack extends JFrame implements IObserver{
 		titlePanel.setText(title);
 	}
 
+	public void selfDestroy() {
+		attackFrame = null;
+	}
+	
 	@Override
 	public void notify(IObservable o) {
 		Object lob[] = (Object []) o.get();
