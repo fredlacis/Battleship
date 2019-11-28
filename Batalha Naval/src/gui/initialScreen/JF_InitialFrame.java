@@ -21,6 +21,10 @@ public class JF_InitialFrame extends JFrame{
         return initialFrame;
         
     }
+    
+    public void selfDestroy() {
+    	initialFrame = null;
+    }
 	
 	private JF_InitialFrame() {
 		Toolkit tk = Toolkit.getDefaultToolkit();

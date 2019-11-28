@@ -12,18 +12,21 @@ import rules.designPatterns.RulesFacade;
 @SuppressWarnings("serial")
 public class JP_PositioningGrid extends JP_Grid implements IObserver{
 	
-	static JP_PositioningGrid g = null;
+	static JP_PositioningGrid positioningGrid = null;
 		
 	private int[][] cellsToPaint;
 	private boolean validation = false;
 	
 	public static JP_PositioningGrid getGrid() {
-		
-        if(g==null)
-            g=new JP_PositioningGrid();
+        if(positioningGrid==null)
+            positioningGrid=new JP_PositioningGrid();
         
-        return g;
+        return positioningGrid;
     }
+	
+	public void selfDestroy() {
+		positioningGrid = null;
+	}
 	
 	private JP_PositioningGrid() {
 		super(0);

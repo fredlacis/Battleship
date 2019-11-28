@@ -28,6 +28,10 @@ public class JF_ShipSelection extends JFrame implements KeyListener, IObserver{
         return shipSelection;    
         
     }
+    
+	public void selfDestroy() {
+		shipSelection = null;
+	}
 	
 	private JF_ShipSelection() {
 		RulesFacade.getRules().register(this);
@@ -83,7 +87,7 @@ public class JF_ShipSelection extends JFrame implements KeyListener, IObserver{
 			RulesFacade.getRules().resetGrid();
 		}		
 	}
-
+	
 	@Override
 	public void notify(IObservable o) {
 		// TODO Auto-generated method stub

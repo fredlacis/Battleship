@@ -47,6 +47,10 @@ public class JP_ShipOptions extends JPanel{
         
         return shipOptions;    
     }
+    
+    public void selfDestroy() {
+    	shipOptions = null;
+    }
 
 	private JP_ShipOptions() {
 		setLayout(null);

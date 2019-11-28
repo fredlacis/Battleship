@@ -44,6 +44,10 @@ public class JP_AttackUtilities extends JPanel implements IObserver{
         
         return attackUtilities;    
     }
+    
+	public void selfDestroy() {
+		attackUtilities = null;
+	}
 	
 	private JP_AttackUtilities() {
 		
