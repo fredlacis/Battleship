@@ -128,10 +128,14 @@ public class CtrlRules implements IObservable, Serializable{
 		setSelectedShipBySize(definedCells[x][y]);
 		definedCells = removeShip(x, y, definedCells);
 		
+		if(currentPlayer == 1)
+			board1 = definedCells;
+		else
+			board2 = definedCells;
+		
 		JP_PositioningGrid.getGrid().paintCells(definedCells);
 		JP_ShipOptions.getShipOptions().increaseShipCount(selectedShip);
 		
-		K.printGrid(board1);
 		K.printGrid(definedCells);
 		
 		refreshBoard();

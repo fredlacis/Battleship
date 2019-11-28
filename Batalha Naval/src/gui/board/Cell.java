@@ -113,12 +113,12 @@ public class Cell extends JPanel implements MouseListener{
 		}
 		
 		if(RulesFacade.getRules().getPhase() == PHASE.POSITION) {
-			/*Ship selectedShip = RulesFacade.getRules().getSelectedShip();
+			Ship selectedShip = RulesFacade.getRules().getSelectedShip();
 			if(selectedShip == null && cellColor.getRed() != 105) {
 				RulesFacade.getRules().repositionShip(x/K.SQUARE_SIZE, y/K.SQUARE_SIZE, 
 						JP_PositioningGrid.getGrid().getFinalGrid());
 				return;
-			}*/
+			}
 			RulesFacade.getRules().positionShip(x/K.SQUARE_SIZE, y/K.SQUARE_SIZE, 
 				JP_PositioningGrid.getGrid().getFinalGrid());
 			return;

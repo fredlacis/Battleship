@@ -192,10 +192,6 @@ public class JP_ShipOptions extends JPanel{
 	public void increaseShipCount(Ship ship) {
 		String shipName = ship.getClass().getName();
 		
-		if(!ship.getAvailability()) {
-			return;
-		}
-		
 		if(shipName == "gui.ships.Battleship") {
 			battleship_count++;
 		}
@@ -213,8 +209,8 @@ public class JP_ShipOptions extends JPanel{
 		}
 		
 		ship_count++;	
+		ship.setAvailable();
 		repaintLabels();
-		
 	}
 	
 	
