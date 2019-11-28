@@ -136,8 +136,6 @@ public class CtrlRules implements IObservable, Serializable{
 		JP_PositioningGrid.getGrid().paintCells(definedCells);
 		JP_ShipOptions.getShipOptions().increaseShipCount(selectedShip);
 		
-		K.printGrid(definedCells);
-		
 		refreshBoard();
 		
 	}
