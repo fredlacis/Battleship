@@ -169,6 +169,11 @@ public class CtrlRules implements IObservable, Serializable{
 			return removeSeaplane(x, y, cellsToRemove);
 		}
 		
+		if(cellsToRemove[x][y] == SHIPS.SUBMARINE.getValue()) {
+			cellsToRemove[x][y] = 100;
+			return cellsToRemove;
+		}
+		
 		try { 
 			//LEFT-RIGHT -> Reach left end and go to right end
 			if(cellsToRemove[x+1][y] > 0) {
@@ -187,6 +192,7 @@ public class CtrlRules implements IObservable, Serializable{
 						cellsToRemove[x][y] = 100;
 						x++;
 					}
+					return cellsToRemove;
 				} catch(Exception e) { }
 			}; 
 		} catch(Exception e) { }
@@ -208,6 +214,7 @@ public class CtrlRules implements IObservable, Serializable{
 						cellsToRemove[x][y] = 100;
 						x++;
 					}
+					return cellsToRemove;
 				} catch(Exception e) { }
 			}; 
 		} catch(Exception e) { }
@@ -229,6 +236,7 @@ public class CtrlRules implements IObservable, Serializable{
 						cellsToRemove[x][y] = 100;
 						y++;
 					}
+					return cellsToRemove;
 				} catch(Exception e) { }
 			}; 
 		} catch(Exception e) { }	
@@ -250,11 +258,12 @@ public class CtrlRules implements IObservable, Serializable{
 						cellsToRemove[x][y] = 100;
 						y++;
 					}
+					return cellsToRemove;
 				} catch(Exception e) { }
 			};
 		} catch(Exception e) { }
 		
-		return cellsToRemove;
+		return null;
 	}
 	private int[][] removeSeaplane(int x, int y, int[][] cellsToRemove) {
 		
@@ -916,6 +925,7 @@ public class CtrlRules implements IObservable, Serializable{
 						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
 						x++;
 					}
+					return;
 				} catch(Exception e) {}
 			}; 
 		} catch(Exception e) {}
@@ -937,6 +947,7 @@ public class CtrlRules implements IObservable, Serializable{
 						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
 						x++;
 					}
+					return;
 				} catch(Exception e) {}
 			}; 
 		} catch(Exception e) {}
@@ -958,6 +969,7 @@ public class CtrlRules implements IObservable, Serializable{
 						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
 						y++;
 					}
+					return;
 				} catch(Exception e) {}
 			}; 
 		} catch(Exception e) {}	
@@ -979,6 +991,7 @@ public class CtrlRules implements IObservable, Serializable{
 						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
 						y++;
 					}
+					return;
 				} catch(Exception e) {}
 			}; 
 		} catch(Exception e) {}
