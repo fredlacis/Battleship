@@ -15,8 +15,6 @@ public class JP_ShipPlacement extends JPanel{
 		setLayout(null);
 		setOpaque(false);
 		
-		
-		
 		board.setBounds((this.getBounds().width - board.BOARD_SIZE)/2, (this.getBounds().height - board.BOARD_SIZE)/2, board.BOARD_SIZE, board.BOARD_SIZE);
 		
 		add(board);

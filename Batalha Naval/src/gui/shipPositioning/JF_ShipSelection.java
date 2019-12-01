@@ -18,7 +18,10 @@ import rules.designPatterns.RulesFacade;
 public class JF_ShipSelection extends JFrame implements KeyListener, IObserver{
 	
 	JP_Title titlePanel = new JP_Title("");
-		
+	
+	private int currentPlayerNum;
+	private String currentPlayerName;
+	
 	static JF_ShipSelection shipSelection;
     
     public static JF_ShipSelection getShipSelection() {
@@ -93,9 +96,14 @@ public class JF_ShipSelection extends JFrame implements KeyListener, IObserver{
 		// TODO Auto-generated method stub
 		Object lob[] = (Object []) o.get();
 		
-		int currentPlayerNum = (Integer) lob[K.objectValues.CURRENT_PLAYER.getValue()];
+		currentPlayerNum = (Integer) lob[K.objectValues.CURRENT_PLAYER.getValue()];
 		
-		setTitle("Ship Selection - " + RulesFacade.getRules().getPlayerName(currentPlayerNum));
+		if(currentPlayerNum == 1)
+			currentPlayerName = (String) lob[K.objectValues.PLAYER_1_NAME.getValue()];
+		else
+			currentPlayerName = (String) lob[K.objectValues.PLAYER_2_NAME.getValue()];
+			
+		setTitle("Ship Selection - " + currentPlayerName);
 	}
 
 }

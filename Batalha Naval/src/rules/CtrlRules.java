@@ -181,7 +181,7 @@ public class CtrlRules implements IObservable, Serializable{
 					while(cellsToRemove[x][y] != 0) {
 						x--;
 					}
-				} catch(Exception e) {   }
+				} catch(ArrayIndexOutOfBoundsException e) {   }
 
 				//Reached end => sum 1 to x to get back to ship
 				x += 1;
@@ -193,9 +193,9 @@ public class CtrlRules implements IObservable, Serializable{
 						x++;
 					}
 					return cellsToRemove;
-				} catch(Exception e) { }
+				} catch(ArrayIndexOutOfBoundsException e) { }
 			}; 
-		} catch(Exception e) { }
+		} catch(ArrayIndexOutOfBoundsException e) { }
 		try { 
 			//LEFT-RIGHT -> Reach left end and go to right end
 			if(cellsToRemove[x-1][y] > 0) {
@@ -203,7 +203,7 @@ public class CtrlRules implements IObservable, Serializable{
 					while(cellsToRemove[x][y] != 0) {
 						x--;
 					}
-				} catch(Exception e) { }
+				} catch(ArrayIndexOutOfBoundsException e) { }
 
 				//Reached end => sum 1 to x to get back to ship
 				x += 1;
@@ -215,9 +215,9 @@ public class CtrlRules implements IObservable, Serializable{
 						x++;
 					}
 					return cellsToRemove;
-				} catch(Exception e) { }
+				} catch(ArrayIndexOutOfBoundsException e) { }
 			}; 
-		} catch(Exception e) { }
+		} catch(ArrayIndexOutOfBoundsException e) { }
 		try { 
 			//BOTTOM-TOP -> Reach bottom and go to top end
 			if(cellsToRemove[x][y+1] > 0) {
@@ -225,7 +225,7 @@ public class CtrlRules implements IObservable, Serializable{
 					while(cellsToRemove[x][y] != 0) {
 						y--;
 					}
-				} catch(Exception e) { }
+				} catch(ArrayIndexOutOfBoundsException e) { }
 
 				//Reached end => sum 1 to y to get back to ship
 				y += 1;
@@ -237,9 +237,9 @@ public class CtrlRules implements IObservable, Serializable{
 						y++;
 					}
 					return cellsToRemove;
-				} catch(Exception e) { }
+				} catch(ArrayIndexOutOfBoundsException e) { }
 			}; 
-		} catch(Exception e) { }	
+		} catch(ArrayIndexOutOfBoundsException e) { }	
 		try { 
 			//BOTTOM-TOP -> Reach bottom and go to top end
 			if(cellsToRemove[x][y-1] > 0) {
@@ -247,7 +247,7 @@ public class CtrlRules implements IObservable, Serializable{
 					while(cellsToRemove[x][y] != 0) {
 						y--;
 					}
-				} catch(Exception e) { }
+				} catch(ArrayIndexOutOfBoundsException e) { }
 
 				//Reached end => sum 1 to y to get back to ship
 				y += 1;
@@ -259,9 +259,9 @@ public class CtrlRules implements IObservable, Serializable{
 						y++;
 					}
 					return cellsToRemove;
-				} catch(Exception e) { }
+				} catch(ArrayIndexOutOfBoundsException e) { }
 			};
-		} catch(Exception e) { }
+		} catch(ArrayIndexOutOfBoundsException e) { }
 		
 		return null;
 	}
@@ -277,7 +277,7 @@ public class CtrlRules implements IObservable, Serializable{
 						cellsToRemove[x+1][y-1] = 100;
 						return cellsToRemove;
 					}
-				}catch(Exception e) {}
+				}catch(ArrayIndexOutOfBoundsException e) {}
 				//Check if block on end of Seaplane
 				try {
 					if(cellsToRemove[x][y+2] == SHIPS.SEAPLANE.getValue()) {
@@ -286,7 +286,7 @@ public class CtrlRules implements IObservable, Serializable{
 						cellsToRemove[x][y+2] = 100;
 						return cellsToRemove;
 					}
-				}catch(Exception e) {}
+				}catch(ArrayIndexOutOfBoundsException e) {}
 				try {
 					if(cellsToRemove[x+2][y] == SHIPS.SEAPLANE.getValue()) {
 						cellsToRemove[x][y] = 100;
@@ -294,9 +294,9 @@ public class CtrlRules implements IObservable, Serializable{
 						cellsToRemove[x+2][y] = 100;
 						return cellsToRemove;
 					}
-				}catch(Exception e) {}
+				}catch(ArrayIndexOutOfBoundsException e) {}
 			}
-		}catch(Exception e) {}
+		}catch(ArrayIndexOutOfBoundsException e) {}
 		
 		try {
 			if(cellsToRemove[x+1][y-1] == SHIPS.SEAPLANE.getValue()) {
@@ -308,7 +308,7 @@ public class CtrlRules implements IObservable, Serializable{
 						cellsToRemove[x-1][y-1] = 100;
 						return cellsToRemove;
 					}
-				}catch(Exception e) {}
+				}catch(ArrayIndexOutOfBoundsException e) {}
 				//Check if block on end of Seaplane
 				try {
 					if(cellsToRemove[x+2][y] == SHIPS.SEAPLANE.getValue()) {
@@ -317,7 +317,7 @@ public class CtrlRules implements IObservable, Serializable{
 						cellsToRemove[x+2][y] = 100;
 						return cellsToRemove;
 					}
-				}catch(Exception e) {}
+				}catch(ArrayIndexOutOfBoundsException e) {}
 				try {
 					if(cellsToRemove[x][y-2] == SHIPS.SEAPLANE.getValue()) {
 						cellsToRemove[x][y] = 100;
@@ -325,9 +325,9 @@ public class CtrlRules implements IObservable, Serializable{
 						cellsToRemove[x][y-2] = 100;
 						return cellsToRemove;
 					}
-				}catch(Exception e) {}
+				}catch(ArrayIndexOutOfBoundsException e) {}
 			}
-		}catch(Exception e) {}
+		}catch(ArrayIndexOutOfBoundsException e) {}
 		try {
 			if(cellsToRemove[x-1][y-1] == SHIPS.SEAPLANE.getValue()) {
 				//Check if block on middle of Seaplane
@@ -338,7 +338,7 @@ public class CtrlRules implements IObservable, Serializable{
 						cellsToRemove[x-1][y+1] = 100;
 						return cellsToRemove;
 					}
-				}catch(Exception e) {}
+				}catch(ArrayIndexOutOfBoundsException e) {}
 				//Check if block on end of Seaplane
 				try {
 					if(cellsToRemove[x][y-2] == SHIPS.SEAPLANE.getValue()) {
@@ -347,7 +347,7 @@ public class CtrlRules implements IObservable, Serializable{
 						cellsToRemove[x][y-2] = 100;
 						return cellsToRemove;
 					}
-				}catch(Exception e) {}
+				}catch(ArrayIndexOutOfBoundsException e) {}
 				try {
 					if(cellsToRemove[x-2][y] == SHIPS.SEAPLANE.getValue()) {
 						cellsToRemove[x][y] = 100;
@@ -355,9 +355,9 @@ public class CtrlRules implements IObservable, Serializable{
 						cellsToRemove[x-2][y] = 100;
 						return cellsToRemove;
 					}
-				}catch(Exception e) {}
+				}catch(ArrayIndexOutOfBoundsException e) {}
 			}
-		}catch(Exception e) {}
+		}catch(ArrayIndexOutOfBoundsException e) {}
 		try {
 			if(cellsToRemove[x-1][y+1] == SHIPS.SEAPLANE.getValue()) {
 				//Check if block on middle of Seaplane
@@ -368,7 +368,7 @@ public class CtrlRules implements IObservable, Serializable{
 						cellsToRemove[x+1][y+1] = 100;
 						return cellsToRemove;
 					}
-				}catch(Exception e) {}
+				}catch(ArrayIndexOutOfBoundsException e) {}
 				//Check if block on end of Seaplane
 				try {
 					if(cellsToRemove[x-2][y] == SHIPS.SEAPLANE.getValue()) {
@@ -377,7 +377,7 @@ public class CtrlRules implements IObservable, Serializable{
 						cellsToRemove[x-2][y] = 100;
 						return cellsToRemove;
 					}
-				}catch(Exception e) {}
+				}catch(ArrayIndexOutOfBoundsException e) {}
 				
 				try {
 					if(cellsToRemove[x][y+2] == SHIPS.SEAPLANE.getValue()) {
@@ -386,9 +386,9 @@ public class CtrlRules implements IObservable, Serializable{
 						cellsToRemove[x][y+2] = 100;
 						return cellsToRemove;
 					}
-				}catch(Exception e) {}
+				}catch(ArrayIndexOutOfBoundsException e) {}
 			}
-		}catch(Exception e) {}
+		}catch(ArrayIndexOutOfBoundsException e) {}
 				
 		
 		return cellsToRemove;
@@ -426,7 +426,7 @@ public class CtrlRules implements IObservable, Serializable{
 					if(definedCells[x][y-i] != 0) setIsValid(false);
 					cellsToPaint[x][y-i] = selectedShip.shipSize;
 				}
-				catch(Exception e) {
+				catch(ArrayIndexOutOfBoundsException e) {
 					setIsValid(false);
 				}
 			}
@@ -437,7 +437,7 @@ public class CtrlRules implements IObservable, Serializable{
 					if(definedCells[x+i][y] != 0) setIsValid(false);
 					cellsToPaint[x+i][y] = selectedShip.shipSize;
 				}
-				catch(Exception e) {
+				catch(ArrayIndexOutOfBoundsException e) {
 					setIsValid(false);
 				}
 			}
@@ -448,7 +448,7 @@ public class CtrlRules implements IObservable, Serializable{
 					if(definedCells[x][y+i] != 0) setIsValid(false);
 					cellsToPaint[x][y+i] = selectedShip.shipSize;
 				}
-				catch(Exception e) {
+				catch(ArrayIndexOutOfBoundsException e) {
 					setIsValid(false);
 				}
 			}
@@ -459,7 +459,7 @@ public class CtrlRules implements IObservable, Serializable{
 					if(definedCells[x-i][y] != 0) setIsValid(false);
 					cellsToPaint[x-i][y] = selectedShip.shipSize;
 				}
-				catch(Exception e) {
+				catch(ArrayIndexOutOfBoundsException e) {
 					setIsValid(false);
 				}
 			}
@@ -491,14 +491,14 @@ public class CtrlRules implements IObservable, Serializable{
 				if(definedCells[x-1][y-1] != 0) setIsValid(false);
 				cellsToPaint[x-1][y-1] = selectedShip.shipSize;
 			}
-			catch (Exception e){
+			catch (ArrayIndexOutOfBoundsException e){
 				setIsValid(false);
 			}
 			try {
 				if(definedCells[x][y-2] != 0) setIsValid(false);
 				cellsToPaint[x][y-2] = selectedShip.shipSize;
 			}
-			catch (Exception e){
+			catch (ArrayIndexOutOfBoundsException e){
 				setIsValid(false);
 			}
 		}
@@ -508,14 +508,14 @@ public class CtrlRules implements IObservable, Serializable{
 				if(definedCells[x+1][y-1] != 0) setIsValid(false);
 				cellsToPaint[x+1][y-1] = selectedShip.shipSize;
 			}
-			catch (Exception e){
+			catch (ArrayIndexOutOfBoundsException e){
 				setIsValid(false);
 			}
 			try {
 				if(definedCells[x+2][y] != 0) setIsValid(false);
 				cellsToPaint[x+2][y] = selectedShip.shipSize;
 			}
-			catch (Exception e){
+			catch (ArrayIndexOutOfBoundsException e){
 				setIsValid(false);
 			}
 		}
@@ -525,14 +525,14 @@ public class CtrlRules implements IObservable, Serializable{
 				if(definedCells[x+1][y+1] != 0) setIsValid(false);
 				cellsToPaint[x+1][y+1] = selectedShip.shipSize;
 			}
-			catch (Exception e){
+			catch (ArrayIndexOutOfBoundsException e){
 				setIsValid(false);
 			}
 			try {
 				if(definedCells[x][y+2] != 0) setIsValid(false);
 				cellsToPaint[x][y+2] = selectedShip.shipSize;
 			}
-			catch (Exception e){
+			catch (ArrayIndexOutOfBoundsException e){
 				setIsValid(false);
 			}
 		}
@@ -542,14 +542,14 @@ public class CtrlRules implements IObservable, Serializable{
 				if(definedCells[x-1][y+1] != 0) setIsValid(false);
 				cellsToPaint[x-1][y+1] = selectedShip.shipSize;
 			}
-			catch (Exception e){
+			catch (ArrayIndexOutOfBoundsException e){
 				setIsValid(false);
 			}
 			try {
 				if(definedCells[x-2][y] != 0) setIsValid(false);
 				cellsToPaint[x-2][y] = selectedShip.shipSize;
 			}
-			catch (Exception e){
+			catch (ArrayIndexOutOfBoundsException e){
 				setIsValid(false);
 			}
 		}
@@ -563,50 +563,50 @@ public class CtrlRules implements IObservable, Serializable{
 		
 		if(selectedShip.orientation == ORIENTATION.TOP) {
 			for(int i = selectedShip.shipSize-1; i >= 0; i--) {
-				try { if(definedCells[x+1][y-i] != 0) return false; } catch(Exception e) {}
-				try { if(definedCells[x][y-i+1] != 0) return false; } catch(Exception e) {}
-				try { if(definedCells[x-1][y-i] != 0) return false; } catch(Exception e) {}
-				try { if(definedCells[x][y-i-1] != 0) return false; } catch(Exception e) {}
-				try { if(definedCells[x+1][y-i+1] != 0) return false; } catch(Exception e) {}
-				try { if(definedCells[x-1][y-i+1] != 0) return false; } catch(Exception e) {}
-				try { if(definedCells[x+1][y-i-1] != 0) return false; } catch(Exception e) {}
-				try { if(definedCells[x-1][y-i-1] != 0) return false; } catch(Exception e) {}
+				try { if(definedCells[x+1][y-i] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+				try { if(definedCells[x][y-i+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+				try { if(definedCells[x-1][y-i] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+				try { if(definedCells[x][y-i-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+				try { if(definedCells[x+1][y-i+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+				try { if(definedCells[x-1][y-i+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+				try { if(definedCells[x+1][y-i-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+				try { if(definedCells[x-1][y-i-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
 			}
 		}
 		else if(selectedShip.orientation == ORIENTATION.RIGHT) {
 			for(int i = 0; i < selectedShip.shipSize; i++) {
-				try { if(definedCells[x+i+1][y] != 0) return false; } catch(Exception e) {}
-				try { if(definedCells[x+i][y+1] != 0) return false; } catch(Exception e) {}
-				try { if(definedCells[x+i-1][y] != 0) return false; } catch(Exception e) {}
-				try { if(definedCells[x+i][y-1] != 0) return false; } catch(Exception e) {}
-				try { if(definedCells[x+i+1][y+1] != 0) return false; } catch(Exception e) {}
-				try { if(definedCells[x+i-1][y+1] != 0) return false; } catch(Exception e) {}
-				try { if(definedCells[x+i+1][y-1] != 0) return false; } catch(Exception e) {}
-				try { if(definedCells[x+i-1][y-1] != 0) return false; } catch(Exception e) {}
+				try { if(definedCells[x+i+1][y] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+				try { if(definedCells[x+i][y+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+				try { if(definedCells[x+i-1][y] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+				try { if(definedCells[x+i][y-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+				try { if(definedCells[x+i+1][y+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+				try { if(definedCells[x+i-1][y+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+				try { if(definedCells[x+i+1][y-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+				try { if(definedCells[x+i-1][y-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
 			}
 		}
 		else if(selectedShip.orientation == ORIENTATION.DOWN) {
 			for(int i = 0; i < selectedShip.shipSize; i++) {
-				try { if(definedCells[x+1][y+i] != 0) return false; } catch(Exception e) {}
-				try { if(definedCells[x][y+i+1] != 0) return false; } catch(Exception e) {}
-				try { if(definedCells[x-1][y+i] != 0) return false; } catch(Exception e) {}
-				try { if(definedCells[x][y+i-1] != 0) return false; } catch(Exception e) {}
-				try { if(definedCells[x+1][y+i+1] != 0) return false; } catch(Exception e) {}
-				try { if(definedCells[x-1][y+i+1] != 0) return false; } catch(Exception e) {}
-				try { if(definedCells[x+1][y+i-1] != 0) return false; } catch(Exception e) {}
-				try { if(definedCells[x-1][y+i-1] != 0) return false; } catch(Exception e) {}	
+				try { if(definedCells[x+1][y+i] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+				try { if(definedCells[x][y+i+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+				try { if(definedCells[x-1][y+i] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+				try { if(definedCells[x][y+i-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+				try { if(definedCells[x+1][y+i+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+				try { if(definedCells[x-1][y+i+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+				try { if(definedCells[x+1][y+i-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+				try { if(definedCells[x-1][y+i-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}	
 			}
 		}
 		else if(selectedShip.orientation == ORIENTATION.LEFT) {
 			for(int i = selectedShip.shipSize-1; i >= 0; i--) {
-				try { if(definedCells[x-i+1][y] != 0) return false; } catch(Exception e) {}
-				try { if(definedCells[x-i][y+1] != 0) return false; } catch(Exception e) {}
-				try { if(definedCells[x-i-1][y] != 0) return false; } catch(Exception e) {}
-				try { if(definedCells[x-i][y-1] != 0) return false; } catch(Exception e) {}
-				try { if(definedCells[x-i+1][y+1] != 0) return false; } catch(Exception e) {}
-				try { if(definedCells[x-i-1][y+1] != 0) return false; } catch(Exception e) {}
-				try { if(definedCells[x-i+1][y-1] != 0) return false; } catch(Exception e) {}
-				try { if(definedCells[x-i-1][y-1] != 0) return false; } catch(Exception e) {}
+				try { if(definedCells[x-i+1][y] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+				try { if(definedCells[x-i][y+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+				try { if(definedCells[x-i-1][y] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+				try { if(definedCells[x-i][y-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+				try { if(definedCells[x-i+1][y+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+				try { if(definedCells[x-i-1][y+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+				try { if(definedCells[x-i+1][y-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+				try { if(definedCells[x-i-1][y-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
 			}
 		}
 		
@@ -614,100 +614,100 @@ public class CtrlRules implements IObservable, Serializable{
 	}
 	private boolean checkSurroundingsSeaplane(int x, int y, int[][] definedCells) {
 		
-		try { if(definedCells[x+1][y] != 0) return false; } catch(Exception e) {}
-		try { if(definedCells[x][y+1] != 0) return false; } catch(Exception e) {}
-		try { if(definedCells[x-1][y] != 0) return false; } catch(Exception e) {}
-		try { if(definedCells[x][y-1] != 0) return false; } catch(Exception e) {}
+		try { if(definedCells[x+1][y] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+		try { if(definedCells[x][y+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+		try { if(definedCells[x-1][y] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+		try { if(definedCells[x][y-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
 		
-		try { if(definedCells[x+1][y+1] != 0) return false; } catch(Exception e) {}
-		try { if(definedCells[x-1][y+1] != 0) return false; } catch(Exception e) {}
-		try { if(definedCells[x+1][y-1] != 0) return false; } catch(Exception e) {}
-		try { if(definedCells[x-1][y-1] != 0) return false; } catch(Exception e) {}
+		try { if(definedCells[x+1][y+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+		try { if(definedCells[x-1][y+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+		try { if(definedCells[x+1][y-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+		try { if(definedCells[x-1][y-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
 		
 		if(selectedShip.orientation == ORIENTATION.TOP) {
-			try { if(definedCells[x-1+1][y-1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x-1][y-1+1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x-1-1][y-1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x-1][y-1-1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x-1+1][y-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x-1][y-1+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x-1-1][y-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x-1][y-1-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
 			
-			try { if(definedCells[x-1+1][y-1+1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x-1-1][y-1+1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x-1+1][y-1-1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x-1-1][y-1-1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x-1+1][y-1+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x-1-1][y-1+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x-1+1][y-1-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x-1-1][y-1-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
 			
-			try { if(definedCells[x+1][y-2] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x][y-2+1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x-1][y-2] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x][y-2-1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x+1][y-2] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x][y-2+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x-1][y-2] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x][y-2-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
 			
-			try { if(definedCells[x+1][y-2+1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x-1][y-2+1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x+1][y-2-1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x-1][y-2-1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x+1][y-2+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x-1][y-2+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x+1][y-2-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x-1][y-2-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
 
 		}
 		else if(selectedShip.orientation == ORIENTATION.RIGHT) {
-			try { if(definedCells[x+1+1][y-1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x+1][y-1+1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x+1-1][y-1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x+1][y-1-1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x+1+1][y-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x+1][y-1+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x+1-1][y-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x+1][y-1-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
 			
-			try { if(definedCells[x+1+1][y-1+1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x+1-1][y-1+1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x+1+1][y-1-1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x+1-1][y-1-1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x+1+1][y-1+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x+1-1][y-1+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x+1+1][y-1-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x+1-1][y-1-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
 			
-			try { if(definedCells[x+2+1][y] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x+2][y+1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x+2-1][y] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x+2][y-1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x+2+1][y] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x+2][y+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x+2-1][y] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x+2][y-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
 			
-			try { if(definedCells[x+2+1][y+1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x+2-1][y+1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x+2+1][y-1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x+2-1][y-1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x+2+1][y+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x+2-1][y+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x+2+1][y-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x+2-1][y-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
 		}
 		else if(selectedShip.orientation == ORIENTATION.DOWN) {
-			try { if(definedCells[x+1+1][y+1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x+1][y+1+1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x+1-1][y+1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x+1][y+1-1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x+1+1][y+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x+1][y+1+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x+1-1][y+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x+1][y+1-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
 			
-			try { if(definedCells[x+1+1][y+1+1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x+1+1][y+1-1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x+1-1][y+1+1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x+1-1][y+1-1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x+1+1][y+1+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x+1+1][y+1-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x+1-1][y+1+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x+1-1][y+1-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
 			
-			try { if(definedCells[x+1][y+2] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x][y+2+1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x-1][y+2] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x][y+2-1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x+1][y+2] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x][y+2+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x-1][y+2] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x][y+2-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
 			
-			try { if(definedCells[x+1][y+2+1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x-1][y+2+1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x+1][y+2-1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x-1][y+2-1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x+1][y+2+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x-1][y+2+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x+1][y+2-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x-1][y+2-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
 		}
 		else if(selectedShip.orientation == ORIENTATION.LEFT) {
-			try { if(definedCells[x-1+1][y+1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x-1][y+1+1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x-1-1][y+1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x-1][y+1-1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x-1+1][y+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x-1][y+1+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x-1-1][y+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x-1][y+1-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
 			
-			try { if(definedCells[x-1+1][y+1+1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x-1-1][y+1+1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x-1+1][y+1-1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x-1-1][y+1-1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x-1+1][y+1+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x-1-1][y+1+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x-1+1][y+1-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x-1-1][y+1-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
 			
-			try { if(definedCells[x-2+1][y] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x-2][y+1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x-2-1][y] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x-2][y-1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x-2+1][y] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x-2][y+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x-2-1][y] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x-2][y-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
 			
-			try { if(definedCells[x-2+1][y+1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x-2-1][y+1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x-2+1][y-1] != 0) return false; } catch(Exception e) {}
-			try { if(definedCells[x-2-1][y-1] != 0) return false; } catch(Exception e) {}
+			try { if(definedCells[x-2+1][y+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x-2-1][y+1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x-2+1][y-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
+			try { if(definedCells[x-2-1][y-1] != 0) return false; } catch(ArrayIndexOutOfBoundsException e) {}
 		}
 		
 		return true;
@@ -809,7 +809,7 @@ public class CtrlRules implements IObservable, Serializable{
 					while(currentBoard[x][y] != 0 && currentBoard[x][y] != SHIPS.D_WATER.getValue()) {
 						x--;
 					}
-				} catch(Exception e) {   }
+				} catch(ArrayIndexOutOfBoundsException e) {   }
 
 				//Reached end => sum 1 to x to get back to ship
 				x += 1;
@@ -822,9 +822,9 @@ public class CtrlRules implements IObservable, Serializable{
 						}
 						x++;
 					}
-				} catch(Exception e) { }
+				} catch(ArrayIndexOutOfBoundsException e) { }
 			}; 
-		} catch(Exception e) { }
+		} catch(ArrayIndexOutOfBoundsException e) { }
 		try { 
 			//LEFT-RIGHT -> Reach left end and go to right end
 			if(currentBoard[x-1][y] < 0) {
@@ -832,7 +832,7 @@ public class CtrlRules implements IObservable, Serializable{
 					while(currentBoard[x][y] != 0 && currentBoard[x][y] != SHIPS.D_WATER.getValue()) {
 						x--;
 					}
-				} catch(Exception e) { }
+				} catch(ArrayIndexOutOfBoundsException e) { }
 
 				//Reached end => sum 1 to x to get back to ship
 				x += 1;
@@ -845,9 +845,9 @@ public class CtrlRules implements IObservable, Serializable{
 						}
 						x++;
 					}
-				} catch(Exception e) { }
+				} catch(ArrayIndexOutOfBoundsException e) { }
 			}; 
-		} catch(Exception e) { }
+		} catch(ArrayIndexOutOfBoundsException e) { }
 		try { 
 			//BOTTOM-TOP -> Reach bottom and go to top end
 			if(currentBoard[x][y+1] < 0) {
@@ -855,7 +855,7 @@ public class CtrlRules implements IObservable, Serializable{
 					while(currentBoard[x][y] != 0 && currentBoard[x][y] != SHIPS.D_WATER.getValue()) {
 						y--;
 					}
-				} catch(Exception e) { }
+				} catch(ArrayIndexOutOfBoundsException e) { }
 
 				//Reached end => sum 1 to y to get back to ship
 				y += 1;
@@ -868,9 +868,9 @@ public class CtrlRules implements IObservable, Serializable{
 						}
 						y++;
 					}
-				} catch(Exception e) { }
+				} catch(ArrayIndexOutOfBoundsException e) { }
 			}; 
-		} catch(Exception e) { }	
+		} catch(ArrayIndexOutOfBoundsException e) { }	
 		try { 
 			//BOTTOM-TOP -> Reach bottom and go to top end
 			if(currentBoard[x][y-1] < 0) {
@@ -878,7 +878,7 @@ public class CtrlRules implements IObservable, Serializable{
 					while(currentBoard[x][y] != 0 && currentBoard[x][y] != SHIPS.D_WATER.getValue()) {
 						y--;
 					}
-				} catch(Exception e) { }
+				} catch(ArrayIndexOutOfBoundsException e) { }
 
 				//Reached end => sum 1 to y to get back to ship
 				y += 1;
@@ -891,9 +891,9 @@ public class CtrlRules implements IObservable, Serializable{
 						}
 						y++;
 					}
-				} catch(Exception e) { }
+				} catch(ArrayIndexOutOfBoundsException e) { }
 			};
-		} catch(Exception e) { }
+		} catch(ArrayIndexOutOfBoundsException e) { }
 		
 		return shipSize == destroyedCellsNum;
 	}
@@ -914,7 +914,7 @@ public class CtrlRules implements IObservable, Serializable{
 					while(currentBoard[x][y] != 0 && currentBoard[x][y] != SHIPS.D_WATER.getValue()) {
 						x--;
 					}
-				} catch(Exception e) {}
+				} catch(ArrayIndexOutOfBoundsException e) {}
 
 				//Reached end => sum 1 to x to get back to ship
 				x += 1;
@@ -926,9 +926,9 @@ public class CtrlRules implements IObservable, Serializable{
 						x++;
 					}
 					return;
-				} catch(Exception e) {}
+				} catch(ArrayIndexOutOfBoundsException e) {}
 			}; 
-		} catch(Exception e) {}
+		} catch(ArrayIndexOutOfBoundsException e) {}
 		try { 
 			//LEFT-RIGHT -> Reach left end and delete
 			if(currentBoard[x-1][y] != 0 && currentBoard[x-1][y] != SHIPS.D_WATER.getValue()) {
@@ -936,7 +936,7 @@ public class CtrlRules implements IObservable, Serializable{
 					while(currentBoard[x][y] != 0 && currentBoard[x][y] != SHIPS.D_WATER.getValue()) {
 						x--;
 					}
-				} catch(Exception e) {}
+				} catch(ArrayIndexOutOfBoundsException e) {}
 
 				//Reached end => sum 1 to x to get back to ship
 				x += 1;
@@ -948,9 +948,9 @@ public class CtrlRules implements IObservable, Serializable{
 						x++;
 					}
 					return;
-				} catch(Exception e) {}
+				} catch(ArrayIndexOutOfBoundsException e) {}
 			}; 
-		} catch(Exception e) {}
+		} catch(ArrayIndexOutOfBoundsException e) {}
 		try { 
 			//BOTTOM-TOP -> Reach bottom end and delete
 			if(currentBoard[x][y+1] != 0 && currentBoard[x][y+1] != SHIPS.D_WATER.getValue()) {
@@ -958,7 +958,7 @@ public class CtrlRules implements IObservable, Serializable{
 					while(currentBoard[x][y] != 0 && currentBoard[x][y] != SHIPS.D_WATER.getValue()) {
 						y--;
 					}
-				} catch(Exception e) {}
+				} catch(ArrayIndexOutOfBoundsException e) {}
 
 				//Reached end => sum 1 to y to get back to ship
 				y += 1;
@@ -970,9 +970,9 @@ public class CtrlRules implements IObservable, Serializable{
 						y++;
 					}
 					return;
-				} catch(Exception e) {}
+				} catch(ArrayIndexOutOfBoundsException e) {}
 			}; 
-		} catch(Exception e) {}	
+		} catch(ArrayIndexOutOfBoundsException e) {}	
 		try { 
 			//BOTTOM-TOP -> Reach bottom end and delete
 			if(currentBoard[x][y-1] != 0 && currentBoard[x][y-1] != SHIPS.D_WATER.getValue()) {
@@ -980,7 +980,7 @@ public class CtrlRules implements IObservable, Serializable{
 					while(currentBoard[x][y] != 0 && currentBoard[x][y] != SHIPS.D_WATER.getValue()) {
 						y--;
 					}
-				} catch(Exception e) {}
+				} catch(ArrayIndexOutOfBoundsException e) {}
 
 				//Reached end => sum 1 to y to get back to ship
 				y += 1;
@@ -992,9 +992,9 @@ public class CtrlRules implements IObservable, Serializable{
 						y++;
 					}
 					return;
-				} catch(Exception e) {}
+				} catch(ArrayIndexOutOfBoundsException e) {}
 			}; 
-		} catch(Exception e) {}
+		} catch(ArrayIndexOutOfBoundsException e) {}
 	}
 	private boolean checkAndDestroySeaplane(int x, int y) {
 		int[][] currentBoard = getOppositeBoard(currentPlayer);
@@ -1009,7 +1009,7 @@ public class CtrlRules implements IObservable, Serializable{
 						currentBoard[x+1][y-1] -= K.DESTROYED_SHIP_LIMIT;
 						return true;
 					}
-				}catch(Exception e) {}
+				}catch(ArrayIndexOutOfBoundsException e) {}
 				//Check if block on end of Seaplane
 				try {
 					if(currentBoard[x][y+2] == SHIPS.D_SEAPLANE.getValue()) {
@@ -1018,7 +1018,7 @@ public class CtrlRules implements IObservable, Serializable{
 						currentBoard[x][y+2] -= K.DESTROYED_SHIP_LIMIT;
 						return true;
 					}
-				}catch(Exception e) {}
+				}catch(ArrayIndexOutOfBoundsException e) {}
 				try {
 					if(currentBoard[x+2][y] == SHIPS.D_SEAPLANE.getValue()) {
 						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
@@ -1026,9 +1026,9 @@ public class CtrlRules implements IObservable, Serializable{
 						currentBoard[x+2][y] -= K.DESTROYED_SHIP_LIMIT;
 						return true;
 					}
-				}catch(Exception e) {}
+				}catch(ArrayIndexOutOfBoundsException e) {}
 			}
-		}catch(Exception e) {}
+		}catch(ArrayIndexOutOfBoundsException e) {}
 		
 		try {
 			if(currentBoard[x+1][y-1] == SHIPS.D_SEAPLANE.getValue()) {
@@ -1040,7 +1040,7 @@ public class CtrlRules implements IObservable, Serializable{
 						currentBoard[x-1][y-1] -= K.DESTROYED_SHIP_LIMIT;
 						return true;
 					}
-				}catch(Exception e) {}
+				}catch(ArrayIndexOutOfBoundsException e) {}
 				//Check if block on end of Seaplane
 				try {
 					if(currentBoard[x+2][y] == SHIPS.D_SEAPLANE.getValue()) {
@@ -1049,7 +1049,7 @@ public class CtrlRules implements IObservable, Serializable{
 						currentBoard[x+2][y] -= K.DESTROYED_SHIP_LIMIT;
 						return true;
 					}
-				}catch(Exception e) {}
+				}catch(ArrayIndexOutOfBoundsException e) {}
 				try {
 					if(currentBoard[x][y-2] == SHIPS.D_SEAPLANE.getValue()) {
 						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
@@ -1057,9 +1057,9 @@ public class CtrlRules implements IObservable, Serializable{
 						currentBoard[x][y-2] -= K.DESTROYED_SHIP_LIMIT;
 						return true;
 					}
-				}catch(Exception e) {}
+				}catch(ArrayIndexOutOfBoundsException e) {}
 			}
-		}catch(Exception e) {}
+		}catch(ArrayIndexOutOfBoundsException e) {}
 		try {
 			if(currentBoard[x-1][y-1] == SHIPS.D_SEAPLANE.getValue()) {
 				//Check if block on middle of Seaplane
@@ -1070,7 +1070,7 @@ public class CtrlRules implements IObservable, Serializable{
 						currentBoard[x-1][y+1] -= K.DESTROYED_SHIP_LIMIT;
 						return true;
 					}
-				}catch(Exception e) {}
+				}catch(ArrayIndexOutOfBoundsException e) {}
 				//Check if block on end of Seaplane
 				try {
 					if(currentBoard[x][y-2] == SHIPS.D_SEAPLANE.getValue()) {
@@ -1079,7 +1079,7 @@ public class CtrlRules implements IObservable, Serializable{
 						currentBoard[x][y-2] -= K.DESTROYED_SHIP_LIMIT;
 						return true;
 					}
-				}catch(Exception e) {}
+				}catch(ArrayIndexOutOfBoundsException e) {}
 				try {
 					if(currentBoard[x-2][y] == SHIPS.D_SEAPLANE.getValue()) {
 						currentBoard[x][y] -= K.DESTROYED_SHIP_LIMIT;
@@ -1087,9 +1087,9 @@ public class CtrlRules implements IObservable, Serializable{
 						currentBoard[x-2][y] -= K.DESTROYED_SHIP_LIMIT;
 						return true;
 					}
-				}catch(Exception e) {}
+				}catch(ArrayIndexOutOfBoundsException e) {}
 			}
-		}catch(Exception e) {}
+		}catch(ArrayIndexOutOfBoundsException e) {}
 		try {
 			if(currentBoard[x-1][y+1] == SHIPS.D_SEAPLANE.getValue()) {
 				//Check if block on middle of Seaplane
@@ -1100,7 +1100,7 @@ public class CtrlRules implements IObservable, Serializable{
 						currentBoard[x+1][y+1] -= K.DESTROYED_SHIP_LIMIT;
 						return true;
 					}
-				}catch(Exception e) {}
+				}catch(ArrayIndexOutOfBoundsException e) {}
 				//Check if block on end of Seaplane
 				try {
 					if(currentBoard[x-2][y] == SHIPS.D_SEAPLANE.getValue()) {
@@ -1109,7 +1109,7 @@ public class CtrlRules implements IObservable, Serializable{
 						currentBoard[x-2][y] -= K.DESTROYED_SHIP_LIMIT;
 						return true;
 					}
-				}catch(Exception e) {}
+				}catch(ArrayIndexOutOfBoundsException e) {}
 				
 				try {
 					if(currentBoard[x][y+2] == SHIPS.D_SEAPLANE.getValue()) {
@@ -1118,9 +1118,9 @@ public class CtrlRules implements IObservable, Serializable{
 						currentBoard[x][y+2] -= K.DESTROYED_SHIP_LIMIT;
 						return true;
 					}
-				}catch(Exception e) {}
+				}catch(ArrayIndexOutOfBoundsException e) {}
 			}
-		}catch(Exception e) {}
+		}catch(ArrayIndexOutOfBoundsException e) {}
 		
 		return false;
 		
