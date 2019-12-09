@@ -18,3 +18,5 @@ A project originally developed for a object oriented programming course at the P
 ## Code
 
 Resolucao 1024x768
+
+![Rotation and Validation](https://i.imgur.com/ffOX4Oo.gif)
