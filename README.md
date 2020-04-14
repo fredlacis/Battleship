@@ -38,7 +38,7 @@ A project originally developed for a object oriented programming course at the P
 Upon opening the game, the players will be met with a menu, in which they are able to choose to play a new game, load a previously played game or exit back to the desktop. Upon starting a new game, the players are required to inform their names, so they can be identified further in the match.
 
 </br>
-![Starting Menu](https://i.imgur.com/XfstbUW.gif)
+![Starting Menu](https://i.imgur.com/XfstbUW.gifv)
 </br>
 
 ### Positioning Phase
@@ -47,14 +47,14 @@ Upon starting a game, both players must choose where to position their ships. Ea
 * The player cannot place ships directly adjacent or diagonally to other ships
 
 </br>
-![Rotation and Validation](https://i.imgur.com/ffOX4Oo.gif)
+![Rotation and Validation](https://i.imgur.com/ffOX4Oo.gifv)
 </br>
 
 ### Attack Phase
 In this phase, players take turns attacking each other. While one player attacks, the other looks away. For every turn, the player has 3 attacks available. If a player hits all the parts of a ship, it is considered sunk. Once a player sinks every ship of his adversary, he wins the game.
 
 </br>
-![Attacking Phase](https://i.imgur.com/ffOX4Oo.gif)
+![Attacking Phase](https://i.imgur.com/j0xqVEG.gifv)
 </br>
 </br>
 </br>
