@@ -1,5 +1,5 @@
 # Battleship
-A project originally developed for a object oriented programming course at the Pontifical Catholic University of Rio de Janeiro, implemented in Java, with the help of the GUI widget toolkit, Swing. The entire project was developed with Eclipse, in 1024x768 resolution.
+A project originally developed for a object oriented programming course teached by [Ivan Mathias Filho](http://www.inf.puc-rio.br/blog/professor/@ivan-mathias-filho) at the Pontifical Catholic University of Rio de Janeiro, implemented in Java, with the help of the GUI widget toolkit, Swing. The entire project was developed with Eclipse, in 1024x768 resolution.
 </br>
 
 ---
